@@ -107,7 +107,7 @@ export default function TripCustom() {
 				onClick={addDay}
 				className="mt-4 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-maincolor hover:text-white transition duration-200"
 			>
-				<IoIosAddCircle className="text-xl" /> Add Day
+				<IoIosAddCircle className="text-xl" /> Day
 			</button>
 		</div>
 	);

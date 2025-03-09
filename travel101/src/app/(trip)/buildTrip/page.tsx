@@ -13,7 +13,7 @@ export default function BuildTripPage() {
 				</div>
 
 				{/* Trip section (스크롤 가능) */}
-				<div className="bg-white p-4 rounded-lg overflow-y-auto">
+				<div className="bg-white p-4 rounded-lg overflow-y-auto no-scrollbar">
 					<TripCustom />
 				</div>
 			</div>

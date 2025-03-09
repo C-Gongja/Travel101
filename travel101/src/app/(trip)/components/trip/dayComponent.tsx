@@ -22,32 +22,49 @@ const DayComponent: React.FC<DraggableDayProps> = ({
 		setIsCollapsed((prev) => !prev); // 접힘/펼침 토글
 	};
 
+	const handleHeaderClick = (e: React.MouseEvent<HTMLDivElement>) => {
+		// 버튼 클릭이 아닌 헤더 자체 클릭 시에만 토글
+		if (e.target === e.currentTarget) {
+			toggleCollapse();
+		}
+	};
+
+	const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+		e.stopPropagation(); // 헤더 클릭 이벤트로 전파 방지
+	};
+
 	return (
 		<Draggable key={`day-${dayIndex}`} draggableId={`day-${dayIndex}`} index={dayIndex}>
 			{(provided) => (
 				<div
 					ref={provided.innerRef}
 					{...provided.draggableProps}
-					className="p-4 border bg-white"
+					className="p-4 bg-white"
 				>
 					{/* 헤더: 드래그 핸들, 제목, 접힘 버튼, 삭제 버튼 */}
-					<div className="flex justify-between items-center">
+					<div
+						onClick={handleHeaderClick}
+						className="flex justify-between items-center cursor-pointer"
+					>
 						<div className="text-xl font-semibold flex items-center space-x-4">
 							<span {...provided.dragHandleProps} className="cursor-move">
 								<RxHamburgerMenu />
 							</span>
 							<span>Day {day.dayNum}</span>
-							<button><FiShare2 /></button>
+							<button >
+								<FiShare2 />
+							</button>
 						</div>
 						<div className="flex items-center space-x-2">
 							<button
-								onClick={toggleCollapse}
 								className="text-gray-600 hover:text-gray-800 transition duration-200 p-4"
 							>
 								{isCollapsed ? <FaChevronDown size={16} /> : <FaChevronUp size={16} />}
 							</button>
 							<button
-								onClick={() => removeDay(dayIndex)}
+								onClick={(e) => {
+									removeDay(dayIndex);
+								}}
 								className="w-8 h-8 text-red-500 rounded-full flex items-center justify-center hover:text-white hover:bg-red-500 transition duration-200"
 							>
 								<MdDeleteOutline size={20} />
