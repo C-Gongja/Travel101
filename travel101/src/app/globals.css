@@ -3,19 +3,62 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+	--background: #ffffff;
+	--foreground: #171717;
+	--text-primary: #171717;
+	--text-secondary: #555555;
+	--text-muted: #888888;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* @media (prefers-color-scheme: dark) {
+	:root {
+		--background: #0a0a0a;
+		--foreground: #ededed;
+		--text-primary: #ededed;
+		--text-secondary: #bbbbbb;
+		--text-muted: #888888;
+	}
+} */
+
+@layer base {
+	input {
+		@apply bg-white text-black;
+	}
+
+	/* @media (prefers-color-scheme: dark) {
+		input {
+			@apply bg-gray-800 text-white;
+		}
+	} */
+}
+
+@layer components {
+	body {
+		@apply bg-white text-black;
+	}
+
+	.modal {
+		@apply bg-white border-gray-300 text-black;
+	}
+
+	/* @media (prefers-color-scheme: dark) {
+		body {
+			@apply bg-gray-900 text-white;
+		}
+
+		.modal {
+			@apply bg-gray-800 border-gray-600 text-white;
+		}
+	} */
+}
+
+h1 {
+	font-size: 3rem;
+	font-weight: bold;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+	color: var(--foreground);
+	background: var(--background);
+	font-family: Arial, Helvetica, sans-serif;
 }
