@@ -8,14 +8,15 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FiShare2 } from "react-icons/fi";
 import LocationComponent from "./locationComponent";
+import { Day, useTripStore } from "@/app/components/stateManagement/createTrip/trip-store";
 
-const DayComponent: React.FC<DraggableDayProps> = ({
-	day,
-	dayIndex,
-	removeDay,
-	addLocation,
-	removeLocation,
-}) => {
+interface DraggableDayProps {
+	day: Day;
+	dayIndex: number;
+}
+
+const DayComponent: React.FC<DraggableDayProps> = ({ day, dayIndex }) => {
+	const { removeDay, addLocation } = useTripStore();
 	const [isCollapsed, setIsCollapsed] = useState(false); // 접힘 상태 관리
 
 	const toggleCollapse = () => {
@@ -50,17 +51,18 @@ const DayComponent: React.FC<DraggableDayProps> = ({
 							<span {...provided.dragHandleProps} className="cursor-move">
 								<RxHamburgerMenu />
 							</span>
-							<span>Day {day.dayNum}</span>
+							<span {...provided.dragHandleProps}>Day {day.number}</span>
 							<button >
 								<FiShare2 />
 							</button>
 						</div>
 						<div className="flex items-center space-x-2">
-							<button
+							<div
+								onClick={handleHeaderClick}
 								className="text-gray-600 hover:text-gray-800 transition duration-200 p-4"
 							>
 								{isCollapsed ? <FaChevronDown size={16} /> : <FaChevronUp size={16} />}
-							</button>
+							</div>
 							<button
 								onClick={(e) => {
 									removeDay(dayIndex);
@@ -89,7 +91,6 @@ const DayComponent: React.FC<DraggableDayProps> = ({
 												location={location}
 												dayIndex={dayIndex}
 												locIndex={locIndex}
-												removeLocation={removeLocation}
 												isLast={locIndex === day.locations.length - 1}
 											/>
 										))
@@ -100,8 +101,11 @@ const DayComponent: React.FC<DraggableDayProps> = ({
 						</Droppable>
 
 						<button
-							onClick={() => addLocation(dayIndex)}
-							className="mt-2 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-maincolor hover:text-white transition duration-200"
+							onClick={(e) => {
+								e.stopPropagation();
+								addLocation(dayIndex);
+							}}
+							className="mt-2 px-4 py-2 rounded-lg flex items-center gap-2 text-maincolor hover:bg-maincolor hover:text-white transition duration-200"
 						>
 							<IoIosAddCircle className="text-xl" /> Location
 						</button>

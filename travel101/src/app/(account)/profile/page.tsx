@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import { useUserStore } from "../../components/stateManagement/user-store";
-import { useProfileStore } from "../../components/stateManagement/user-profile-store";
+import { useUserStore } from "../../components/stateManagement/user/user-store";
+import { useProfileStore } from "../../components/stateManagement/user/user-profile-store";
 import { fetchProfile } from "@/app/api/profile/profileApi";
 
 export default function ProfilePage() {

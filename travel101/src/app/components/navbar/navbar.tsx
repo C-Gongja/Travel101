@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
-import { useUserStore } from "../stateManagement/user-store";
+import { useUserStore } from "../stateManagement/user/user-store";
 import Modal from "../modals/mainModal";
 import SignInForm from "../auth/signInForm";
 import SignUpForm from "../auth/signUpForm";
@@ -84,7 +84,7 @@ export default function Navbar() {
 					<div className="flex gap-2">
 						<button
 							onClick={() => setIsModalOpen(true)}
-							className="px-4 py-2 bg-maincolor text-white rounded-full">
+							className="px-4 py-2 bg-maincolor text-white rounded-full shadow-md">
 							Sign In
 						</button>
 					</div>

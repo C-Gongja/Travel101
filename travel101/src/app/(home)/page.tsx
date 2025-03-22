@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link";
-import { useUserStore } from "../components/stateManagement/user-store";
+import { useUserStore } from "../components/stateManagement/user/user-store";
 import { BiTrip } from "react-icons/bi";
 
 export default function Home() {

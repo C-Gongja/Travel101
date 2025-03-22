@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { useRouter } from "next/navigation";
 import ExternalAuthButtons from "../externalAuth/externalAuth";
 import { fetchSignup } from "@/app/api/auth/authApi";
-import { useUserStore } from "../stateManagement/user-store";
+import { useUserStore } from "../stateManagement/user/user-store";
 
 export interface SignupFormData {
 	name: string;

@@ -3,12 +3,12 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { MdDeleteOutline } from "react-icons/md";
 import { useRef, useState, useEffect } from "react";
+import { Location, useTripStore } from "@/app/components/stateManagement/createTrip/trip-store";
 
 interface LocationProps {
-	location: string;
+	location: Location;
 	dayIndex: number;
 	locIndex: number;
-	removeLocation: (dayIndex: number, locIndex: number) => void;
 	isLast: boolean;
 }
 
@@ -16,18 +16,42 @@ const LocationComponent: React.FC<LocationProps> = ({
 	location,
 	dayIndex,
 	locIndex,
-	removeLocation,
 	isLast,
 }) => {
 	const contentRef = useRef<HTMLDivElement>(null);
 	const [lineHeight, setLineHeight] = useState<number>(0);
+	const textareaRef = useRef<HTMLTextAreaElement>(null);
+	const { updateDescription, removeLocation } = useTripStore();
+
+	const handleDescriptionChange = (
+		e: React.ChangeEvent<HTMLTextAreaElement>,
+		dayIndex: number,
+		locIndex: number
+	) => {
+		const { value } = e.target;
+		updateDescription(dayIndex, locIndex, value);
+	};
 
 	useEffect(() => {
-		if (contentRef.current && !isLast) {
-			const height = contentRef.current.offsetHeight;
-			setLineHeight(height + 0); // 장소 높이 + 다음 장소 간격(mt-2 ≈ 0.5rem ≈ 8px)
-		}
+		const handler = setTimeout(() => {
+			if (contentRef.current && !isLast) {
+				const height = contentRef.current.offsetHeight;
+				setLineHeight(height);
+			}
+		}, 10); // 100ms 지연
+
+		return () => clearTimeout(handler); // 클린업
 	}, [location, isLast]); // location이나 isLast가 변경될 때마다 높이 재계산
+
+	useEffect(() => {
+		const textarea = textareaRef.current;
+		if (textarea) {
+			// 높이를 먼저 초기화 (scrollHeight 정확히 측정 위해)
+			textarea.style.height = 'auto';
+			// 내용 높이에 맞춰 설정
+			textarea.style.height = `${textarea.scrollHeight}px`;
+		}
+	}, [location.description]); // description이 변경될 때마다 실행
 
 	return (
 		<Draggable
@@ -49,27 +73,31 @@ const LocationComponent: React.FC<LocationProps> = ({
 						{!isLast && (
 							<div
 								className="absolute rounded-md left-[5px] top-4 w-[2px] bg-maincolor"
-								style={{ height: `${lineHeight}px` }} // 동적 높이 적용
+								style={{ height: `${lineHeight - 10}px` }} // 동적 높이 적용
 							/>
 						)}
 					</div>
 
 					{/* 장소 정보 */}
 					<div ref={contentRef} className="flex flex-col flex-grow">
-						<div className="font-semibold">Location Name</div>
-						<div className="text-gray-600">Location Address</div>
-						<div className="text-gray-500 text-sm">ㅁㄴ음나ㅡ이므나ㅣㅇㅁㄴ
-							ㅇㄴㅁㄹ ㅁㄹㄴ멀몽ㄴ ㅍ어누펑ㄴ푸ㅏㄴ무푸어ㅣ뉘
-							ㅇㄹㄴㅇㅁ
-							ㄹㅇㅁㄴ
-							ㄹㅇㄴㅁㄹㄴㅇㄹㄴㅁㅇㄹ  ㅙㄴㅇ로앤ㄹ ㅓ노러 론ㅇ ㅏ로ㅓ노럼 너ㅏㄹ홈냐ㅗ혀ㅑ모호며ㅑㄹ
-						</div>
+						<div className="font-semibold">{location.name}</div>
+						<div className="text-gray-600">{location.address || "address"}</div>
+						<textarea
+							ref={textareaRef}
+							onChange={(e) => handleDescriptionChange(e, dayIndex, locIndex)}
+							name="description"
+							placeholder="description"
+							value={location.description}
+							className="text-gray-500 text-sm block w-full max-w-xs mt-2 px-2 py-1 rounded resize-none
+							focus:outline-none focus:border focus:border-blue-500"
+							wrap="soft"
+						/>
 					</div>
 
 					{/* 삭제 버튼 */}
 					<button
 						onClick={() => removeLocation(dayIndex, locIndex)}
-						className="text-red-500 hover:text-red-700"
+						className="w-8 h-8 text-red-500 rounded-full flex items-center justify-center hover:border hover:border-red-500 transition duration-200"
 					>
 						<MdDeleteOutline size={18} />
 					</button>
