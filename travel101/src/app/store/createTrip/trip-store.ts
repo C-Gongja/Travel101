@@ -1,48 +1,6 @@
-import { fetchCreateTrip } from '@/app/api/trip/tripApi';
+import { fetchCreateTrip, fetchSaveTrip, fetchUpdateTrip, fetchScriptTrip, fetchDeleteTrip } from '@/app/api/trip/tripApi';
+import { TripStore, Trip, Day, Location } from '@/types/tripStoreTypes';
 import { create } from 'zustand';
-
-export interface Trip {
-	id?: string;
-	name: string;
-	startDate: Date;
-	endDate: Date;
-	days: Day[];
-	createdAt?: string;
-	scripted: number;
-	isCompleted: boolean;
-	countries: string[];
-}
-
-export interface Day {
-	number: number;
-	locations: Location[];
-}
-
-export interface Location {
-	number: number;
-	name: string;
-	address: string;
-	description: string;
-}
-
-interface TripStore {
-	trip: Trip | null;
-	isLoading: boolean;
-	setTrip: (trip: Trip) => void;
-	createTrip: () => void; // 페이지 진입 시 초기화
-	updateTripName: (name: string) => void;
-	updateDates: (startDate: Date, endDate: Date) => void; // 날짜 설정 및 days 업데이트
-	addDay: () => void;
-	removeDay: (dayIndex: number) => void;
-	addLocation: (dayIndex: number) => void;
-	updateLocation: (dayIndex: number, locIndex: number, location: Location) => void;
-	updateDescription: (dayIndex: number, locIndex: number, description: string) => void;
-	removeLocation: (dayIndex: number, locIndex: number) => void;
-	updateTotalCost: (totalCost: bigint) => void;
-	updateIsCompleted: (isCompleted: boolean) => void;
-	updateCountries: (countries: string[]) => void;
-	setIsLoading: (loading: boolean) => void;
-}
 
 // 날짜 범위에 따라 days 배열을 초기화하는 헬퍼 함수
 const initializeDays = (startDate: Date, endDate: Date): Day[] => {
@@ -55,9 +13,15 @@ const initializeDays = (startDate: Date, endDate: Date): Day[] => {
 
 export const useTripStore = create<TripStore>((set, get) => ({
 	trip: null,
+	isOwner: false,
+	selectedDay: 1,
+	location: null,
 	isLoading: false,
+	searchQuery: null,
 
 	setTrip: (trip: Trip) => set({ trip }),
+
+	setIsOwner: (isOwner: boolean) => set({ isOwner }),
 
 	setIsLoading: (loading: boolean) => set({ isLoading: loading }),
 
@@ -68,7 +32,7 @@ export const useTripStore = create<TripStore>((set, get) => ({
 			const defaultEndDate = new Date(today);
 			defaultEndDate.setDate(today.getDate() + 2);
 
-			const newTrip: Trip = {
+			const defaultTrip: Trip = {
 				name: 'New Trip',
 				startDate: today,
 				endDate: defaultEndDate,
@@ -77,23 +41,102 @@ export const useTripStore = create<TripStore>((set, get) => ({
 				isCompleted: false,
 				countries: [],
 			};
-			set({ trip: newTrip });
 
-			// need to be refactor
-			const currentTrip = get().trip;
-			if (!currentTrip) {
-				throw new Error("Trip is null after setting newTrip");
-			}
+			console.log("create trip: ", defaultTrip);
+			const newTrip = await fetchCreateTrip(defaultTrip);
 
-			console.log("create trip: ", currentTrip);
-			const trip = await fetchCreateTrip(currentTrip);
-
-			// ✅ trip이 올바르게 반환되었는지 확인 후 localStorage에 저장
-			if (trip && trip.id) {
-				localStorage.setItem("tripId", trip.id);
+			if (newTrip && newTrip.id) {
+				set({ trip: newTrip });
 			}
 		} catch (error) {
 			console.error("Error creating trip: ", error);
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+
+	scriptTrip: async () => {
+		console.log("script trip!")
+		const trip = get().trip;
+		if (!trip || !trip.id) {
+			console.error("No trip or trip ID available to update");
+			return;
+		}
+		try {
+			set({ isLoading: true });
+			const scriptedTrip = await fetchScriptTrip(trip.id);
+		} catch (error) {
+			console.error("Failed to script trip:", error);
+		} finally {
+			console.log("success script trip!")
+			set({ isLoading: false });
+		}
+	},
+
+	saveTrip: async (updatedTrip: Trip) => {
+		if (!updatedTrip) {
+			console.error("No trip provided to save");
+			return;
+		}
+		const trip = get().trip;
+		if (!trip || !trip.id) {
+			console.error("No trip or trip ID available to update");
+			return;
+		}
+		try {
+			set({ isLoading: true });
+			const savedTrip = await fetchSaveTrip(trip.id, updatedTrip);
+			if (savedTrip) {
+				set({
+					trip: {
+						...trip,
+						...savedTrip,
+						startDate: new Date(savedTrip.startDate),
+						endDate: new Date(savedTrip.endDate),
+					},
+				});
+			}
+		} catch (error) {
+			console.error("Failed to update trip:", error);
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+
+	// PATCH 요청으로 부분 업데이트
+	updateTrip: async (updates: Partial<Trip>) => {
+		const trip = get().trip;
+		if (!trip || !trip.id) {
+			console.error("No trip or trip ID available to update");
+			return;
+		}
+
+		set({ isLoading: true });
+		try {
+			const updatedTrip = await fetchUpdateTrip(trip.id, updates);
+			if (updatedTrip) {
+				set({ trip: { ...trip, ...updatedTrip } }); // 백엔드 응답으로 상태 동기화
+			}
+		} catch (error) {
+			console.error("Failed to update trip:", error);
+		} finally {
+			set({ isLoading: false });
+		}
+	},
+
+	deleteTrip: async () => {
+		const trip = get().trip;
+		if (!trip || !trip.id) {
+			console.error("No trip or trip ID available to update");
+			return;
+		}
+
+		set({ isLoading: true });
+		try {
+			await fetchDeleteTrip(trip.id);
+
+		} catch (error) {
+			console.error("Failed to delete trip:", error);
 		} finally {
 			set({ isLoading: false });
 		}
@@ -103,6 +146,8 @@ export const useTripStore = create<TripStore>((set, get) => ({
 		set((state) => ({
 			trip: state.trip ? { ...state.trip, name } : null,
 		})),
+
+	setSelectedDay: (day: number) => set((state) => ({ ...state, selectedDay: day })),
 
 	updateDates: (startDate: Date, endDate: Date) =>
 		set((state) => {
@@ -192,19 +237,30 @@ export const useTripStore = create<TripStore>((set, get) => ({
 				},
 			};
 		}),
+	// 🔍 검색어 업데이트
+	setSearchQuery: (query: string) => set({ searchQuery: query }),
 
-	addLocation: (dayIndex: number) =>
+	// 📌 장소 추가 (검색어 저장만 함)
+	searchLocation: () => {
+		const search = prompt('장소 이름을 입력하세요:');
+		set({ searchQuery: search });
+	},
+
+	setLocation: (loc: Partial<Location>) => {
+		console.log("setLocation: ", loc);
+		set({ location: loc });
+	},
+
+	addLocation: (dayIndex: number, loc: Partial<Location>) =>
 		set((state) => {
 			if (!state.trip || dayIndex >= state.trip.days.length) return state;
-			// 사용자로부터 locationName 입력받기 (필요에 따라 커스터마이징 가능)
-			const name = prompt('장소 이름을 입력하세요:');
-			if (!name) return state; // 입력이 없으면 상태 변경 없음
 
 			// 새로운 Location 객체 생성
 			const newLocation: Location = {
 				number: state.trip.days[dayIndex].locations.length + 1, // 기존 위치 수 + 1
-				name,
-				address: '', // 기본값
+				name: loc.name,
+				longitude: loc.longitude, // 기본값
+				latitude: loc.latitude, // 기본값
 				description: '', // 기본값
 			};
 
@@ -234,9 +290,15 @@ export const useTripStore = create<TripStore>((set, get) => ({
 		set((state) => {
 			if (!state.trip || dayIndex >= state.trip.days.length) return state;
 			const updatedDays = [...state.trip.days];
-			updatedDays[dayIndex].locations = updatedDays[dayIndex].locations.filter(
-				(_, index) => index !== locIndex
-			);
+
+			// 🗑️ 해당 위치 제거 후 number 재정렬
+			updatedDays[dayIndex].locations = updatedDays[dayIndex].locations
+				.filter((_, index) => index !== locIndex)
+				.map((location, newIndex) => ({
+					...location,
+					number: newIndex + 1, // 📌 number를 1부터 다시 매김
+				}));
+
 			return {
 				trip: { ...state.trip, days: updatedDays },
 			};
@@ -271,3 +333,8 @@ export const useTripStore = create<TripStore>((set, get) => ({
 			trip: state.trip ? { ...state.trip, countries } : null,
 		})),
 }));
+
+// ... may need functions that tracks changes
+// changedFields: new Set(),
+// addChangedField: (field) => set((state) => ({ changedFields: new Set(state.changedFields).add(field) })),
+// clearChangedFields: () => set({ changedFields: new Set() }),

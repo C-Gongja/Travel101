@@ -4,15 +4,14 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
-import { useUserStore } from "../stateManagement/user/user-store";
-import Modal from "../modals/mainModal";
-import SignInForm from "../auth/signInForm";
-import SignUpForm from "../auth/signUpForm";
+import { useUserStore } from "../../store/user/user-store";
+import Modal from "../../../components/ui/modals/mainModal";
 
 import { IoSearch } from "react-icons/io5";
+import SignUpForm from "@/components/auth/signUpForm";
+import SignInForm from "@/components/auth/signInForm";
 
 export default function Navbar() {
-	const router = useRouter();
 	const { user, verifyUser, clearUser } = useUserStore();
 	const isLoggedIn = !!user;
 	const [menuOpen, setMenuOpen] = useState(false);
@@ -44,7 +43,7 @@ export default function Navbar() {
 				<input
 					type="text"
 					placeholder="Search..."
-					className="w-full border rounded-full py-2 px-4 pl-10 shadow-md focus:outline-none focus:ring-2 focus:ring-maincolor"
+					className="w-full border rounded-full py-2 px-4 pl-10 shadow-md focus:outline-none focus:ring-1 focus:ring-maincolor"
 				/>
 				{/* 아이콘을 input 안에 위치시키기 위해 absolute로 positioning */}
 				<IoSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600" />
@@ -68,8 +67,8 @@ export default function Navbar() {
 						{/* drop down */}
 						{menuOpen && (
 							<div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2">
-								<Link href="/profile" className="block px-4 py-2 text-black hover:bg-gray-100 ">
-									Profile
+								<Link href={`/profile/${user.uid}`} className="block px-4 py-2 text-black hover:bg-gray-100 ">
+									Account
 								</Link>
 								<button
 									onClick={() => handleLogout()}

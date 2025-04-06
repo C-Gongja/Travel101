@@ -3,7 +3,8 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { MdDeleteOutline } from "react-icons/md";
 import { useRef, useState, useEffect } from "react";
-import { Location, useTripStore } from "@/app/components/stateManagement/createTrip/trip-store";
+import { useTripStore } from "@/app/store/createTrip/trip-store";
+import { Location } from "@/types/tripStoreTypes";
 
 interface LocationProps {
 	location: Location;
@@ -21,7 +22,7 @@ const LocationComponent: React.FC<LocationProps> = ({
 	const contentRef = useRef<HTMLDivElement>(null);
 	const [lineHeight, setLineHeight] = useState<number>(0);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
-	const { updateDescription, removeLocation } = useTripStore();
+	const { isOwner, updateDescription, removeLocation } = useTripStore();
 
 	const handleDescriptionChange = (
 		e: React.ChangeEvent<HTMLTextAreaElement>,
@@ -58,6 +59,7 @@ const LocationComponent: React.FC<LocationProps> = ({
 			key={`location-${dayIndex}-${locIndex}`}
 			draggableId={`location-${dayIndex}-${locIndex}`}
 			index={locIndex}
+			isDragDisabled={!isOwner}
 		>
 			{(provided, snapshot) => (
 				<div
@@ -81,7 +83,7 @@ const LocationComponent: React.FC<LocationProps> = ({
 					{/* 장소 정보 */}
 					<div ref={contentRef} className="flex flex-col flex-grow">
 						<div className="font-semibold">{location.name}</div>
-						<div className="text-gray-600">{location.address || "address"}</div>
+						{/* <div className="text-gray-600">{location.address || "address"}</div> */}
 						<textarea
 							ref={textareaRef}
 							onChange={(e) => handleDescriptionChange(e, dayIndex, locIndex)}
@@ -97,7 +99,8 @@ const LocationComponent: React.FC<LocationProps> = ({
 					{/* 삭제 버튼 */}
 					<button
 						onClick={() => removeLocation(dayIndex, locIndex)}
-						className="w-8 h-8 text-red-500 rounded-full flex items-center justify-center hover:border hover:border-red-500 transition duration-200"
+						className={`w-8 h-8 text-red-500 rounded-full flex items-center justify-center hover:border hover:border-red-500 transition duration-200
+							${!isOwner ? "hidden" : ""}`}
 					>
 						<MdDeleteOutline size={18} />
 					</button>

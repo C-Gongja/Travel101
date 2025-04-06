@@ -2,9 +2,9 @@
 
 import { Dispatch, SetStateAction, useState } from "react";
 import { useRouter } from "next/navigation";
-import ExternalAuthButtons from "../externalAuth/externalAuth";
-import { useUserStore } from "../stateManagement/user/user-store";
+import { useUserStore } from "@/app/store/user/user-store";
 import { fetchLogin } from "@/app/api/auth/authApi";
+import ExternalAuthButtons from "./externalAuth/externalAuth";
 
 export interface SignInFormData {
 	email: string;

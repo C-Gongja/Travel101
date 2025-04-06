@@ -1,6 +1,7 @@
-import { SignupFormData } from "@/app/components/auth/signUpForm";
-import { SignInFormData } from "@/app/components/auth/signInForm";
+
+import { SignupFormData } from "@/components/auth/signUpForm";
 import { apiClient } from "../apiClient";
+import { SignInFormData } from "@/components/auth/signInForm";
 
 const AUTH_BASE_URL = "http://localhost:8080/auth";
 const VERIFY_BASE_URL = "http://localhost:8080/api/user/verify";
@@ -49,7 +50,6 @@ const fetchLogin = async (credentials: SignInFormData): Promise<any> => {
 			const errorData = await response.json();
 			throw new Error(JSON.stringify(errorData));
 		}
-
 		return await response.json();
 	} catch (error) {
 		throw error;

@@ -1,11 +1,11 @@
 'use client';
 
-import { useTripStore } from '@/app/components/stateManagement/createTrip/trip-store';
+import { useTripStore } from '@/app/store/createTrip/trip-store';
 import { useState, useEffect } from 'react';
 import Datepicker from 'react-tailwindcss-datepicker';
 
 export default function DateComponent() {
-	const { trip, updateDates } = useTripStore();
+	const { trip, isOwner, updateDates } = useTripStore();
 
 	// 타입 수정: null 허용
 	const [value, setValue] = useState<{
@@ -15,6 +15,10 @@ export default function DateComponent() {
 		startDate: trip?.startDate ?? null,
 		endDate: trip?.endDate ?? null,
 	});
+
+	useEffect(() => {
+		console.log("Date trip:", trip);
+	}, [trip]);
 
 	// 날짜 변경 핸들러: 타입 수정 및 로직 개선
 	const handleDateChange = (newValue: { startDate: string | Date | null; endDate: string | Date | null } | null) => {
@@ -50,6 +54,7 @@ export default function DateComponent() {
 			useRange={false}
 			asSingle={false}
 			readOnly={true}
+			disabled={!isOwner}
 			value={value}
 			separator="-"
 			onChange={handleDateChange}

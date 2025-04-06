@@ -1,4 +1,4 @@
-import { Day } from "../components/stateManagement/createTrip/trip-store";
+import { Day } from "../store/createTrip/trip-store";
 
 const updateDaysOrder = (days: Day[], sourceIdx: number, destIdx: number): Day[] => {
 	const newDays = [...days];
