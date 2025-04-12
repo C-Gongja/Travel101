@@ -1,4 +1,4 @@
-import { useTripStore } from "@/app/store/createTrip/trip-store";
+import { useTripStore } from "@/store/trip/trip-store";
 import { useState, useEffect } from "react";
 
 const getByteLength = (text: string): number => {

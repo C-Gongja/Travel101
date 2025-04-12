@@ -8,8 +8,8 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FiShare2 } from "react-icons/fi";
 import LocationComponent from "./locationComponent";
-import { useTripStore } from "@/app/store/createTrip/trip-store";
-import { Day } from "@/types/tripStoreTypes";
+import { useTripStore } from "@/store/trip/trip-store";
+import { Day } from "@/types/trip/tripStoreTypes";
 
 interface DraggableDayProps {
 	day: Day;

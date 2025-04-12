@@ -7,25 +7,27 @@ import { FiShare2 } from "react-icons/fi";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import DayComponent from "./dayComponent";
 import DateComponent from "./dateComponent";
-import { updateDaysOrder, updateLocationsOrder } from "@/app/util/TripUtil";
-import { useTripStore } from "@/app/store/createTrip/trip-store";
+import { updateDaysOrder, updateLocationsOrder } from "@/util/TripDragDropUtil";
+import { useTripStore } from "@/store/trip/trip-store";
+import useSaveTrip from "@/hooks/trip/useSaveTrip";
+import useDeleteTrip from "@/hooks/trip/useDeleteTrip";
+import useScriptTrip from "@/hooks/trip/useScriptTrip";
 
 export default function TripCustom() {
 	const {
 		trip,
-		isLoading,
 		isOwner,
-		saveTrip,
-		scriptTrip,
-		updateTripName,
+		setTripName,
 		addDay,
 		setTrip,
-		deleteTrip
 	} = useTripStore();
 
 	const spanRef = useRef<HTMLSpanElement>(null);
 	const [value, setValue] = useState(trip?.name || "");
 	const [inputWidth, setInputWidth] = useState(10);
+	const { saveTrip, isSaving, error } = useSaveTrip();
+	const { deleteTrip, isLoading } = useDeleteTrip();
+	const { scriptTrip } = useScriptTrip();
 
 	useEffect(() => {
 		if (spanRef.current) {
@@ -36,14 +38,13 @@ export default function TripCustom() {
 
 	const handleTripNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (!isOwner) return;
-		updateTripName(e.target.value);
+		setTripName(e.target.value);
 	};
 
 	const handleSave = async () => {
-		if (!trip) {
-			return;
-		}
-		await saveTrip(trip);
+		if (!isOwner || !trip) return; // 소유자가 아니면 저장 불가
+		const updatedTrip = { ...trip }; // 예시 수정
+		saveTrip(updatedTrip);
 	};
 
 	const onDragEnd = (result: any) => {
@@ -100,7 +101,7 @@ export default function TripCustom() {
 		setTrip(updatedTrip);
 	};
 
-	if (isLoading) return (<div>Loading tripCustom...</div>);
+	if (isSaving) return (<div>Saving tripCustom...</div>);
 
 	return (
 		<div className="p-6">

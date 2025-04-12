@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { TripCardProps } from "@/types/tripTypes";
-import { fetchAllTrips } from "@/app/api/trip/tripListApi";
+import { TripCardProps } from "@/types/trip/tripCardTypes";
+import { fetchAllTrips } from "@/api/trip/tripListApi";
 import TripCard from "@/components/ui/card/tripCard";
 
 export default function TripRecommandation() {

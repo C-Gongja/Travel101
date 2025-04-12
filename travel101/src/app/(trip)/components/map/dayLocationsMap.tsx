@@ -1,6 +1,6 @@
 'use client';
 
-import { useTripStore } from "@/app/store/createTrip/trip-store";
+import { useTripStore } from "@/store/trip/trip-store";
 import CustomMarker from "./customMarker";
 import { Polyline, useGoogleMap } from "@react-google-maps/api";
 import { useEffect, useRef, useState } from "react";

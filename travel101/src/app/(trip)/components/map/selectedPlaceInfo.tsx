@@ -1,6 +1,7 @@
+import { SelectedLocation } from "@/types/trip/tripStoreTypes";
 
 interface SelectedPlaceInfoProps {
-	selectedPlace: { name: string; address: string; place_id: string };
+	selectedPlace: SelectedLocation;
 	onClose: () => void; // 정보창 닫기
 	onSaveClick: () => void; // Save 버튼 클릭 시 호출
 }

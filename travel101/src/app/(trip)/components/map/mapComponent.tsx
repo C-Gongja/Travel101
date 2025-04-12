@@ -1,211 +1,189 @@
-/*Since the map was loaded on client side, 
-we need to make this component client rendered as well*/
 'use client'
 
-import { useTripStore } from "@/app/store/createTrip/trip-store";
-//Map component Component from library
+import { useTripStore } from "@/store/trip/trip-store";
 import { GoogleMap, Marker, StandaloneSearchBox } from "@react-google-maps/api";
-import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import CustomMarker from "./customMarker";
 import Modal from "@/components/ui/modals/mainModal";
-import SelectedPlaceInfo from "./selectedPlaceInfo";
 import AddLocationModal from "./addLocationModal";
 import DayLocationsMap from "./dayLocationsMap";
+import SelectedPlaceInfo from "./\bselectedPlaceInfo";
+import { SelectedLocation } from "@/types/trip/tripStoreTypes";
 
-//Map's styling
-const defaultMapContainerStyle = {
-	width: '100%',
-	height: '650px',
-	borderRadius: '15px 15px 15px 15px',
-};
-
-//K2's coordinates
-const defaultMapCenter = {
-	lat: 37.7749, lng: -122.4194,
+interface MapLocation {
+	lat: number;
+	lng: number;
 }
 
-//Default zoom level, can be adjusted
-const defaultMapZoom = 18
+// 상수 정의
+const MAP_CONFIG = {
+	containerStyle: {
+		width: '100%',
+		height: '650px',
+		borderRadius: '15px 15px 15px 15px',
+	},
+	defaultCenter: { lat: 37.7749, lng: -122.4194 },
+	defaultZoom: 18,
+	options: {
+		zoomControl: true,
+		tilt: 0,
+		gestureHandling: 'auto',
+		mapTypeId: 'roadmap',
+		streetViewControl: false,
+	}
+} as const;
 
-//Map options
-const defaultMapOptions = {
-	zoomControl: true,
-	tilt: 0,
-	gestureHandling: 'auto',
-	mapTypeId: 'roadmap',
-	streetViewControl: false,
+// 위치 처리 유틸리티
+const locationUtils = {
+	getPlaceDetails: (service: google.maps.places.PlacesService, placeId: string) =>
+		new Promise<google.maps.places.PlaceResult | null>((resolve) => {
+			service.getDetails({ placeId }, (place, status) => {
+				resolve(status === google.maps.places.PlacesServiceStatus.OK ? place : null);
+			});
+		}),
+
+	searchPlaces: (service: google.maps.places.PlacesService, query: string, center: MapLocation) =>
+		new Promise<google.maps.places.PlaceResult | null>((resolve) => {
+			service.textSearch(
+				{ query, location: center, radius: 5000 },
+				(results, status) => {
+					resolve(status === google.maps.places.PlacesServiceStatus.OK && results?.length
+						? results[0]
+						: null);
+				}
+			);
+		}),
+
+	geocodeLocation: (geocoder: google.maps.Geocoder, location: MapLocation) =>
+		new Promise<google.maps.GeocoderResult | null>((resolve) => {
+			geocoder.geocode({ location }, (results, status) => {
+				resolve(status === "OK" && results?.length ? results[0] : null);
+			});
+		}),
+
+	// 주소 구성 요소에서 국가 추출
+	getCountryFromAddressComponents: (components?: google.maps.GeocoderAddressComponent[]) => {
+		return components?.find((component) =>
+			component.types.includes("country")
+		)?.long_name || "";
+	}
 };
 
 const MapComponent = () => {
-
 	const [map, setMap] = useState<google.maps.Map | null>(null);
-	const [markerPosition, setMarkerPosition] = useState<google.maps.LatLngLiteral | null>(null);
-	const [selectedPlace, setSelectedPlace] = useState<any>(null);
-	const [isInfoVisible, setIsInfoVisible] = useState(false); // 정보창 표시 여부
+	const [markerPosition, setMarkerPosition] = useState<MapLocation | null>(null);
+	const [selectedPlace, setSelectedPlace] = useState<SelectedLocation | null>(null);
+	const [isInfoVisible, setIsInfoVisible] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
-
 	const { trip, searchQuery, selectedDay, setLocation } = useTripStore();
 
-	// selectedDay 변경 시 지도 줌 조절
-	useEffect(() => {
-		if (map && trip) {
-			const currentDay = trip.days.find((day) => day.number === selectedDay);
-			const locations = currentDay?.locations || [];
-			if (locations.length > 0) {
-				const bounds = new google.maps.LatLngBounds();
-				locations.forEach((location) => {
-					if (location.latitude && location.longitude) {
-						bounds.extend({ lat: location.latitude, lng: location.longitude });
-					}
-				});
+	// Places Service 인스턴스 메모이제이션
+	const placesService = useMemo(() =>
+		map ? new google.maps.places.PlacesService(map) : null,
+		[map]
+	);
 
-				// bounds가 비어 있지 않으면 지도 조정
-				if (!bounds.isEmpty()) {
-					map.fitBounds(bounds, 80); // padding으로 여백 추가
-					console.log("selected day3: ", selectedDay);
+	const geocoder = useMemo(() => new google.maps.Geocoder(), []);
+
+	// 위치 업데이트 헬퍼 함수
+	const updateLocation = (place: google.maps.places.PlaceResult | null, location: MapLocation) => {
+		if (!place) return;
+
+		const country = locationUtils.getCountryFromAddressComponents(place.address_components);
+
+		setSelectedPlace({
+			name: place.name,
+			address: place.formatted_address,
+			place_id: place.place_id,
+			country: country,
+		});
+		setMarkerPosition(location);
+		setLocation({
+			name: place.name || '',
+			latitude: location.lat,
+			longitude: location.lng,
+		});
+		map?.panTo(location);
+		map?.setZoom(16);
+		setIsInfoVisible(true);
+	};
+
+	// 지도 bounds 조정
+	useEffect(() => {
+		if (!map || !trip) return;
+
+		const currentDay = trip.days.find((day) => day.number === selectedDay);
+		const locations = currentDay?.locations || [];
+
+		if (locations.length > 0) {
+			const bounds = new google.maps.LatLngBounds();
+			locations.forEach((loc) => {
+				if (loc.latitude && loc.longitude) {
+					bounds.extend({ lat: loc.latitude, lng: loc.longitude });
 				}
-			} else if (locations.length === 0) {
-				// locations가 없으면 기본 중심으로 리셋
-				map.setCenter(defaultMapCenter);
-				map.setZoom(defaultMapZoom);
+			});
+			if (!bounds.isEmpty()) {
+				map.fitBounds(bounds, 80);
 			}
+		} else {
+			map.setCenter(MAP_CONFIG.defaultCenter);
+			map.setZoom(MAP_CONFIG.defaultZoom);
 		}
 	}, [map, trip, selectedDay]);
 
-	// 🔍 searchQuery가 변경될 때 검색 실행
+	// 검색 쿼리 처리
 	useEffect(() => {
-		if (searchQuery != "" && searchQuery && inputRef.current && searchBoxRef.current) {
-			inputRef.current.value = searchQuery; // 입력 필드에 searchQuery 반영
+		if (!searchQuery || !placesService || !inputRef.current) return;
 
-			// Google Places API를 통해 검색 실행
-			const service = new google.maps.places.PlacesService(map || new google.maps.Map(document.createElement('div')));
-			service.textSearch(
-				{
-					query: searchQuery,
-					location: defaultMapCenter, // 기본 중심 좌표 사용 (필요 시 동적으로 변경 가능)
-					radius: 5000, // 검색 반경 (단위: 미터)
-				},
-				(results, status) => {
-					if (status === google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
-						const place = results[0];
-						const location = {
-							lat: place.geometry?.location?.lat() || 0,
-							lng: place.geometry?.location?.lng() || 0,
-						};
-						setSelectedPlace({
-							name: place.name,
-							address: place.formatted_address,
-							place_id: place.place_id,
-						});
-						setMarkerPosition(location);
-						map?.panTo(location);
-						map?.setZoom(16);
-						setIsInfoVisible(true);
-						setLocation({
-							name: place.name,
-							latitude: location.lat,
-							longitude: location.lng,
-						});
-					} else {
-						console.error("Search failed:", status);
-					}
+		inputRef.current.value = searchQuery;
+		locationUtils.searchPlaces(placesService, searchQuery, MAP_CONFIG.defaultCenter)
+			.then((place) => {
+				if (place?.geometry?.location) {
+					const location = {
+						lat: place.geometry.location.lat(),
+						lng: place.geometry.location.lng(),
+					};
+					updateLocation(place, location);
 				}
-			);
-		}
-	}, [searchQuery, map]);
+			})
+			.catch((error) => console.error("Search failed:", error));
+	}, [searchQuery, placesService]);
 
-	// 🔍 검색 결과 선택 시 실행
-	const onPlacesChanged = () => {
-		if (searchBoxRef.current) {
-			const places = searchBoxRef.current.getPlaces();
-			if (places && places.length > 0) {
-				const place = places[0];
-				const location = {
-					lat: place.geometry?.location?.lat() || 0,
-					lng: place.geometry?.location?.lng() || 0,
-				};
-				setLocation(
-					{
-						name: place.name,
-						latitude: place.geometry?.location?.lat() || 0,
-						longitude: place.geometry?.location?.lng() || 0,
-					}
-				)
-				setSelectedPlace({
-					name: place.name,
-					address: place.formatted_address,
-					place_id: place.place_id,
-				});
-				setMarkerPosition(location); // 📍 마커 업데이트
-				map?.panTo(location); // 🗺️ 지도 이동
-				map?.setZoom(16);
-				setIsInfoVisible(true);
-			}
+	const handlePlacesChanged = () => {
+		const places = searchBoxRef.current?.getPlaces();
+		if (places?.length && places[0].geometry?.location) {
+			const place = places[0];
+			const location = {
+				lat: place.geometry.location.lat(),
+				lng: place.geometry.location.lng(),
+			};
+			updateLocation(place, location);
 		}
 	};
 
-	const onMapClick = async (event: google.maps.MapMouseEvent) => {
-		if (!event.latLng) return;
+	const handleMapClick = async (event: google.maps.MapMouseEvent) => {
+		if (!event.latLng || !placesService) return;
 
-		const location = {
-			lat: event.latLng.lat(),
-			lng: event.latLng.lng(),
-		};
+		const location = { lat: event.latLng.lat(), lng: event.latLng.lng() };
 		setMarkerPosition(location);
 
-		// 📌 Geocoder API 호출
-		const geocoder = new google.maps.Geocoder();
-		geocoder.geocode({ location }, async (results, status) => {
-			if (status === "OK" && results?.length) {
-				const placeInfo = results[0];
-
-				// `place_id`가 있으면 Places API로 추가 정보 요청
-				if (placeInfo.place_id) {
-					const placeDetails = await getPlaceDetails(placeInfo.place_id);
-					setSelectedPlace({
-						name: placeDetails?.name || placeInfo.formatted_address, // 상호명 or 주소 저장
-						address: placeInfo.formatted_address,
-						place_id: placeInfo.place_id,
-					});
-					setLocation({
-						name: placeDetails?.name,
-						latitude: placeDetails?.geometry?.location?.lat() || 0,
-						longitude: placeDetails?.geometry?.location?.lng() || 0,
-					})
-					setIsInfoVisible(true);
-				}
-			} else {
-				console.error("Geocoder failed due to:", status);
-			}
-		});
-	};
-
-	// 📌 Google Places API에서 place_id로 장소 정보 가져오기
-	const getPlaceDetails = async (placeId: string) => {
-		const service = new google.maps.places.PlacesService(map!);
-		return new Promise<google.maps.places.PlaceResult | null>((resolve) => {
-			service.getDetails({ placeId }, (place, status) => {
-				if (status === google.maps.places.PlacesServiceStatus.OK) {
-					resolve(place);
-				} else {
-					console.error("Places API failed due to:", status);
-					resolve(null);
-				}
-			});
-		});
+		const result = await locationUtils.geocodeLocation(geocoder, location);
+		if (result?.place_id) {
+			const details = await locationUtils.getPlaceDetails(placesService, result.place_id);
+			updateLocation(details, location);
+		}
 	};
 
 	return (
 		<div className="relative w-full">
-			{/* 🔍 지도 내부 검색창 */}
 			<div className="absolute top-2 left-1/2 transform -translate-x-1/2 z-10">
 				<StandaloneSearchBox
 					onLoad={(searchBox) => (searchBoxRef.current = searchBox)}
-					onPlacesChanged={onPlacesChanged}>
+					onPlacesChanged={handlePlacesChanged}
+				>
 					<input
 						ref={inputRef}
 						type="text"
@@ -215,28 +193,22 @@ const MapComponent = () => {
 				</StandaloneSearchBox>
 			</div>
 
-			{/* 🗺️ Google Map */}
 			<GoogleMap
-				options={defaultMapOptions}
-				mapContainerStyle={defaultMapContainerStyle}
-				center={defaultMapCenter}
-				zoom={defaultMapZoom}
-				onLoad={(map) => setMap(map)}
-				onClick={onMapClick} // 🏆 지도 클릭 이벤트 추가
+				options={MAP_CONFIG.options}
+				mapContainerStyle={MAP_CONFIG.containerStyle}
+				center={MAP_CONFIG.defaultCenter}
+				zoom={MAP_CONFIG.defaultZoom}
+				onLoad={setMap}
+				onClick={handleMapClick}
 			>
-				{/* 📍 검색 or 클릭한 위치에 마커 표시 */}
 				{markerPosition && (
 					<CustomMarker
 						position={markerPosition}
-						label={`!`}
+						label="!"
 						onClick={() => alert("마커 클릭됨!")}
 					/>
 				)}
-
-				{/* show added locations (day) on the map */}
 				<DayLocationsMap />
-
-				{/* 📌 선택된 장소 정보 컴포넌트 */}
 				{isInfoVisible && selectedPlace && (
 					<SelectedPlaceInfo
 						selectedPlace={selectedPlace}
@@ -247,7 +219,10 @@ const MapComponent = () => {
 			</GoogleMap>
 
 			<Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-				<AddLocationModal onClose={() => setIsModalOpen(false)} />
+				<AddLocationModal
+					selectedPlace={selectedPlace}
+					onClose={() => setIsModalOpen(false)}
+				/>
 			</Modal>
 		</div>
 	);

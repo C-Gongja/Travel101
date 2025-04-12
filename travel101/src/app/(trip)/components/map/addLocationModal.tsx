@@ -1,14 +1,16 @@
 'use client'
 
 import { useState } from "react";
-import { useTripStore } from "@/app/store/createTrip/trip-store";
+import { useTripStore } from "@/store/trip/trip-store";
 import { IoIosAddCircle } from "react-icons/io";
+import { SelectedLocation } from "@/types/trip/tripStoreTypes";
 
 interface AddLocationModalProps {
+	selectedPlace: SelectedLocation;
 	onClose: () => void;
 }
 
-const AddLocationModal: React.FC<AddLocationModalProps> = ({ onClose }) => {
+const AddLocationModal: React.FC<AddLocationModalProps> = ({ selectedPlace, onClose }) => {
 	const { trip, location, addLocation } = useTripStore();
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -17,8 +19,8 @@ const AddLocationModal: React.FC<AddLocationModalProps> = ({ onClose }) => {
 	const handleAddLocation = (dayIndex: number) => {
 		try {
 			setIsLoading(true);
-			addLocation(dayIndex, location); // 위치 추가
-			onClose(); // 성공 시 모달 닫기
+			addLocation(dayIndex, location, selectedPlace); // 위치 추가
+			onClose();
 		} catch (err) {
 			setError("Failed to add location");
 		} finally {
@@ -28,7 +30,7 @@ const AddLocationModal: React.FC<AddLocationModalProps> = ({ onClose }) => {
 
 	return (
 		<div className="flex flex-col items-center w-[420px]">
-			<h1>{trip.name}</h1>
+			<h1>{trip?.name}</h1>
 			<h2>Add to</h2>
 			<div className="flex flex-row gap-6 mt-5">
 				{trip?.days.map((day, dayIndex) => (

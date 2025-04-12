@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "./components/navbar/navbar";
+import ClientProvider from "@/components/providers/clientProvider";
+import Navbar from "../components/navbar/navbar";
+import { UserProvider } from "@/components/providers/userProvider";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -28,11 +30,16 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+
 	return (
 		<html lang="en">
 			<body className="py-5 px-[150px]">
-				<Navbar />
-				{children}
+				<UserProvider>
+					<ClientProvider>
+						<Navbar />
+						{children}
+					</ClientProvider>
+				</UserProvider>
 			</body>
 		</html>
 	);

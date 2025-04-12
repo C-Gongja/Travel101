@@ -3,8 +3,8 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { MdDeleteOutline } from "react-icons/md";
 import { useRef, useState, useEffect } from "react";
-import { useTripStore } from "@/app/store/createTrip/trip-store";
-import { Location } from "@/types/tripStoreTypes";
+import { useTripStore } from "@/store/trip/trip-store";
+import { Location } from "@/types/trip/tripStoreTypes";
 
 interface LocationProps {
 	location: Location;
@@ -22,7 +22,7 @@ const LocationComponent: React.FC<LocationProps> = ({
 	const contentRef = useRef<HTMLDivElement>(null);
 	const [lineHeight, setLineHeight] = useState<number>(0);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
-	const { isOwner, updateDescription, removeLocation } = useTripStore();
+	const { isOwner, setDescription, removeLocation } = useTripStore();
 
 	const handleDescriptionChange = (
 		e: React.ChangeEvent<HTMLTextAreaElement>,
@@ -30,7 +30,7 @@ const LocationComponent: React.FC<LocationProps> = ({
 		locIndex: number
 	) => {
 		const { value } = e.target;
-		updateDescription(dayIndex, locIndex, value);
+		setDescription(dayIndex, locIndex, value);
 	};
 
 	useEffect(() => {
