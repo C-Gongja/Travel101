@@ -4,17 +4,21 @@ import { } from "react";
 import Image from "next/image";
 
 const socialIcons = [
-	{ src: "/icons/social_logo/google-icon.svg", alt: "Google" },
-	{ src: "/icons/social_logo/facebook-icon.svg", alt: "Facebook" },
-	{ src: "/icons/social_logo/microsoft-icon.svg", alt: "Microsoft" },
-	{ src: "/icons/social_logo/Apple_logo_black.svg", alt: "Apple" },
+	{ src: "/icons/social_logo/google-icon.svg", alt: "Google", url: "http://localhost:8080/oauth2/authorization/google" },
+	{ src: "/icons/social_logo/facebook-icon.svg", alt: "Facebook", url: "" },
+	{ src: "/icons/social_logo/microsoft-icon.svg", alt: "Microsoft", url: "" },
+	{ src: "/icons/social_logo/Apple_logo_black.svg", alt: "Apple", url: "" },
 ];
 
 export default function ExternalAuthButtons() {
 	return (
 		<div className="flex justify-center items-center gap-4 mt-8">
-			{socialIcons.map(({ src, alt }) => (
+			{socialIcons.map(({ src, alt, url }) => (
 				<button
+					onClick={() => {
+						if (url) window.location.href = url;
+						else alert(`${alt} login not available yet`);
+					}}
 					key={alt}
 					className="w-[50px] h-[50px] flex items-center justify-center bg-white rounded-full border-none cursor-pointer transition-transform duration-300 hover:scale-110 shadow-md"
 				>

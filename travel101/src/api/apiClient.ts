@@ -5,7 +5,7 @@ const AUTH_BASE_URL = "http://localhost:8080/auth";
 const apiClient = async (url: string, options: RequestInit = {}) => {
 	let accessToken = localStorage.getItem("accessToken");
 
-	if (!accessToken) return null;
+	// if (!accessToken) return null;
 
 	const headers: HeadersInit = {
 		"Content-Type": "application/json",

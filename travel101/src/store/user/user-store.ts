@@ -26,6 +26,7 @@ export const useUserStore = create<UserStore>((set) => ({
 				user: {
 					uid: userData.uuid,
 					name: userData.name,
+					picture: userData.picture,
 					roles: userData.roles.map((role) => role.authority),
 				},
 				isAuthenticated: true,

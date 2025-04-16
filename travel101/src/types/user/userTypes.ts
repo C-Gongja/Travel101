@@ -1,6 +1,7 @@
 export interface User {
 	uid: string;
 	name: string;
+	picture: string;
 	roles: string[];
 }
 
@@ -10,7 +11,9 @@ export interface UserStore {
 	isAuthenticated: boolean | null;
 	accessToken: string | null;
 	setToken: (token: string) => void;
-	setUser: (userData: { uuid: string; name: string; roles: { authority: string }[] } | null) => void;
+	setUser: (userData: {
+		picture: string; uuid: string; name: string; roles: { authority: string }[]
+	} | null) => void;
 	setIsUserLoading: (isUserLoading: boolean) => void;
 	clearUser: () => void;
 }

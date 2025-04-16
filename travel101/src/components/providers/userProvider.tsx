@@ -10,9 +10,10 @@ interface UserProviderProps {
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 	const [isUserInitialized, setIsUserInitialized] = useState(false);
-	const { setUser, setIsUserLoading } = useUserStore();
+	const { setUser, setToken, setIsUserLoading } = useUserStore();
 
 	const verifyUser = async () => {
+		console.log("user provider verify");
 		try {
 			setIsUserLoading(true);
 			const response = await fetchVerifyUser();
@@ -21,9 +22,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 				setUser({
 					uuid: response.user.uuid,
 					name: response.user.name,
+					picture: response.user.picture,
 					roles: response.user.roles.map((role: any) => role.authority),
 				});
-				localStorage.setItem("accessToken", response.accessToken);
+				setToken(response.accessToken);
 			} else {
 				setUser(null);
 			}

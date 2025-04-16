@@ -1,49 +1,26 @@
 'use client'
 
-import { useEffect, useState } from "react";
 import { useUserStore } from "../../../../../store/user/user-store";
-import { useProfileStore } from "../../../../../store/user/user-profile-store";
-import { fetchProfile } from "@/api/profile/profileApi";
-import { fetchUserTrips } from "@/api/trip/tripListApi";
-import { TripCardProps } from "@/types/trip/tripCardTypes";
 import TripCard from "@/components/ui/card/tripCard";
+import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
+import { useFetchUserTrips } from "@/hooks/tripList/useFetchUserTrips";
+import { useParams } from "next/navigation";
 
-interface ProfilePageProps {
-	params: { uuid: string };
-}
 
-const ProfilePage = ({ params }: ProfilePageProps) => {
+export default function ProfilePage() {
+	const { uuid } = useParams<{ uuid: string }>();
+	const { user, clearUser } = useUserStore();
+	// const { setProfile } = useProfileStore();
+	const { data: profile, isLoading } = useFetchProfile(uuid);
+	const { data: tripList, isLoading: isTripsLoading, isError: isTripsError } = useFetchUserTrips(uuid);
 
-	const { user, isAuthenticated, clearUser } = useUserStore();
-	const { profile, setProfile } = useProfileStore();
-	const [tripList, setTripList] = useState<TripCardProps[] | null>(null);
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
-
-	useEffect(() => {
-		const loadProfileData = async () => {
-			try {
-				const [userData, tripsData] = await Promise.all([
-					fetchProfile(params.uuid),
-					fetchUserTrips(params.uuid),
-				]);
-				setProfile(userData);
-				setTripList(tripsData);
-			} catch (error) {
-				console.error("Error loading profile data:", error);
-			}
-		};
-		loadProfileData();
-	}, [setProfile, setTripList]);
-
-	if (loading) {
-		return <div>Loading...</div>; // 로딩 중일 때 표시
+	if (isLoading) {
+		return <div>Loading...</div>;
 	}
 
 	return (
 		<div className="pt-[50px] px-[180px]">
 			<h1>Profile</h1>
-			{error && <p className="text-red-500">{error}</p>} {/* 에러 메시지 표시 */}
 
 			<p>Email: {profile?.email || "Email not available"}</p>
 			<p>Name: {user?.name || "Name not available"}</p>
@@ -76,5 +53,3 @@ const ProfilePage = ({ params }: ProfilePageProps) => {
 		</div>
 	);
 }
-
-export default ProfilePage;
