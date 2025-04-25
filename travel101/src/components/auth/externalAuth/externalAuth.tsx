@@ -6,8 +6,6 @@ import Image from "next/image";
 const socialIcons = [
 	{ src: "/icons/social_logo/google-icon.svg", alt: "Google", url: "http://localhost:8080/oauth2/authorization/google" },
 	{ src: "/icons/social_logo/facebook-icon.svg", alt: "Facebook", url: "" },
-	{ src: "/icons/social_logo/microsoft-icon.svg", alt: "Microsoft", url: "" },
-	{ src: "/icons/social_logo/Apple_logo_black.svg", alt: "Apple", url: "" },
 ];
 
 export default function ExternalAuthButtons() {

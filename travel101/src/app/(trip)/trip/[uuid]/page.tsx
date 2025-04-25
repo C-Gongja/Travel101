@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { useTripStore } from "@/store/trip/trip-store";
 import { fetchGetTrip } from "@/api/trip/tripApi";
-import { MapProvider } from "../../components/map/mapProvider";
-import { MapComponent } from "../../components/map/mapComponent";
-import TripCustom from "../../components/trip/tripCustom";
+import { MapProvider } from "../../../../components/trip/map/mapProvider";
+import { MapComponent } from "../../../../components/trip/map/mapComponent";
+import TripCustom from "../../../../components/trip/trip/tripCustom";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUserStore } from "@/store/user/user-store";

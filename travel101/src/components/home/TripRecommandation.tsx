@@ -12,6 +12,7 @@ export default function TripRecommandation() {
 				const [tripsData] = await Promise.all([
 					fetchAllTrips(),
 				]);
+				console.log("tripsData: ", tripsData);
 				setTripList(tripsData);
 			} catch (error) {
 				console.error("Error loading profile data:", error);
@@ -21,12 +22,12 @@ export default function TripRecommandation() {
 	}, [setTripList])
 
 	return (
-		<div className="">
-			<div className="">
+		<div className="mt-10">
+			<div className="my-5">
 				<h1>Trip List</h1>
 			</div>
 			{tripList && Array.isArray(tripList) && tripList.length > 0 ? (
-				<ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+				<ul className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-6">
 					{tripList.map((trip) => (
 						<TripCard key={trip.id} trip={trip} />
 					))}

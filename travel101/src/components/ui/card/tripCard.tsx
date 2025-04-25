@@ -25,7 +25,7 @@ const TripCard = ({ trip }: TripCardListProps) => {
 			className="border rounded-lg shadow-md overflow-hidden transition duration-150 bg-white cursor-pointer hover:scale-105"
 		>
 			{/* 1. 이미지 (Placeholder) */}
-			<div className="bg-green-100 h-[200px] flex items-center justify-center">
+			<div className="bg-green-100 h-[250px] flex items-center justify-center">
 				<svg
 					className="w-12 h-12 text-gray-400"
 					fill="none"
@@ -51,11 +51,11 @@ const TripCard = ({ trip }: TripCardListProps) => {
 							<p className="text-gray-600">{trip.scripted}</p>
 						</div>
 					</div>
-					<p className="text-gray-600 mt-1">{trip.username}</p>
 				</div>
-				<div className="flex flex-row gap-3">
-					<p className="text-gray-600 mt-1">{daysDifference} days trip</p>
+				<div className="flex flex-col">
 					<p className="text-gray-600 mt-1">countries (flags)</p>
+					<p className="text-gray-600 mt-1">{trip.username}</p>
+					<p className="text-gray-600 mt-1">{daysDifference} days trip</p>
 				</div>
 			</div>
 		</li>

@@ -1,6 +1,6 @@
-import { SignupFormData } from "@/components/auth/signUpForm";
+import { SignupFormData } from "@/components/auth/SignUpForm";
 import { apiClient } from "../apiClient";
-import { SignInFormData } from "@/components/auth/signInForm";
+import { SignInFormData } from "@/components/auth/SignInForm";
 
 const AUTH_BASE_URL = "http://localhost:8080/auth";
 const VERIFY_BASE_URL = "http://localhost:8080/api/user/verify";

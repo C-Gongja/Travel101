@@ -3,13 +3,10 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import Modal from "../ui/modals/mainModal";
-
-import { IoSearch } from "react-icons/io5";
-import SignUpForm from "@/components/auth/signUpForm";
-import SignInForm from "@/components/auth/signInForm";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUserStore } from "@/store/user/user-store";
+import AuthModal from "../auth/AuthModal";
+import SearchBar from "../ui/searchbar/SearchBar";
 
 export default function Navbar() {
 	const router = useRouter();
@@ -19,7 +16,6 @@ export default function Navbar() {
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isSignUp, setIsSignUp] = useState(false);
-	const [searchInput, setSearchInput] = useState("");
 	const dropdownRef = useRef<HTMLDivElement>(null); // 드롭다운 참조
 
 	// 외부 클릭 감지
@@ -39,42 +35,19 @@ export default function Navbar() {
 		};
 	}, []);
 
-	useEffect(() => {
-		if (isModalOpen) {
-			setIsSignUp(false);  // 모달이 열릴 때마다 로그인 폼을 기본으로 설정
-		}
-	}, [isModalOpen]);
-
-	// Enter 키로 검색 실행
-	const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === "Enter") {
-			if (searchInput.trim()) {
-				router.push(`/search?keyword=${encodeURIComponent(searchInput)}`);
-			}
-		}
-	};
-
 	const handleLogout = () => {
 		queryClient.clear();
 		clearUser();
 	}
 
 	return (
-		<nav className="flex items-center justify-between bg-transparent px-6 py-3 rounded-full">
+		<nav className="fixed top-0 w-full flex items-center justify-between bg-white px-[150px] py-5 rounded-b-lg z-50">
 			<Link href="/" className="text-3xl font-bold text-maincolor">
 				Sharavel
 			</Link>
 
 			<div className="relative w-1/3">
-				<input
-					onChange={(e) => setSearchInput(e.target.value)}
-					onKeyDown={handleSearch}
-					type="text"
-					placeholder="Search..."
-					value={searchInput}
-					className="w-full border rounded-full py-2 px-4 pl-10 shadow-md focus:outline-none focus:ring-1 focus:ring-maincolor"
-				/>
-				<IoSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600" />
+				<SearchBar width="100%" height="50px" />
 			</div>
 
 			<div className="flex items-center gap-4">
@@ -108,23 +81,23 @@ export default function Navbar() {
 						)}
 					</div>
 				) : (
-					<div className="flex gap-2">
+					<div className="">
 						<button
 							onClick={() => setIsModalOpen(true)}
-							className="px-4 py-2 bg-maincolor text-white rounded-full shadow-md">
+							className="px-4 py-2 bg-maincolor text-white rounded-full shadow-[0px_0px_23px_-4px_rgba(0,_0,_0,_0.1)] 
+							transition duration-150 hover:bg-maindarkcolor">
 							Sign In
 						</button>
 					</div>
 				)}
 			</div>
 
-			<Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-				{isSignUp ?
-					<SignUpForm setIsSignUp={setIsSignUp} onClose={() => setIsModalOpen(false)} />
-					:
-					<SignInForm setIsSignUp={setIsSignUp} onClose={() => setIsModalOpen(false)} />
-				}
-			</Modal>
+			<AuthModal
+				isOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				isSignUp={isSignUp}
+				setIsSignUp={setIsSignUp}
+			/>
 		</nav>
 	);
 }

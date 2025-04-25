@@ -1,6 +1,6 @@
 'use client'
 
-import { useUserContext } from "@/components/providers/userProvider";
+import { useUserContext } from "@/providers/userProvider";
 import { useUserStore } from "@/store/user/user-store";
 import { useRouter } from "next/navigation";
 import { ReactNode, useContext, useEffect } from "react";
