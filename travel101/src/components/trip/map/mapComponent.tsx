@@ -4,7 +4,7 @@ import { useTripStore } from "@/store/trip/trip-store";
 import { GoogleMap, Marker, StandaloneSearchBox } from "@react-google-maps/api";
 import { useEffect, useRef, useState, useMemo } from "react";
 import CustomMarker from "./customMarker";
-import Modal from "@/components/ui/modals/mainModal";
+import Modal from "@/components/ui/modals/MainModal";
 import AddLocationModal from "./addLocationModal";
 import DayLocationsMap from "./dayLocationsMap";
 import SelectedPlaceInfo from "./\bselectedPlaceInfo";

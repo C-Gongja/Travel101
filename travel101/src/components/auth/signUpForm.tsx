@@ -3,9 +3,8 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/user/user-store";
-import ExternalAuthButtons from "./externalAuth/externalAuth";
 import { fetchSignup } from "@/api/auth/authApi";
-
+import ExternalAuthButtons from "./externalAuth/ExternalAuth";
 
 export interface SignupFormData {
 	name: string;

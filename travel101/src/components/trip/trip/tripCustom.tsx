@@ -104,7 +104,7 @@ export default function TripCustom() {
 	if (isSaving) return (<div>Saving tripCustom...</div>);
 
 	return (
-		<div className="p-6">
+		<div className="px-6 h-[calc(100vh-500px)]">
 			<div className="flex justify-between items-center">
 				<div className="items-center gap-2">
 					<input
@@ -173,7 +173,7 @@ export default function TripCustom() {
 			</DragDropContext>
 
 			{isOwner && (
-				<div className="mt-4 flex gap-4">
+				<div className="mt-4 gap-4">
 					<button
 						onClick={addDay}
 						className="px-4 py-2 rounded-lg flex items-center gap-2 text-xl text-maincolor hover:bg-maincolor hover:text-white transition duration-200"

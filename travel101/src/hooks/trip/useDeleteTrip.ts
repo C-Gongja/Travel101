@@ -11,14 +11,14 @@ const useDeleteTrip = () => {
 	const router = useRouter();
 
 	const deleteTrip = async () => {
-		if (!trip || !trip.uuid) {
+		if (!trip || !trip.tripUid) {
 			console.error("No trip or trip ID available to update");
 			return;
 		}
 
 		setIsLoading(true);
 		try {
-			await fetchDeleteTrip(trip.uuid);
+			await fetchDeleteTrip(trip.tripUid);
 		} catch (error) {
 			console.error("Failed to delete trip:", error);
 		} finally {

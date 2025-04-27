@@ -40,18 +40,17 @@ const fetchScriptTrip = async (tripUuid: string): Promise<any> => {
 }
 
 interface FetchTripOptions {
-	tripUuid: string;
+	tripUid: string;
 	isAuthenticated: boolean | null;
 	user: any; // user 타입은 프로젝트에 따라 구체화 필요
 }
 
-const fetchGetTrip = async ({ tripUuid, isAuthenticated, user }: FetchTripOptions): Promise<any> => {
+const fetchGetTrip = async ({ tripUid, isAuthenticated, user }: FetchTripOptions): Promise<any> => {
 	const client = isAuthenticated && user ? apiClient : publicApiClient;
 	const url = isAuthenticated && user ? TRIP_BASE_URL : TRIP_PUBLIC_URL;
 
-	console.log("url", url)
 	try {
-		const response = await client(`${url}/${encodeURIComponent(tripUuid)}`, {
+		const response = await client(`${url}/${encodeURIComponent(tripUid)}`, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -60,7 +59,7 @@ const fetchGetTrip = async ({ tripUuid, isAuthenticated, user }: FetchTripOption
 		return response;
 	} catch (error) {
 		console.error("Error fetching trip:", error);
-		throw new Error(`Failed to fetch trip with UUID: ${tripUuid}`);
+		throw new Error(`Failed to fetch trip with UUID: ${tripUid}`);
 	}
 };
 

@@ -3,7 +3,7 @@ import { BiTrip } from "react-icons/bi";
 import SearchBar from "../ui/searchbar/SearchBar";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCreateTrip } from "@/hooks/trip/useCreateTrip";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function HeroSection({
 	isAuthenticated,
@@ -12,6 +12,7 @@ export default function HeroSection({
 	isAuthenticated: boolean | null;
 	user: any;
 }) {
+	const router = useRouter();
 	const queryClient = useQueryClient();
 	const { mutate: createTrip, isPending, data, error } = useCreateTrip();
 	const [searchInput, setSearchInput] = useState("");
@@ -25,10 +26,12 @@ export default function HeroSection({
 						editable, // editable 속성을 추가
 					};
 					queryClient.setQueryData(['trip', trip.uuid], createdTrip);
+					console.log("redirectUrl: ", redirectUrl);
 					router.push(redirectUrl);
 				},
 			});
 		} else {
+			//use contextapi or zustand to manage this
 			setIsModalOpen(true); // 로그인 안 된 경우 모달 열기
 		}
 		localStorage.removeItem("tripId"); // 항상 tripId 제거

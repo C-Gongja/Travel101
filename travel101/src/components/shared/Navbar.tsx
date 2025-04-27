@@ -64,7 +64,7 @@ export default function Navbar() {
 						</button>
 
 						{menuOpen && (
-							<div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2">
+							<div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2" ref={dropdownRef}>
 								<Link
 									href={`/profile/${user.uid}`}
 									className="block px-4 py-2 text-black hover:bg-gray-100 "

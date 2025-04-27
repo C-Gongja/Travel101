@@ -9,26 +9,26 @@ import TripCustom from "../../../../components/trip/trip/tripCustom";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUserStore } from "@/store/user/user-store";
+import UserSnippetCard from "@/components/ui/card/UserSnippetCard";
 
 export default function TripPage() {
-	const params = useParams();
-	const { trip, setTrip, setIsOwner } = useTripStore();
+	const { tripUid } = useParams<{ tripUid: string }>();
+	const { trip, setTrip, setIsOwner, setTripOwner } = useTripStore();
 	const { user, isAuthenticated, isUserLoading } = useUserStore();
 	const [isInitializing, setIsInitializing] = useState(true);
 
 	const queryClient = useQueryClient();
-	const uuid = Array.isArray(params.uuid) ? params.uuid[0] : params.uuid;
 
 	const { data: tripData, isLoading } = useQuery({
-		queryKey: ['trip', uuid],
-		queryFn: () => fetchGetTrip({ tripUuid: uuid, isAuthenticated, user }),
-		initialData: () => queryClient.getQueryData(['trip', uuid]), // Home에서 캐싱된 데이터 사용
+		queryKey: ['trip', tripUid],
+		queryFn: () => fetchGetTrip({ tripUid: tripUid, isAuthenticated, user }),
+		initialData: () => queryClient.getQueryData(['trip', tripUid]), // Home에서 캐싱된 데이터 사용
 		staleTime: 5 * 60 * 1000, // 5분 동안 캐시 유지
 		enabled: isAuthenticated !== null, // user 상태가 로드된 후에만 실행
 	});
 
 	useEffect(() => {
-		console.log(tripData)
+		console.log("TripPage tripData:", tripData)
 		if (tripData && isInitializing) {
 			setTrip({
 				...tripData.trip,
@@ -36,6 +36,7 @@ export default function TripPage() {
 				endDate: new Date(tripData.trip.endDate),
 			});
 			setIsOwner(tripData.editable);
+			setTripOwner(tripData.userSnippet);
 			setIsInitializing(false);
 		}
 	}, [tripData, isInitializing, setTrip, setIsOwner]);
@@ -45,9 +46,9 @@ export default function TripPage() {
 	}
 
 	return (
-		<div className="flex justify-center items-center flex-col px-4">
-			<h1 className="text-4xl font-bold mb-10">Build Your Own Trip!</h1>
-			<div className="grid grid-cols-2 gap-4 w-full h-[calc(100vh-500px)]">
+		<div className="flex flex-col px-4">
+			<h1 className="text-4xl font-bold mb-10"></h1>
+			<div className="grid grid-cols-2 gap-4 w-full h-auto mb-12">
 				{/* Map section */}
 				<div className="">
 					{isLoading ?
@@ -65,6 +66,10 @@ export default function TripPage() {
 				<div className="bg-white p-4 rounded-lg overflow-y-auto no-scrollbar">
 					<TripCustom />
 				</div>
+			</div>
+			{/* Account info card */}
+			<div className="border-b-2">
+				<UserSnippetCard />
 			</div>
 		</div>
 	);

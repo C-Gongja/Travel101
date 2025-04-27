@@ -2,7 +2,7 @@
 
 import { fetchSearch } from "@/api/search/searchApi";
 import { useTripSearchStore } from "@/store/search/tripSearch-store";
-import TripCard from "@/components/ui/card/tripCard";
+import TripCard from "@/components/ui/card/TripCard";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -30,7 +30,7 @@ const SearchPage = () => {
 					{searchedTrips && Array.isArray(searchedTrips) && searchedTrips.length > 0 ? (
 						<ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 							{searchedTrips.map((trip) => (
-								<TripCard key={trip.id} trip={trip} />
+								<TripCard key={trip.tripUid} trip={trip} />
 							))}
 						</ul>
 					) : (

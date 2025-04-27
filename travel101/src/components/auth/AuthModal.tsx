@@ -1,4 +1,4 @@
-import Modal from "../ui/modals/mainModal";
+import Modal from "../ui/modals/MainModal";
 import SignInForm from "./SignInForm";
 import SignUpForm from "./SignUpForm";
 

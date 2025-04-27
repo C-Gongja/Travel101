@@ -1,5 +1,5 @@
 export interface Trip {
-	uuid: string;
+	tripUid: string;
 	name: string;
 	startDate: Date;
 	endDate: Date;
@@ -30,15 +30,23 @@ export interface SelectedLocation {
 	country?: string;
 }
 
+export interface TripOwnerSnippet {
+	name: string;
+	username: string;
+	uuid: string;
+}
+
 export interface TripStore {
 	trip: Trip | null;
 	isOwner: boolean; // 새로운 속성 추가
+	tripOwner: TripOwnerSnippet | null;
 	isLoading: boolean;
 	searchQuery: string | null;
 	selectedDay: number;
 	location: Partial<Location> | null;
 	setTrip: (trip: Trip) => void;
 	setIsOwner: (editable: boolean) => void;
+	setTripOwner: (tripOwner: TripOwnerSnippet) => void;
 	updateTrip: (updates: Partial<Trip>) => Promise<void>;// partial update
 	setTripName: (name: string) => void;
 	setSelectedDay: (dayIndex: number) => void;

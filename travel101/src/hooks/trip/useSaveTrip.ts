@@ -11,11 +11,11 @@ const useSaveTrip = () => {
 		mutationFn: async (updatedTrip?: Trip) => {
 			const tripToSave = updatedTrip || trip; // 전달된 trip이 없으면 기존 trip 사용
 			console.log(tripToSave);
-			if (!tripToSave?.uuid) {
+			if (!tripToSave?.tripUid) {
 				throw new Error("No trip provided or trip ID is missing");
 			}
 
-			const savedTrip = await fetchSaveTrip(tripToSave.uuid, tripToSave);
+			const savedTrip = await fetchSaveTrip(tripToSave.tripUid, tripToSave);
 			return savedTrip;
 		},
 		onMutate: () => {
@@ -30,7 +30,7 @@ const useSaveTrip = () => {
 			};
 			setTrip(updatedTrip);
 
-			queryClient.setQueryData(['trip', savedTrip.uuid], {
+			queryClient.setQueryData(['trip', savedTrip.tripUid], {
 				trip: updatedTrip,
 				editable: true,
 			});

@@ -1,55 +1,37 @@
 'use client'
 
 import { useUserStore } from "../../../../../store/user/user-store";
-import TripCard from "@/components/ui/card/tripCard";
-import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
-import { useFetchUserTrips } from "@/hooks/tripList/useFetchUserTrips";
 import { useParams } from "next/navigation";
-
+import UserTrips from "@/components/account/profile/UserTrips";
+import AccountInfoCard from "@/components/account/AccountInfoCard";
+import AccountTravelMap from "@/components/account/AccountTravelMap";
 
 export default function ProfilePage() {
 	const { uuid } = useParams<{ uuid: string }>();
-	const { user, clearUser } = useUserStore();
-	// const { setProfile } = useProfileStore();
-	const { data: profile, isLoading } = useFetchProfile(uuid);
-	const { data: tripList, isLoading: isTripsLoading, isError: isTripsError } = useFetchUserTrips(uuid);
-
-	if (isLoading) {
-		return <div>Loading...</div>;
-	}
+	const { clearUser } = useUserStore();
 
 	return (
-		<div className="pt-[50px] px-[180px]">
-			<h1>Profile</h1>
-
-			<p>Email: {profile?.email || "Email not available"}</p>
-			<p>Name: {user?.name || "Name not available"}</p>
-			<p>Username: {profile?.username || "Set username"}</p>
-			<p>Region: {profile?.country ? profile?.country : "Set your region"}</p>
-			<p>Bio:  Bio</p>
-
-			{/* my trip */}
+		<div className="px-[120px]">
+			<h1 className="mb-6">Profiles</h1>
+			<div className="grid grid-cols-[1fr_2fr] h-auto gap-10">
+				<AccountInfoCard uuid={uuid} />
+				<AccountTravelMap uuid={uuid} />
+			</div>
 			<div>
 				<div className="mt-10 mb-5">
 					<h2>My Trips</h2>
 				</div>
-				{tripList && Array.isArray(tripList) && tripList.length > 0 ? (
-					<ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-						{tripList.map((trip) => (
-							<TripCard key={trip.id} trip={trip} />
-						))}
-					</ul>
-				) : (
-					<p>No trips available</p>
-				)}
+				<UserTrips uuid={uuid} />
 			</div>
 
-			<button
-				onClick={clearUser}
-				className="p-2 border border-red-600"
-			>
-				Logout
-			</button>
+			<div className="pt-10">
+				<button
+					onClick={clearUser}
+					className="p-2 border border-red-600"
+				>
+					Logout
+				</button>
+			</div>
 		</div>
 	);
 }

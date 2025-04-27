@@ -7,14 +7,14 @@ const useScriptTrip = () => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const scriptTrip = async () => {
-		if (!trip || !trip.uuid) {
+		if (!trip || !trip.tripUid) {
 			console.error("No trip or trip ID available to script");
 			return;
 		}
 		setIsLoading(true);
 
 		try {
-			await fetchScriptTrip(trip.uuid);
+			await fetchScriptTrip(trip.tripUid);
 		} catch (e) {
 			console.error("Failed to script trip:", e);
 		} finally {

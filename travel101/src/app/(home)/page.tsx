@@ -20,6 +20,8 @@ export default function Home() {
 				user={user}
 			/>
 			<TripRecommandation />
+			<div>Top Explorer</div>
+			<div>Top Advanturer</div>
 		</div>
 	);
 }

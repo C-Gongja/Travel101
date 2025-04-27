@@ -1,5 +1,5 @@
 export interface TripCardProps {
-	id: string;
+	tripUid: string;
 	name: string;
 	username: string;
 	scripted: number;

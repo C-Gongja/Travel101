@@ -1,5 +1,5 @@
 import { fetchCreateTrip, fetchSaveTrip, fetchUpdateTrip, fetchScriptTrip, fetchDeleteTrip } from '@/api/trip/tripApi';
-import { TripStore, Trip, Day, Location, SelectedLocation } from '@/types/trip/tripStoreTypes';
+import { TripStore, Trip, Day, Location, SelectedLocation, TripOwnerSnippet } from '@/types/trip/tripStoreTypes';
 import { create } from 'zustand';
 
 // 날짜 범위에 따라 days 배열을 초기화하는 헬퍼 함수
@@ -14,6 +14,7 @@ const initializeDays = (startDate: Date, endDate: Date): Day[] => {
 export const useTripStore = create<TripStore>((set, get) => ({
 	trip: null,
 	isOwner: false,
+	tripOwner: null,
 	selectedDay: 1,
 	location: null,
 	isLoading: false,
@@ -22,6 +23,8 @@ export const useTripStore = create<TripStore>((set, get) => ({
 	setTrip: (trip: Trip) => set({ trip }),
 
 	setIsOwner: (isOwner: boolean) => set({ isOwner }),
+
+	setTripOwner: (tripOwner: TripOwnerSnippet) => set({ tripOwner }),
 
 	setIsLoading: (loading: boolean) => set({ isLoading: loading }),
 

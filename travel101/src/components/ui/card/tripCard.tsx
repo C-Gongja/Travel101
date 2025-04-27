@@ -15,14 +15,16 @@ const TripCard = ({ trip }: TripCardListProps) => {
 
 	const handleClick = (e: any) => {
 		e.preventDefault()
-		router.push(`/trip/${trip.id}`);
+		console.log("tripUid: ", trip.tripUid);
+		router.push(`/trip/${trip.tripUid}`);
 	};
 
 
 	return (
 		<li
 			onClick={handleClick}
-			className="border rounded-lg shadow-md overflow-hidden transition duration-150 bg-white cursor-pointer hover:scale-105"
+			className="border rounded-lg shadow-[0px_0px_15px_7px_rgba(0,_0,_0,_0.1)] overflow-hidden 
+			transition duration-150 bg-white cursor-pointer hover:scale-105"
 		>
 			{/* 1. 이미지 (Placeholder) */}
 			<div className="bg-green-100 h-[250px] flex items-center justify-center">

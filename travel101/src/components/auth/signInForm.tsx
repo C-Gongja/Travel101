@@ -3,7 +3,7 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/user/user-store";
-import ExternalAuthButtons from "./externalAuth/externalAuth";
+import ExternalAuthButtons from "./externalAuth/ExternalAuth";
 import { fetchLogin } from "@/api/auth/authApi";
 
 export interface SignInFormData {
