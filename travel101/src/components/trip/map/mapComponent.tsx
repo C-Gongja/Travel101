@@ -65,7 +65,7 @@ const locationUtils = {
 	getCountryFromAddressComponents: (components?: google.maps.GeocoderAddressComponent[]) => {
 		return components?.find((component) =>
 			component.types.includes("country")
-		)?.long_name || "";
+		)?.short_name || "";
 	}
 };
 
@@ -93,6 +93,7 @@ const MapComponent = () => {
 		if (!place) return;
 
 		const country = locationUtils.getCountryFromAddressComponents(place.address_components);
+		console.log("country: ", country);
 
 		setSelectedPlace({
 			name: place.name,

@@ -5,21 +5,31 @@ import { useParams } from "next/navigation";
 import UserTrips from "@/components/account/profile/UserTrips";
 import AccountInfoCard from "@/components/account/AccountInfoCard";
 import AccountTravelMap from "@/components/account/AccountTravelMap";
+import Link from "next/link";
+import { IoSettingsOutline } from "react-icons/io5";
+
 
 export default function ProfilePage() {
 	const { uuid } = useParams<{ uuid: string }>();
-	const { clearUser } = useUserStore();
+	const { user, clearUser } = useUserStore();
 
 	return (
-		<div className="px-[120px]">
-			<h1 className="mb-6">Profiles</h1>
-			<div className="grid grid-cols-[1fr_2fr] h-auto gap-10">
+		<div className="px-[100px]">
+			<div className="mb-6 flex gap-3 items-center">
+				<h1 className="">Profiles</h1>
+				{user?.uid === uuid &&
+					(<Link href={`/profile/${user?.uid}/userInfo`} className="text-3xl">
+						<IoSettingsOutline />
+					</Link>)
+				}
+			</div>
+			<div className="grid grid-cols-[35%_65%] h-auto gap-10">
 				<AccountInfoCard uuid={uuid} />
 				<AccountTravelMap uuid={uuid} />
 			</div>
 			<div>
 				<div className="mt-10 mb-5">
-					<h2>My Trips</h2>
+					<h2> {user?.name}'s Trips</h2>
 				</div>
 				<UserTrips uuid={uuid} />
 			</div>

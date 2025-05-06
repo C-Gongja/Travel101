@@ -1,6 +1,6 @@
 import { fetchSaveTrip } from "@/api/trip/tripApi";
 import { useTripStore } from "@/store/trip/trip-store";
-import { Trip } from "@/types/trip/tripStoreTypes";
+import { adaptTripModelToRequest, Trip } from "@/types/trip/tripStoreTypes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useSaveTrip = () => {
@@ -10,12 +10,14 @@ const useSaveTrip = () => {
 	const saveTripMutation = useMutation({
 		mutationFn: async (updatedTrip?: Trip) => {
 			const tripToSave = updatedTrip || trip; // 전달된 trip이 없으면 기존 trip 사용
-			console.log(tripToSave);
+			// console.log(tripToSave);
 			if (!tripToSave?.tripUid) {
 				throw new Error("No trip provided or trip ID is missing");
 			}
-
-			const savedTrip = await fetchSaveTrip(tripToSave.tripUid, tripToSave);
+			// console.log("tripToSave: ", tripToSave);
+			const requestUpdatedTrip = adaptTripModelToRequest(tripToSave);
+			// console.log("requestUpdatedTrip: ", requestUpdatedTrip);
+			const savedTrip = await fetchSaveTrip(tripToSave.tripUid, requestUpdatedTrip);
 			return savedTrip;
 		},
 		onMutate: () => {
@@ -46,7 +48,7 @@ const useSaveTrip = () => {
 	return {
 		saveTrip: saveTripMutation.mutate, // 수정된 Trip을 인자로 받을 수 있음
 		isSaving: saveTripMutation.isPending, // isLoading 대신 isPending 사용 (React Query 권장)
-		error: saveTripMutation.error, 
+		error: saveTripMutation.error,
 	};
 };
 

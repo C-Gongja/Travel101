@@ -28,7 +28,6 @@ export default function TripPage() {
 	});
 
 	useEffect(() => {
-		console.log("TripPage tripData:", tripData)
 		if (tripData && isInitializing) {
 			setTrip({
 				...tripData.trip,

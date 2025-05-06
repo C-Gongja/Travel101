@@ -1,5 +1,5 @@
 import { apiClient } from "../apiClient";
-import { Trip } from "@/types/trip/tripStoreTypes";
+import { Trip, TripRequest } from "@/types/trip/tripStoreTypes";
 import { publicApiClient } from "../publicApiClient";
 import { useUserStore } from "@/store/user/user-store";
 
@@ -56,6 +56,7 @@ const fetchGetTrip = async ({ tripUid, isAuthenticated, user }: FetchTripOptions
 				"Content-Type": "application/json",
 			},
 		});
+		console.log("get trip: ", response);
 		return response;
 	} catch (error) {
 		console.error("Error fetching trip:", error);
@@ -63,7 +64,7 @@ const fetchGetTrip = async ({ tripUid, isAuthenticated, user }: FetchTripOptions
 	}
 };
 
-const fetchSaveTrip = async (tripUuid: string, updatedTrip: Trip): Promise<any> => {
+const fetchSaveTrip = async (tripUuid: string, updatedTrip: TripRequest): Promise<any> => {
 	try {
 		const response = await apiClient(`${TRIP_BASE_URL}/${encodeURIComponent(tripUuid)}`, {
 			method: "PUT",

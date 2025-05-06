@@ -1,0 +1,54 @@
+import { useCreateTrip } from "@/hooks/trip/useCreateTrip";
+import { useUserStore } from "@/store/user/user-store";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { BiTrip } from "react-icons/bi";
+
+interface TripCreateBtnProps {
+	text?: string;
+	width?: string;
+	height?: string;
+	margin?: string;
+}
+
+const TripCreateBtn: React.FC<TripCreateBtnProps> = ({ text = "Create a New Trip", width = 'auto', height = 'auto', margin = '0' }) => {
+	const router = useRouter();
+	const queryClient = useQueryClient();
+	const { user, isAuthenticated } = useUserStore();
+	const { mutate: createTrip, isPending, data, error } = useCreateTrip();
+
+	const handleClickBuildTrip = () => {
+		if (isAuthenticated) {
+			createTrip(undefined, {
+				onSuccess: ({ trip, editable, redirectUrl }) => {
+					const createdTrip = {
+						trip,
+						editable, // editable 속성을 추가
+					};
+					queryClient.setQueryData(['trip', trip.uuid], createdTrip);
+					console.log("redirectUrl: ", redirectUrl);
+					router.push(redirectUrl);
+				},
+			});
+		} else {
+			//use contextapi or zustand to manage this
+			setIsModalOpen(true); // 로그인 안 된 경우 모달 열기
+		}
+		localStorage.removeItem("tripId"); // 항상 tripId 제거
+	};
+
+	return (
+		<>
+			<button
+				onClick={handleClickBuildTrip}
+				style={{ width, height, margin }}
+				className="flex justify-center items-center rounded-full bg-maincolor text-white gap-2 p-4 cursor-pointer
+							transition duration-150 hover:scale-105 hover:bg-maindarkcolor"
+			>
+				{text}
+			</button>
+		</>
+	);
+}
+
+export default TripCreateBtn;

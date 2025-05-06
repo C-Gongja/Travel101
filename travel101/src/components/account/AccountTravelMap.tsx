@@ -1,13 +1,11 @@
-import { useEffect } from "react";
-import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
-import { CgProfile } from "react-icons/cg";
+import { useGetProfile } from "@/hooks/profile/useGetProfile";
 
 interface AccountTravelMapProps {
 	uuid: string;
 }
 
 const AccountTravelMap: React.FC<AccountTravelMapProps> = ({ uuid }) => {
-	const { data: profile, isLoading } = useFetchProfile(uuid);
+	const { data: profile, isLoading } = useGetProfile(uuid);
 
 	return (
 		<div className="p-5 rounded-xl shadow-[0px_0px_15px_7px_rgba(0,_0,_0,_0.1)] 

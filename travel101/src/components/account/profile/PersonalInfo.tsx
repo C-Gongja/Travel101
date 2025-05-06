@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
+import { useFetchProfile } from "@/hooks/profile/useGetProfile";
 import { CgProfile } from "react-icons/cg";
 
 interface PersonalInfoProps {

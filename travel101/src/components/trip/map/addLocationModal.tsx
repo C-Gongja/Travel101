@@ -19,6 +19,7 @@ const AddLocationModal: React.FC<AddLocationModalProps> = ({ selectedPlace, onCl
 	const handleAddLocation = (dayIndex: number) => {
 		try {
 			setIsLoading(true);
+			console.log("selected Place:", selectedPlace);
 			addLocation(dayIndex, location, selectedPlace); // 위치 추가
 			onClose();
 		} catch (err) {

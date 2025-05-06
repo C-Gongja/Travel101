@@ -1,5 +1,5 @@
 import { fetchCreateTrip, fetchSaveTrip, fetchUpdateTrip, fetchScriptTrip, fetchDeleteTrip } from '@/api/trip/tripApi';
-import { TripStore, Trip, Day, Location, SelectedLocation, TripOwnerSnippet } from '@/types/trip/tripStoreTypes';
+import { TripStore, Trip, Day, Location, SelectedLocation, TripOwnerSnippet, Country } from '@/types/trip/tripStoreTypes';
 import { create } from 'zustand';
 
 // 날짜 범위에 따라 days 배열을 초기화하는 헬퍼 함수
@@ -31,14 +31,14 @@ export const useTripStore = create<TripStore>((set, get) => ({
 	// PATCH 요청으로 부분 업데이트
 	updateTrip: async (updates: Partial<Trip>) => {
 		const trip = get().trip;
-		if (!trip || !trip.uuid) {
+		if (!trip || !trip.tripUid) {
 			console.error("No trip or trip ID available to update");
 			return;
 		}
 
 		set({ isLoading: true });
 		try {
-			const updatedTrip = await fetchUpdateTrip(trip.uuid, updates);
+			const updatedTrip = await fetchUpdateTrip(trip.tripUid, updates);
 			if (updatedTrip) {
 				set({ trip: { ...trip, ...updatedTrip } }); // 백엔드 응답으로 상태 동기화
 			}
@@ -178,10 +178,27 @@ export const useTripStore = create<TripStore>((set, get) => ({
 			};
 
 			let updatedCountries = state.trip.countries;
-			if (selectedLoc.country && !updatedCountries.includes(selectedLoc.country)) {
-				updatedCountries = [...updatedCountries, selectedLoc.country];
+			console.log("before updatedCountries: ", updatedCountries)
+			const country = selectedLoc.country;
+			console.log("updating country: ", country)
+			if (country) {
+				const iso2 = typeof country === 'string' ? country : country;
+				const countryExists = updatedCountries.some(c => c.iso2 === iso2);
+				if (!countryExists) {
+					const countryToAdd: Country =
+						typeof country === 'string'
+							? {
+								iso2: country,
+								name: null,
+								flag: null
+							}
+							: country;
+
+					updatedCountries = [...updatedCountries, countryToAdd];
+				}
 			}
 
+			console.log("updatedCountries: ", updatedCountries)
 			return {
 				trip: {
 					...state.trip,
@@ -244,10 +261,10 @@ export const useTripStore = create<TripStore>((set, get) => ({
 			trip: state.trip ? { ...state.trip, isCompleted } : null,
 		})),
 
-	setCountries: (countries: string[]) =>
-		set((state) => ({
-			trip: state.trip ? { ...state.trip, countries } : null,
-		})),
+	// setCountries: (countries: string[]) =>
+	// 	set((state) => ({
+	// 		trip: state.trip ? { ...state.trip, countries } : null,
+	// 	})),
 }));
 
 // ... may need functions that tracks changes

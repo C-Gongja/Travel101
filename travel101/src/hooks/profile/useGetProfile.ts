@@ -1,9 +1,7 @@
-import { fetchProfile } from "@/api/profile/profileApi";
-import { useProfileStore } from "@/store/user/user-profile-store";
+import { fetchProfile } from "@/api/account/profile/profileApi";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
 
-export const useFetchProfile = (uuid: string) => {
+export const useGetProfile = (uuid: string) => {
 	return useQuery({
 		queryKey: ["profile", uuid],
 		queryFn: async () => {

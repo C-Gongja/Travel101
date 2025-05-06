@@ -5,8 +5,6 @@ export interface UserProfile {
 	picture: string;
 	email: string;
 	country?: string;
-	state?: string;
-	city?: string;
 }
 
 export interface ProfileStore {

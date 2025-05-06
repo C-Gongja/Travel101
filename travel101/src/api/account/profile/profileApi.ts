@@ -1,4 +1,4 @@
-import { apiClient } from "../apiClient";
+import { apiClient } from "../../apiClient";
 
 const PROFILE_URL = "http://localhost:8080/api/user/profile";
 

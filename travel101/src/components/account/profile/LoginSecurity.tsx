@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
+import { useFetchProfile } from "@/hooks/profile/useGetProfile";
 import { MdOutlineSecurity } from "react-icons/md";
 
 interface LoginSecurityProps {

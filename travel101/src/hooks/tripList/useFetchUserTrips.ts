@@ -6,6 +6,7 @@ export const useFetchUserTrips = (uuid: string) => {
 		queryKey: ["userTrips", uuid],
 		queryFn: async () => {
 			const response = await fetchUserTrips(uuid);
+			console.log("userTrips: ", response);
 			return response;
 		},
 		enabled: !!uuid,

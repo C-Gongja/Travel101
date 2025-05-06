@@ -1,13 +1,28 @@
 import { useEffect } from "react";
-import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
-import { FaInstagram, FaYoutube } from "react-icons/fa6";
+import { useGetProfile } from "@/hooks/profile/useGetProfile";
+import { FaInstagram, FaYoutube, FaFacebook, FaTwitter } from "react-icons/fa";
+import { useUserStore } from "@/store/user/user-store";
+import { Country } from "@/types/trip/tripStoreTypes";
 
 interface AccountInfoProps {
 	uuid: string;
 }
 
 const AccountInfoCard: React.FC<AccountInfoProps> = ({ uuid }) => {
-	const { data: profile, isLoading } = useFetchProfile(uuid);
+	const { user } = useUserStore();
+	const { data: profile, isLoading } = useGetProfile(uuid);
+
+	const platformIcons: Record<string, JSX.Element> = {
+		Instagram: <FaInstagram />,
+		Youtube: <FaYoutube />,
+		Facebook: <FaFacebook />,
+		Twitter: <FaTwitter />,
+	};
+
+	useEffect(() => {
+		console.log("profile: ", profile);
+	}, [profile])
+
 
 	return (
 		<div className="p-5 rounded-xl shadow-[0px_0px_15px_7px_rgba(0,_0,_0,_0.1)] 
@@ -30,41 +45,68 @@ const AccountInfoCard: React.FC<AccountInfoProps> = ({ uuid }) => {
 				<div className="flex-1">
 					<div className="ml-3">
 						<h3 className="text-3xl font-bold text-gray-900">{profile?.name}</h3>
-						<p className="text-base text-gray-600">{profile?.username}</p>
+						<p className="text-base text-gray-600">@{profile?.username}</p>
+
 						<div className="flex gap-2 mt-4">
-							<FaInstagram className="text-4xl p-2 rounded-full bg-gray-800 text-white cursor-pointer hover:bg-gray-500" />
-							<FaYoutube className="text-4xl p-2 rounded-full bg-gray-800 text-white cursor-pointer hover:bg-gray-500" />
+							{profile?.socialLinks?.map((link, idx) => (
+								<a
+									key={idx}
+									href={link.url}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-2xl p-2 rounded-full bg-gray-800 text-white cursor-pointer hover:bg-gray-500"
+								>
+									{platformIcons[link.platform] || null}
+								</a>
+							))}
 						</div>
 					</div>
 				</div>
 			</div>
-			{/* Following Followers */}
-			<div className="flex py-3 gap-4 justify-center items-center border-y">
-				<button
-					className="flex flex-row gap-2 px-2 text-gray-800 border-b border-transparent hover:border-gray-700 transition duration-150"
-				>
-					Following <span className="font-semibold">200</span>
+			{/* Follow Btn */}
+			{user?.uid !== uuid && (
+				<div className="mb-2">
+					<button className="font-semibold py-2 w-full bg-maincolor rounded-md hover:bg-maindarkcolor">
+						Follow
+					</button>
+				</div>
+			)}
+			{/* Trips | Followers | Following */}
+			<div className="flex justify-center items-center gap-4 border-y py-4">
+				<button className="flex items-baseline gap-2 text-gray-800 font-semibold hover:text-black transition duration-200">
+					<span className="text">10.5K</span>
+					<span className="text-sm font-normal text-gray-500">trips</span>
 				</button>
-				<div className="w-px h-6 bg-gray-300 self-center"></div>
-				<button
-					className="flex flex-row gap-2 px-2 text-gray-800 border-b border-transparent hover:border-gray-700 transition duration-150"
-				>
-					Followers <span className="font-semibold">50K</span>
+
+				<div className="w-px h-5 bg-gray-300" />
+
+				<button className="flex items-baseline gap-2 text-gray-800 font-semibold hover:text-black transition duration-200">
+					<span className="text-base">15.3K</span>
+					<span className="text-sm font-normal text-gray-500">followers</span>
+				</button>
+
+				<div className="w-px h-5 bg-gray-300" />
+
+				<button className="flex items-baseline gap-2 text-gray-800 font-semibold hover:text-black transition duration-200">
+					<span className="text">10.5K</span>
+					<span className="text-sm font-normal text-gray-500">following</span>
 				</button>
 			</div>
 			{/* Bio Section */}
 			<div className="p-2">
-				<p className="text-lg font-semibold text-gray-800">Total Travel Countries</p>
-				<p className="text-2xl text-gray-800">🇺🇸 🇯🇵 🇰🇷 🇩🇪</p>
+				<p className="text-base text-gray-800">Explore Countries</p>
+				<div className="flex gap-2">
+					{profile?.countries && profile.countries.map((country: Country) => (
+						<p key={country.iso2} className="text-2xl mt-1">{country.flag}</p>
+					))}
+				</div>
 			</div>
 			<div className="p-2">
-				<p className="text-lg font-semibold text-gray-800">Total Travels</p>
-				<p className="text-base text-gray-800">4 trips 30 days</p>
+				<p className="text-base text-gray-800">Explore Days</p>
+				<p className="text-lg font-semibold text-gray-800">{profile?.totalTravelDays}</p>
 			</div>
 			<div className="p-2">
-				<p className="text-base font-semibold text-gray-800">글자수 제한 걸어라. Hi, I'm a traveler who loves peaceful journeys.
-					I enjoy exploring the world's breathtaking landscapes and experiencing the beauty of nature firsthand.
-					Every adventure is a chance to find new inspiration and connect with the world in a deeper way.</p>
+				<p className="text-base text-gray-800">{profile?.bio}</p>
 			</div>
 		</div>
 	);

@@ -43,14 +43,14 @@ const SearchBar: React.FC<Props> = ({ width = '100%', height = 'auto', margin = 
 	return (
 		<div
 			ref={searchBarRef}
-			className="my-5 flex items-center bg-white rounded-full shadow-[0px_0px_23px_-4px_rgba(0,_0,_0,_0.1)] p-2 w-full"
+			className="flex items-center bg-white border border-maincolor rounded-full shadow-[0px_0px_23px_-4px_rgba(0,_0,_0,_0.1)] p-2 w-full"
 			style={{ width, height, margin }}
 		>
-			<div className="w-2/3 px-4 py-2 border-r border-gray-200">
+			<div className="w-2/3 px-4 py-2 border-r border-gray-300">
 				<label
 					className={`block font-medium px-3 transition duration-150 ${showPlaceholder
 						? isLocationActive
-							? 'text-xs text-purple-600'
+							? 'text-xs text-maincolor'
 							: 'text-sm text-gray-900'
 						: 'hidden'
 						}`}
@@ -67,14 +67,14 @@ const SearchBar: React.FC<Props> = ({ width = '100%', height = 'auto', margin = 
 					onKeyDown={handleSearch}
 					value={searchInput}
 					placeholder={showPlaceholder ? "Search Locations" : "Where"}
-					className="w-full text-[17px] text-gray-500 focus:outline-none px-3"
+					className="w-full text-[17px] text-gray-500 bg-transparent focus:outline-none px-3"
 				/>
 			</div>
 			<div className="w-1/3 px-4 py-2 border-gray-200">
 				<label
 					className={`block font-medium px-3 transition duration-150 ${showPlaceholder
 						? isDaysActive
-							? 'text-xs text-purple-600'
+							? 'text-xs text-maincolor'
 							: 'text-sm text-gray-900'
 						: 'hidden'
 						}`}
@@ -88,10 +88,10 @@ const SearchBar: React.FC<Props> = ({ width = '100%', height = 'auto', margin = 
 						setIsLocationActive(false);
 					}}
 					placeholder={showPlaceholder ? "Add Days" : "Days"}
-					className="w-full text-[17px] text-gray-500 focus:outline-none px-3"
+					className="w-full text-[17px] text-gray-500 bg-transparent focus:outline-none px-3"
 				/>
 			</div>
-			<button className="ml-2 p-3 bg-maincolor rounded-full text-white transition duration-150 hover:bg-maindarkcolor">
+			<button className="ml-2 p-2 bg-maincolor rounded-full text-white transition duration-150 hover:bg-maindarkcolor">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"

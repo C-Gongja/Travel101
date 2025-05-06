@@ -24,7 +24,7 @@ const TripCard = ({ trip }: TripCardListProps) => {
 		<li
 			onClick={handleClick}
 			className="border rounded-lg shadow-[0px_0px_15px_7px_rgba(0,_0,_0,_0.1)] overflow-hidden 
-			transition duration-150 bg-white cursor-pointer hover:scale-105"
+			transition duration-150 bg-white cursor-pointer"
 		>
 			{/* 1. 이미지 (Placeholder) */}
 			<div className="bg-green-100 h-[250px] flex items-center justify-center">
@@ -55,7 +55,15 @@ const TripCard = ({ trip }: TripCardListProps) => {
 					</div>
 				</div>
 				<div className="flex flex-col">
-					<p className="text-gray-600 mt-1">countries (flags)</p>
+					<div className="flex gap-2">
+						{trip?.countries && trip.countries.length > 0 ? (
+							trip.countries.map((country) => (
+								<p key={country.iso2} className="text-2xl mt-1">{country.flag}</p>
+							))
+						) : (
+							<p className="text-gray-600 mt-1">no country</p>
+						)}
+					</div>
 					<p className="text-gray-600 mt-1">{trip.username}</p>
 					<p className="text-gray-600 mt-1">{daysDifference} days trip</p>
 				</div>

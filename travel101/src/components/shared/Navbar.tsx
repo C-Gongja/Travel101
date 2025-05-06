@@ -1,34 +1,40 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUserStore } from "@/store/user/user-store";
 import AuthModal from "../auth/AuthModal";
 import SearchBar from "../ui/searchbar/SearchBar";
+import { useSearchBarStore } from "@/store/ui/searchBar/useSearchBarStore";
+import TripCreateBtn from "../ui/buttons/TripCreateBtn";
+import { useIsInView } from "../home/useIsInView";
 
 export default function Navbar() {
 	const router = useRouter();
+	const pathname = usePathname();
+	const isHome = pathname === '/';
+	const isHeroVisible = useSearchBarStore((state) => state.isHeroVisible);
+	const showSearchAndTrip = !isHome || !isHeroVisible;
+
 	const queryClient = useQueryClient();
 	const { user, clearUser } = useUserStore();
-	const isLoggedIn = !!user;
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isSignUp, setIsSignUp] = useState(false);
-	const dropdownRef = useRef<HTMLDivElement>(null); // 드롭다운 참조
+	const dropdownRef = useRef<HTMLDivElement>(null);
+	const isLoggedIn = !!user;
 
-	// 외부 클릭 감지
+
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
 				setMenuOpen(false); // 드롭다운 외부 클릭 시 닫기
 			}
 		};
-
 		// 문서에 클릭 이벤트 리스너 추가
 		document.addEventListener('mousedown', handleClickOutside);
-
 		// 컴포넌트 언마운트 시 리스너 제거
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
@@ -41,14 +47,19 @@ export default function Navbar() {
 	}
 
 	return (
-		<nav className="fixed top-0 w-full flex items-center justify-between bg-white px-[150px] py-5 rounded-b-lg z-50">
+		<nav className={`fixed top-0 w-full flex items-center justify-between bg-white px-[150px] py-5 z-50
+			${showSearchAndTrip ? 'border-b border-gray-200 shadow-sm' : ''
+			}`}>
 			<Link href="/" className="text-3xl font-bold text-maincolor">
 				Sharavel
 			</Link>
 
-			<div className="relative w-1/3">
-				<SearchBar width="100%" height="50px" />
-			</div>
+			{showSearchAndTrip && (
+				<div className="flex items-center gap-4 w-1/2">
+					<SearchBar width="70%" height="47px" />
+					<TripCreateBtn text="New Trip" height="45px" width="120px" />
+				</div>
+			)}
 
 			<div className="flex items-center gap-4">
 				{isLoggedIn ? (

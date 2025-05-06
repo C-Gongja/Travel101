@@ -1,3 +1,5 @@
+import { Country } from "./tripStoreTypes";
+
 export interface TripCardProps {
 	tripUid: string;
 	name: string;
@@ -5,7 +7,7 @@ export interface TripCardProps {
 	scripted: number;
 	startDate: string;
 	endDate: string;
-	countries: string[];
+	countries: Country[];
 }
 
 export interface TripCardListProps {
