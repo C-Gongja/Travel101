@@ -1,7 +1,10 @@
-import { ProfileStore } from "@/types/user/userProfileTypes";
+import { UserSnippetStore } from "@/types/user/userSnippetTypes";
 import { create } from "zustand";
 
-export const useProfileStore = create<ProfileStore>((set) => ({
-	profile: null, // 초기 상태
-	setProfile: (profile) => set({ profile }),
+export const useSnippetStore = create<UserSnippetStore>((set) => ({
+	userSnippet: null,
+	setUserSnippet: (userSnippet) => set({ userSnippet }),
+	updateUserSnippet: (key, value) => set((state) => ({
+		userSnippet: state.userSnippet ? { ...state.userSnippet, [key]: value } : null
+	})),
 }));

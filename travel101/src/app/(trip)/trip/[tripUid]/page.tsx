@@ -10,10 +10,12 @@ import { useParams, useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUserStore } from "@/store/user/user-store";
 import UserSnippetCard from "@/components/ui/card/UserSnippetCard";
+import { useSnippetStore } from "@/store/user/user-profile-store";
 
 export default function TripPage() {
 	const { tripUid } = useParams<{ tripUid: string }>();
 	const { trip, setTrip, setIsOwner, setTripOwner } = useTripStore();
+	const { setUserSnippet } = useSnippetStore();
 	const { user, isAuthenticated, isUserLoading } = useUserStore();
 	const [isInitializing, setIsInitializing] = useState(true);
 
@@ -35,7 +37,7 @@ export default function TripPage() {
 				endDate: new Date(tripData.trip.endDate),
 			});
 			setIsOwner(tripData.editable);
-			setTripOwner(tripData.userSnippet);
+			setUserSnippet(tripData.userSnippet);
 			setIsInitializing(false);
 		}
 	}, [tripData, isInitializing, setTrip, setIsOwner]);

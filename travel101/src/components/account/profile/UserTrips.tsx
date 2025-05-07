@@ -7,7 +7,6 @@ interface UserCardProps {
 }
 
 const UserTrips: React.FC<UserCardProps> = ({ uuid }) => {
-	console.log("uuid: ", uuid)
 	const { data: tripList, isLoading: isTripsLoading, isError: isTripsError } = useFetchUserTrips(uuid);
 
 	return (

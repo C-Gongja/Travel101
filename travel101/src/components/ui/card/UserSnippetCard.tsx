@@ -1,16 +1,16 @@
 import { useRouter } from "next/navigation";
-import { useTripStore } from "@/store/trip/trip-store";
 import { useUserStore } from "@/store/user/user-store";
 import FollowButton from "../buttons/follow/FollowButton";
 import UnfollowButton from "../buttons/follow/UnfollowButton";
+import { useSnippetStore } from "@/store/user/user-profile-store";
 
 const UserSnippetCard = () => {
 	const router = useRouter();
 	const { user } = useUserStore();
-	const { tripOwner } = useTripStore();
+	const { userSnippet } = useSnippetStore();
 
 	const handleProfileClick = () => {
-		router.push(`/profile/${tripOwner?.uuid}`);
+		router.push(`/profile/${userSnippet?.uuid}`);
 	}
 
 	return (
@@ -35,15 +35,15 @@ const UserSnippetCard = () => {
 
 					{/* User Info */}
 					<div className="flex-1 ml-3">
-						<h3 className="text-lg font-bold text-gray-900">{tripOwner?.name}</h3>
-						<p className="text-sm text-gray-600">{tripOwner?.username}</p>
+						<h3 className="text-lg font-bold text-gray-900">{userSnippet?.name}</h3>
+						<p className="text-sm text-gray-600">@{userSnippet?.username}</p>
 					</div>
 				</div>
-				{user?.uid !== tripOwner?.uuid && (
-					tripOwner?.isFollowing ? (
-						<UnfollowButton padding="10px 30px" />
+				{user?.uid !== userSnippet?.uuid && (
+					userSnippet?.isFollowing ? (
+						<UnfollowButton targetUser={userSnippet} padding="10px 30px" rounded="rounded-full" />
 					) : (
-						<FollowButton padding="10px 30px" />
+						<FollowButton targetUser={userSnippet} padding="10px 30px" rounded="rounded-full" />
 					)
 				)}
 			</div>

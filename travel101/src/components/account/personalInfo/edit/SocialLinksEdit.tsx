@@ -4,34 +4,30 @@ import { patchPersonalInfo } from "@/api/account/personalInfo/PerosnalInfoApi";
 import Button from "@/components/ui/buttons/Button";
 import { PersonalInfoStore } from "@/store/user/user-personal-info-store";
 import { useUserStore } from "@/store/user/user-store";
-import { SocialLink, SocialLinkDto } from "@/types/user/userPersonalInfoTypes";
+import { SocialLink } from "@/types/user/userPersonalInfoTypes";
 import { useState } from "react";
 
 interface SocialLinksEditProps {
-	socialLinks: SocialLinkDto;
+	socialLinks: SocialLink[];
 	onSaveSuccess: () => void;
 }
 
 const SocialLinksEdit: React.FC<SocialLinksEditProps> = ({ socialLinks, onSaveSuccess }) => {
-	const [updatedSocialLinks, setUpdatedSocialLinks] = useState<SocialLinkDto>(socialLinks);
+	const [updatedSocialLinks, setUpdatedSocialLinks] = useState<SocialLink[]>(socialLinks);
 	const { updateField } = PersonalInfoStore();
 
 	const handleSocialLinkChange = (index: number, field: keyof SocialLink, value: string) => {
-		const updatedLinks = [...updatedSocialLinks.socialLinks];
+		const updatedLinks = [...updatedSocialLinks];
 		updatedLinks[index] = { ...updatedLinks[index], [field]: value };
-		setUpdatedSocialLinks({ socialLinks: updatedLinks });
+		setUpdatedSocialLinks(updatedLinks);
 	};
 
 	const handleAddSocialLink = () => {
-		setUpdatedSocialLinks(prev => ({
-			socialLinks: [...prev.socialLinks, { platform: '', url: '' }]
-		}));
+		setUpdatedSocialLinks(prev => [...prev, { platform: '', url: '' }]);
 	};
 
 	const handleRemoveSocialLink = (index: number) => {
-		setUpdatedSocialLinks(prev => ({
-			socialLinks: prev.socialLinks.filter((_, i) => i !== index)
-		}));
+		setUpdatedSocialLinks(prev => prev.filter((_, i) => i !== index));
 	};
 
 	const handleSave = async () => {
@@ -47,7 +43,7 @@ const SocialLinksEdit: React.FC<SocialLinksEditProps> = ({ socialLinks, onSaveSu
 
 	return (
 		<>
-			{updatedSocialLinks.socialLinks.map((link, index) => (
+			{updatedSocialLinks.map((link, index) => (
 				<div key={index} className="mb-4 ml-4">
 					<div className="flex flex-col md:flex-row md:items-end md:gap-x-4">
 						{/* Platform */}

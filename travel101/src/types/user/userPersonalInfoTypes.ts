@@ -5,11 +5,7 @@ export interface UserPersonalInfo {
 	email: string;
 	country?: string;
 	bio?: string;
-	socialLinks?: SocialLinkDto
-}
-
-export interface SocialLinkDto {
-	socialLinks: SocialLink[];
+	socialLinks?: SocialLink[]
 }
 
 export interface SocialLink {
