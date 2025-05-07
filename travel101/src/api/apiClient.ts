@@ -15,9 +15,13 @@ const apiClient = async (url: string, options: RequestInit = {}) => {
 
 	try {
 		const response = await fetch(url, { ...options, headers });
-
+		const contentType = response.headers.get("Content-Type");
 		if (response.ok) {
-			return response.json();
+			if (contentType && contentType.includes("application/json")) {
+				return await response.json();
+			} else {
+				return await response.text(); // fallback to plain text
+			}
 		}
 
 		if (response.status === 401) {

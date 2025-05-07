@@ -26,6 +26,10 @@ export const useTripStore = create<TripStore>((set, get) => ({
 
 	setTripOwner: (tripOwner: TripOwnerSnippet) => set({ tripOwner }),
 
+	updateTripOwner: (key, value) => set((state) => ({
+		tripOwner: state.tripOwner ? { ...state.tripOwner, [key]: value } : null
+	})),
+
 	setIsLoading: (loading: boolean) => set({ isLoading: loading }),
 
 	// PATCH 요청으로 부분 업데이트

@@ -3,6 +3,7 @@ import { useGetProfile } from "@/hooks/profile/useGetProfile";
 import { FaInstagram, FaYoutube, FaFacebook, FaTwitter } from "react-icons/fa";
 import { useUserStore } from "@/store/user/user-store";
 import { Country } from "@/types/trip/tripStoreTypes";
+import { SocialLink } from "@/types/user/userPersonalInfoTypes";
 
 interface AccountInfoProps {
 	uuid: string;
@@ -48,7 +49,7 @@ const AccountInfoCard: React.FC<AccountInfoProps> = ({ uuid }) => {
 						<p className="text-base text-gray-600">@{profile?.username}</p>
 
 						<div className="flex gap-2 mt-4">
-							{profile?.socialLinks?.map((link, idx) => (
+							{profile?.socialLinks?.map((link: SocialLink, idx: number) => (
 								<a
 									key={idx}
 									href={link.url}
@@ -74,21 +75,21 @@ const AccountInfoCard: React.FC<AccountInfoProps> = ({ uuid }) => {
 			{/* Trips | Followers | Following */}
 			<div className="flex justify-center items-center gap-4 border-y py-4">
 				<button className="flex items-baseline gap-2 text-gray-800 font-semibold hover:text-black transition duration-200">
-					<span className="text">10.5K</span>
+					<span className="text">{profile?.totalTrips}</span>
 					<span className="text-sm font-normal text-gray-500">trips</span>
 				</button>
 
 				<div className="w-px h-5 bg-gray-300" />
 
 				<button className="flex items-baseline gap-2 text-gray-800 font-semibold hover:text-black transition duration-200">
-					<span className="text-base">15.3K</span>
+					<span className="text-base">{profile?.followersCount}</span>
 					<span className="text-sm font-normal text-gray-500">followers</span>
 				</button>
 
 				<div className="w-px h-5 bg-gray-300" />
 
 				<button className="flex items-baseline gap-2 text-gray-800 font-semibold hover:text-black transition duration-200">
-					<span className="text">10.5K</span>
+					<span className="text">{profile?.followingCount}</span>
 					<span className="text-sm font-normal text-gray-500">following</span>
 				</button>
 			</div>

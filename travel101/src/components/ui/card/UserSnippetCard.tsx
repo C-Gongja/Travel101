@@ -1,7 +1,8 @@
 import { useRouter } from "next/navigation";
 import { useTripStore } from "@/store/trip/trip-store";
 import { useUserStore } from "@/store/user/user-store";
-import FollowButton from "../buttons/FollowButton";
+import FollowButton from "../buttons/follow/FollowButton";
+import UnfollowButton from "../buttons/follow/UnfollowButton";
 
 const UserSnippetCard = () => {
 	const router = useRouter();
@@ -39,7 +40,11 @@ const UserSnippetCard = () => {
 					</div>
 				</div>
 				{user?.uid !== tripOwner?.uuid && (
-					<FollowButton padding="10px 30px" />
+					tripOwner?.isFollowing ? (
+						<UnfollowButton padding="10px 30px" />
+					) : (
+						<FollowButton padding="10px 30px" />
+					)
 				)}
 			</div>
 		</div>

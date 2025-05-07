@@ -1,11 +1,37 @@
 import { apiClient } from "@/api/apiClient";
 import { UserPersonalInfo } from "@/types/user/userPersonalInfoTypes";
 
-const FOLLOW_URL = "http://localhost:8080/api/user/account";
+const FOLLOW_URL = "http://localhost:8080/api/users";
 
-const FollowUser = async (userUuid: string): Promise<any> => {
+const FollowUser = async (targetId: string): Promise<any> => {
 	try {
-		const response = await apiClient(`${FOLLOW_URL}/${encodeURIComponent(userUuid)}`, { method: "GET" });
+		const response = await apiClient(`${FOLLOW_URL}/follow?targetId=${targetId}`, { method: "POST" });
+		return response;
+	} catch (error) {
+		console.error("Error fetching update trip:", error);
+		return null;
+	}
+}
+
+const UnfollowUser = async (targetId: string): Promise<any> => {
+	try {
+		const response = await apiClient(`${FOLLOW_URL}/unfollow?targetId=${targetId}`, { method: "DELETE" });
+		return response;
+	} catch (error) {
+		console.error("Error fetching update trip:", error);
+		return null;
+	}
+}
+
+const getFollowCounts = async (targetId: string): Promise<any> => {
+	try {
+		const response = await apiClient(`${FOLLOW_URL}/}`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(targetId),
+		});
 		return response;
 	} catch (error) {
 		console.error("Error getPersonalInfo:", error);
@@ -13,29 +39,15 @@ const FollowUser = async (userUuid: string): Promise<any> => {
 	}
 }
 
-const UnfollowUser = async (userUuid: string): Promise<any> => {
+const getAllFollow = async (targetId: string): Promise<any> => {
 	try {
-		const response = await apiClient(`${FOLLOW_URL}/${encodeURIComponent(userUuid)}`, { method: "GET" });
-		return response;
-	} catch (error) {
-		console.error("Error getPersonalInfo:", error);
-		return null;
-	}
-}
-
-const getFollowCounts = async (userUuid: string): Promise<any> => {
-	try {
-		const response = await apiClient(`${FOLLOW_URL}/${encodeURIComponent(userUuid)}`, { method: "GET" });
-		return response;
-	} catch (error) {
-		console.error("Error getPersonalInfo:", error);
-		return null;
-	}
-}
-
-const getAllFollow = async (userUuid: string): Promise<any> => {
-	try {
-		const response = await apiClient(`${FOLLOW_URL}/${encodeURIComponent(userUuid)}`, { method: "GET" });
+		const response = await apiClient(`${FOLLOW_URL}/}`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(targetId),
+		});
 		return response;
 	} catch (error) {
 		console.error("Error getPersonalInfo:", error);

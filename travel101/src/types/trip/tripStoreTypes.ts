@@ -6,7 +6,7 @@ export interface Trip {
 	days: Day[];
 	createdAt?: string;
 	scripted: number;
-	isCompleted: boolean;
+	completed: boolean;
 	countries: Country[];
 }
 
@@ -19,7 +19,7 @@ export interface TripResponse {
 	days: Day[];
 	createdAt?: string;
 	scripted: number;
-	isCompleted: boolean;
+	completed: boolean;
 	countries: CountryResponse[]; // 백엔드에서 오는 형태
 }
 
@@ -31,7 +31,7 @@ export interface TripRequest {
 	endDate: string; // 또는 Date
 	days: Day[];
 	scripted: number;
-	isCompleted: boolean;
+	completed: boolean;
 	countries: CountryRequest[]; // 백엔드로 보내는 형태
 }
 
@@ -78,6 +78,7 @@ export interface TripOwnerSnippet {
 	name: string;
 	username: string;
 	uuid: string;
+	isFollowing: boolean;
 }
 
 export interface TripStore {
@@ -91,6 +92,7 @@ export interface TripStore {
 	setTrip: (trip: Trip) => void;
 	setIsOwner: (editable: boolean) => void;
 	setTripOwner: (tripOwner: TripOwnerSnippet) => void;
+	updateTripOwner: <K extends keyof TripOwnerSnippet>(key: K, value: TripOwnerSnippet[K]) => void;
 	updateTrip: (updates: Partial<Trip>) => Promise<void>;// partial update
 	setTripName: (name: string) => void;
 	setSelectedDay: (dayIndex: number) => void;
@@ -105,7 +107,7 @@ export interface TripStore {
 	removeLocation: (dayIndex: number, locIndex: number) => void;
 	setDescription: (dayIndex: number, locIndex: number, description: string) => void;
 	setTotalCost: (totalCost: bigint) => void;
-	setIsCompleted: (isCompleted: boolean) => void;
+	setIsCompleted: (completed: boolean) => void;
 	// setCountries: (countries: string[]) => void;
 	setIsLoading: (loading: boolean) => void;
 }
@@ -133,7 +135,7 @@ export function adaptTripModelToRequest(trip: Trip): TripRequest {
 		endDate: trip.endDate.toISOString(), // 날짜 형식 변환
 		days: trip.days,
 		scripted: trip.scripted,
-		isCompleted: trip.isCompleted,
+		completed: trip.completed,
 		countries: trip.countries.map(country => ({
 			iso2: country.iso2
 		}))

@@ -157,6 +157,7 @@ export default function TripCustom() {
 
 			<div className="mt-2 ml-1 text-lg text-gray-500">
 				<DateComponent />
+				{trip?.completed ? "completed" : "not"}
 			</div>
 
 			<DragDropContext onDragEnd={onDragEnd}>
