@@ -23,7 +23,7 @@ const AccountInfoCard: React.FC<AccountInfoProps> = ({ uuid }) => {
 	}, [profileData]);
 	console.log("profileData: ", profileData)
 
-	const platformIcons: Record<string, JSX.Element> = {
+	const platformIcons: Record<string, any> = {
 		Instagram: <FaInstagram />,
 		Youtube: <FaYoutube />,
 		Facebook: <FaFacebook />,

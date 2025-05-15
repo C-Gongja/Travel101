@@ -1,13 +1,12 @@
 'use client'
 
-import { useUserStore } from "../../../../../store/user/user-store";
+import { useUserStore } from "../../../store/user/user-store";
 import { useParams } from "next/navigation";
 import UserTrips from "@/components/account/profile/UserTrips";
 import AccountInfoCard from "@/components/account/AccountInfoCard";
 import AccountTravelMap from "@/components/account/AccountTravelMap";
 import Link from "next/link";
 import { IoSettingsOutline } from "react-icons/io5";
-
 
 export default function ProfilePage() {
 	const { uuid } = useParams<{ uuid: string }>();

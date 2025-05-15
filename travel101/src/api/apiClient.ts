@@ -16,6 +16,7 @@ const apiClient = async (url: string, options: RequestInit = {}) => {
 	try {
 		const response = await fetch(url, { ...options, headers });
 		const contentType = response.headers.get("Content-Type");
+
 		if (response.ok) {
 			if (contentType && contentType.includes("application/json")) {
 				return await response.json();
@@ -25,7 +26,7 @@ const apiClient = async (url: string, options: RequestInit = {}) => {
 		}
 
 		if (response.status === 401) {
-			console.log("access token is expired, use refresh token to get new access token");
+			// console.log("access token is expired, use refresh token to get new access token");
 
 			accessToken = await fetchRefreshToken();
 			if (!accessToken) {
@@ -41,10 +42,13 @@ const apiClient = async (url: string, options: RequestInit = {}) => {
 
 			return retryResponse.json();
 		}
+		if (response.status === 400) {
+			const errorData = await response.json();
+			throw new Error(errorData.error || "Unknown error");
+		}
 
 		throw new Error(`Request failed with status: ${response.status}`);
 	} catch (error) {
-		console.error("API request error:", error);
 		throw error;
 	}
 };

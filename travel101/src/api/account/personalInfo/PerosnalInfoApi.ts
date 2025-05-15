@@ -23,11 +23,8 @@ const patchPersonalInfo = async (partialUpdateData: Partial<UserPersonalInfo>, u
 			body: JSON.stringify(partialUpdateData),
 		});
 
-		console.log("patch response: ", response);
 		return await response;
-
 	} catch (error) {
-		console.error("Patch error:", error);
 		throw error;
 	}
 };

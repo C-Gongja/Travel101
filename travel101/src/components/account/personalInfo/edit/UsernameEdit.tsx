@@ -12,16 +12,27 @@ interface UsernameEditProps {
 
 const UsernameEdit = ({ currentUsername, onSaveSuccess }: UsernameEditProps) => {
 	const [username, setUsername] = useState(currentUsername);
+	const [error, setError] = useState('');
 	const { updateField } = PersonalInfoStore();
 
 	const handleSave = async () => {
 		const { user } = useUserStore.getState();
 		const patch = { username: username };
-		if (user?.uid) {
-			await patchPersonalInfo(patch, user?.uid);
+		if (!user?.uid) return;
+
+		try {
+			await patchPersonalInfo(patch, user.uid);
+			updateField('username', username);
+			onSaveSuccess();
+			setError(''); // 성공하면 에러 초기화
+		} catch (err: any) {
+			console.log("error:", err);
+			if (err.message) {
+				setError(err.message);
+			} else {
+				setError('Something went wrong');
+			}
 		}
-		updateField('username', username);
-		onSaveSuccess();
 	};
 
 	return (
@@ -31,6 +42,7 @@ const UsernameEdit = ({ currentUsername, onSaveSuccess }: UsernameEditProps) => 
 				value={username}
 				onChange={(e) => setUsername(e.target.value)}
 			/>
+			{error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 			<div className="my-4">
 				<Button onClick={handleSave} text="Save" padding="10px 20px" />
 			</div>
