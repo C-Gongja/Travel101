@@ -7,23 +7,29 @@ import AccountInfoCard from "@/components/account/AccountInfoCard";
 import AccountTravelMap from "@/components/account/AccountTravelMap";
 import Link from "next/link";
 import { IoSettingsOutline } from "react-icons/io5";
+import { useState } from "react";
+import Modal from "@/components/ui/modals/MainModal";
+import FollowingModal from "@/components/account/profile/follow/FollowingModal";
+import FollowersModal from "@/components/account/profile/follow/FollowersModal";
 
 export default function ProfilePage() {
 	const { uuid } = useParams<{ uuid: string }>();
 	const { user, clearUser } = useUserStore();
+	const [isFollowingOpen, setIsFollowingOpen] = useState(false);
+	const [isFollowersOpen, setIsFollowersOpen] = useState(false);
 
 	return (
 		<div className="px-[100px]">
 			<div className="mb-6 flex gap-3 items-center">
 				<h1 className="">Profiles</h1>
 				{user?.uid === uuid &&
-					(<Link href={`/profile/${user?.uid}/userInfo`} className="text-3xl">
+					(<Link href={`/user/personalInfo/${user?.uid}`} className="text-3xl">
 						<IoSettingsOutline />
 					</Link>)
 				}
 			</div>
 			<div className="grid grid-cols-[35%_65%] h-auto gap-10">
-				<AccountInfoCard uuid={uuid} />
+				<AccountInfoCard uuid={uuid} setIsFollowingOpen={setIsFollowingOpen} setIsFollowersOpen={setIsFollowersOpen} />
 				<AccountTravelMap uuid={uuid} />
 			</div>
 			<div>
@@ -41,6 +47,17 @@ export default function ProfilePage() {
 					Logout
 				</button>
 			</div>
+
+			{isFollowersOpen && (
+				<Modal isOpen={isFollowersOpen} onClose={() => setIsFollowersOpen(false)}>
+					<FollowersModal />
+				</Modal>
+			)}
+			{isFollowingOpen && (
+				<Modal isOpen={isFollowingOpen} onClose={() => setIsFollowingOpen(false)}>
+					<FollowingModal />
+				</Modal>
+			)}
 		</div>
 	);
 }

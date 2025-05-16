@@ -1,4 +1,4 @@
-import { FollowUser, UnfollowUser } from "@/api/account/follow/FollowApi";
+import { FollowUser } from "@/api/account/follow/FollowApi";
 import { useTripStore } from "@/store/trip/trip-store";
 import { useSnippetStore } from "@/store/user/user-profile-store";
 

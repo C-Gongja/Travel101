@@ -1,5 +1,4 @@
 import { apiClient } from "@/api/apiClient";
-import { UserPersonalInfo } from "@/types/user/userPersonalInfoTypes";
 
 const FOLLOW_URL = "http://localhost:8080/api/users";
 
@@ -23,36 +22,25 @@ const UnfollowUser = async (targetId: string): Promise<any> => {
 	}
 }
 
-const getFollowCounts = async (targetId: string): Promise<any> => {
+const getAllFollowers = async (uuid: string, isAuthenticated: boolean, user: any): Promise<any> => {
 	try {
-		const response = await apiClient(`${FOLLOW_URL}/}`, {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(targetId),
-		});
+		const response = await apiClient(`${FOLLOW_URL}/followers?uuid=${uuid}`, { method: "GET" });
 		return response;
 	} catch (error) {
-		console.error("Error getPersonalInfo:", error);
+		console.error("Error fetching user profile:", error);
 		return null;
 	}
 }
 
-const getAllFollow = async (targetId: string): Promise<any> => {
+const getAllFollowing = async (uuid: string, isAuthenticated: boolean, user: any): Promise<any> => {
 	try {
-		const response = await apiClient(`${FOLLOW_URL}/}`, {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(targetId),
-		});
+		const response = await apiClient(`${FOLLOW_URL}/following?uuid=${uuid}`, { method: "GET" });
 		return response;
 	} catch (error) {
-		console.error("Error getPersonalInfo:", error);
+		console.error("Error fetching user profile:", error);
 		return null;
 	}
 }
 
-export { FollowUser, UnfollowUser, getFollowCounts, getAllFollow }
+
+export { FollowUser, UnfollowUser, getAllFollowers, getAllFollowing };

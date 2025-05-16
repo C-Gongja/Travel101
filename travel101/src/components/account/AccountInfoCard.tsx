@@ -1,19 +1,20 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useGetProfile } from "@/hooks/profile/useGetProfile";
 import { FaInstagram, FaYoutube, FaFacebook, FaTwitter } from "react-icons/fa";
 import { useUserStore } from "@/store/user/user-store";
 import { Country } from "@/types/trip/tripStoreTypes";
 import { SocialLink } from "@/types/user/userPersonalInfoTypes";
-import { useTripStore } from "@/store/trip/trip-store";
 import UnfollowButton from "../ui/buttons/follow/UnfollowButton";
 import FollowButton from "../ui/buttons/follow/FollowButton";
 import { useSnippetStore } from "@/store/user/user-profile-store";
 
 interface AccountInfoProps {
 	uuid: string;
+	setIsFollowingOpen: Dispatch<SetStateAction<boolean>>;
+	setIsFollowersOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const AccountInfoCard: React.FC<AccountInfoProps> = ({ uuid }) => {
+const AccountInfoCard: React.FC<AccountInfoProps> = ({ uuid, setIsFollowingOpen, setIsFollowersOpen }) => {
 	const { user } = useUserStore();
 	const { data: profileData, isLoading } = useGetProfile(uuid);
 	const { userSnippet, setUserSnippet } = useSnippetStore();
@@ -88,14 +89,18 @@ const AccountInfoCard: React.FC<AccountInfoProps> = ({ uuid }) => {
 
 				<div className="w-px h-5 bg-gray-300" />
 
-				<button className="flex items-baseline gap-2 text-gray-800 font-semibold hover:text-black transition duration-200">
+				<button
+					className="flex items-baseline gap-2 text-gray-800 font-semibold hover:text-black transition duration-200"
+					onClick={() => setIsFollowersOpen(true)}>
 					<span className="text-base">{profileData?.followersCount}</span>
 					<span className="text-sm font-normal text-gray-500">followers</span>
 				</button>
 
 				<div className="w-px h-5 bg-gray-300" />
 
-				<button className="flex items-baseline gap-2 text-gray-800 font-semibold hover:text-black transition duration-200">
+				<button
+					className="flex items-baseline gap-2 text-gray-800 font-semibold hover:text-black transition duration-200"
+					onClick={() => setIsFollowingOpen(true)}>
 					<span className="text">{profileData?.followingCount}</span>
 					<span className="text-sm font-normal text-gray-500">following</span>
 				</button>

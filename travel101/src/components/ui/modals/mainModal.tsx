@@ -21,7 +21,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 		<div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
 			onClick={handleClickOutside}
 		>
-			<div className="modal p-[50px] rounded-xl shadow-lg relative">
+			<div className="modal p-[20px] rounded-xl shadow-lg relative">
 				<button className="absolute top-4 right-4 text-gray-600 hover:text-maincolor" onClick={onClose}>
 					<IoIosCloseCircle className="text-3xl" />
 				</button>
