@@ -1,24 +1,19 @@
-import Modal from "../ui/modals/MainModal";
+import { useAuthModalStore } from "@/store/user/useAuthModalStore";
+import Modal from "../ui/modal/MainModal";
 import SignInForm from "./SignInForm";
 import SignUpForm from "./SignUpForm";
 
-export default function AuthModal({
-	isOpen,
-	onClose,
-	isSignUp,
-	setIsSignUp,
-}: {
-	isOpen: boolean;
-	onClose: () => void;
-	isSignUp: boolean;
-	setIsSignUp: (val: boolean) => void;
-}) {
+export default function AuthModal() {
+	const { isOpen, onClose, isSignUp } = useAuthModalStore();
+
+	if (!isOpen) return null;
+
 	return (
 		<Modal isOpen={isOpen} onClose={onClose}>
 			{isSignUp ? (
-				<SignUpForm setIsSignUp={setIsSignUp} onClose={onClose} />
+				<SignUpForm />
 			) : (
-				<SignInForm setIsSignUp={setIsSignUp} onClose={onClose} />
+				<SignInForm />
 			)}
 		</Modal>
 	);

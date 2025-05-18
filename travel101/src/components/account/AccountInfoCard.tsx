@@ -6,7 +6,7 @@ import { Country } from "@/types/trip/tripStoreTypes";
 import { SocialLink } from "@/types/user/userPersonalInfoTypes";
 import UnfollowButton from "../ui/buttons/follow/UnfollowButton";
 import FollowButton from "../ui/buttons/follow/FollowButton";
-import { useSnippetStore } from "@/store/user/user-profile-store";
+import { UserSnippet } from "@/types/user/userSnippetTypes";
 
 interface AccountInfoProps {
 	uuid: string;
@@ -17,12 +17,17 @@ interface AccountInfoProps {
 const AccountInfoCard: React.FC<AccountInfoProps> = ({ uuid, setIsFollowingOpen, setIsFollowersOpen }) => {
 	const { user } = useUserStore();
 	const { data: profileData, isLoading } = useGetProfile(uuid);
-	const { userSnippet, setUserSnippet } = useSnippetStore();
+	const [userSnippet, setUserSnippet] = useState<UserSnippet>();
 
 	useEffect(() => {
 		setUserSnippet(profileData?.userSnippet);
 	}, [profileData]);
-	console.log("profileData: ", profileData)
+
+	const toggleFollow = (uuid: string, isFollowing: boolean) => {
+		setUserSnippet(prev =>
+			prev?.uuid == uuid ? { ...prev, isFollowing } : prev
+		);
+	};
 
 	const platformIcons: Record<string, any> = {
 		Instagram: <FaInstagram />,
@@ -72,11 +77,11 @@ const AccountInfoCard: React.FC<AccountInfoProps> = ({ uuid, setIsFollowingOpen,
 			</div>
 			{/* Follow Btn */}
 			<div className="mb-4 flex justify-center items-center">
-				{user?.uid !== uuid && (
+				{(userSnippet && user?.uid !== uuid) && (
 					userSnippet?.isFollowing ? (
-						<UnfollowButton targetUser={userSnippet} width="100%" padding="8px 0px" rounded="rounded-xl" />
+						<UnfollowButton targetUser={userSnippet} onToggleFollow={toggleFollow} width="100%" padding="8px 0px" rounded="rounded-xl" />
 					) : (
-						<FollowButton targetUser={userSnippet} width="100%" padding="8px 0px" rounded="rounded-xl" />
+						<FollowButton targetUser={userSnippet} onToggleFollow={toggleFollow} width="100%" padding="8px 0px" rounded="rounded-xl" />
 					)
 				)}
 			</div>

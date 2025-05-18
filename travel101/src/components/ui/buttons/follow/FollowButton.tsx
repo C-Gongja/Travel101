@@ -1,9 +1,9 @@
 import { FollowUser } from "@/api/account/follow/FollowApi";
-import { useTripStore } from "@/store/trip/trip-store";
-import { useSnippetStore } from "@/store/user/user-profile-store";
+import { UserSnippet } from "@/types/user/userSnippetTypes";
 
 interface ButtonProps {
-	targetUser: any;
+	targetUser: UserSnippet;
+	onToggleFollow?: (uuid: string, isFollowing: boolean) => void;
 	width?: string;
 	height?: string;
 	padding?: string;
@@ -11,16 +11,14 @@ interface ButtonProps {
 	rounded?: string;
 }
 
-const FollowButton: React.FC<ButtonProps> = ({ targetUser, width = 'auto', height = 'auto', padding = '0', margin = '0', rounded = 'rounded-none' }) => {
-	const { tripOwner, updateTripOwner } = useTripStore();
-	const { updateUserSnippet } = useSnippetStore();
-	console.log("tripOwner: ", tripOwner);
+const FollowButton: React.FC<ButtonProps> = ({ targetUser, onToggleFollow, width = 'auto', height = 'auto', padding = '0', margin = '0', rounded = 'rounded-none' }) => {
+	// const { updateTripOwner } = useTripStore();
 
 	const handleFollowClick = () => {
 		if (!targetUser?.isFollowing && targetUser?.isFollowing !== undefined) {
-			FollowUser(targetUser?.uuid)
-			updateTripOwner("isFollowing", true);
-			updateUserSnippet("isFollowing", true);
+			FollowUser(targetUser?.uuid);
+			onToggleFollow?.(targetUser.uuid, true);
+			// updateTripOwner("isFollowing", true);
 		}
 	}
 

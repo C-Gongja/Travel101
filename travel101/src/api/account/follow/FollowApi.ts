@@ -22,25 +22,38 @@ const UnfollowUser = async (targetId: string): Promise<any> => {
 	}
 }
 
-const getAllFollowers = async (uuid: string, isAuthenticated: boolean, user: any): Promise<any> => {
-	try {
-		const response = await apiClient(`${FOLLOW_URL}/followers?uuid=${uuid}`, { method: "GET" });
-		return response;
-	} catch (error) {
-		console.error("Error fetching user profile:", error);
-		return null;
-	}
+export { FollowUser, UnfollowUser };
+
+interface FetchInfiniteFollowOptions {
+	uuid: string;
+	page: number;
+	limit: number;
 }
 
-const getAllFollowing = async (uuid: string, isAuthenticated: boolean, user: any): Promise<any> => {
+export const getFollowersPaginated = async ({
+	uuid,
+	page,
+	limit,
+}: FetchInfiniteFollowOptions): Promise<any> => {
 	try {
-		const response = await apiClient(`${FOLLOW_URL}/following?uuid=${uuid}`, { method: "GET" });
-		return response;
+		const response = await apiClient(`${FOLLOW_URL}/inffollowers?uuid=${uuid}&page=${page}&limit=${limit}`, { method: "GET" });
+		return response; // { followers: [...], hasNext: true }
 	} catch (error) {
-		console.error("Error fetching user profile:", error);
-		return null;
+		console.error("Error fetching followers:", error);
+		return { followers: [], hasNext: false };
 	}
-}
+};
 
-
-export { FollowUser, UnfollowUser, getAllFollowers, getAllFollowing };
+export const getFollowingPaginated = async ({
+	uuid,
+	page,
+	limit,
+}: FetchInfiniteFollowOptions): Promise<any> => {
+	try {
+		const response = await apiClient(`${FOLLOW_URL}/inffollowing?uuid=${uuid}&page=${page}&limit=${limit}`, { method: "GET" });
+		return response; // { followers: [...], hasNext: true }
+	} catch (error) {
+		console.error("Error fetching following:", error);
+		return { followers: [], hasNext: false };
+	}
+};

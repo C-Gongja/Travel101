@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/user/user-store";
 import ExternalAuthButtons from "./externalAuth/ExternalAuth";
 import { fetchLogin } from "@/api/auth/authApi";
+import { useAuthModalStore } from "@/store/user/useAuthModalStore";
 
 export interface SignInFormData {
 	email: string;
@@ -12,12 +13,10 @@ export interface SignInFormData {
 }
 
 interface SignInFormProps {
-	setIsSignUp: Dispatch<SetStateAction<boolean>>;
-	onClose: () => void;
 }
 
-const SignInForm: React.FC<SignInFormProps> = ({ setIsSignUp, onClose }) => {
-	const router = useRouter();
+const SignInForm: React.FC<SignInFormProps> = () => {
+	const { setIsSignUp, afterAuthCallback, onClose, setAfterAuthCallback } = useAuthModalStore();
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
 	const { setUser, setToken } = useUserStore();
@@ -25,6 +24,14 @@ const SignInForm: React.FC<SignInFormProps> = ({ setIsSignUp, onClose }) => {
 		email: "",
 		password: "",
 	});
+
+	const handleLoginSuccess = () => {
+		if (afterAuthCallback) {
+			afterAuthCallback();
+			setAfterAuthCallback(null);
+		}
+		onClose();
+	};
 
 	const handleSignUpClick = () => {
 		setIsSignUp(true);  // 회원가입 폼으로 전환
@@ -43,7 +50,6 @@ const SignInForm: React.FC<SignInFormProps> = ({ setIsSignUp, onClose }) => {
 			const userInfo = await fetchLogin(formData);
 			setUser(userInfo.user);
 			setToken(userInfo.accessToken);
-			onClose();
 		} catch (e: any) {
 			const error = JSON.parse(e.message);
 			if (error.errorCode === "EMAIL_NOT_FOUND") {
@@ -57,6 +63,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ setIsSignUp, onClose }) => {
 			}
 		} finally {
 			setIsLoading(false);
+			handleLoginSuccess();
 		}
 	};
 

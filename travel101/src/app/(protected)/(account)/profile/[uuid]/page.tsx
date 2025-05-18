@@ -1,16 +1,16 @@
 'use client'
 
-import { useUserStore } from "../../../store/user/user-store";
+import { useState } from "react";
 import { useParams } from "next/navigation";
+import { useUserStore } from "@/store/user/user-store";
+import { IoSettingsOutline } from "react-icons/io5";
+import Link from "next/link";
 import UserTrips from "@/components/account/profile/UserTrips";
 import AccountInfoCard from "@/components/account/AccountInfoCard";
 import AccountTravelMap from "@/components/account/AccountTravelMap";
-import Link from "next/link";
-import { IoSettingsOutline } from "react-icons/io5";
-import { useState } from "react";
-import Modal from "@/components/ui/modals/MainModal";
 import FollowingModal from "@/components/account/profile/follow/FollowingModal";
 import FollowersModal from "@/components/account/profile/follow/FollowersModal";
+import Modal from "@/components/ui/modal/MainModal";
 
 export default function ProfilePage() {
 	const { uuid } = useParams<{ uuid: string }>();
@@ -22,11 +22,11 @@ export default function ProfilePage() {
 		<div className="px-[100px]">
 			<div className="mb-6 flex gap-3 items-center">
 				<h1 className="">Profiles</h1>
-				{user?.uid === uuid &&
-					(<Link href={`/user/personalInfo/${user?.uid}`} className="text-3xl">
+				{user?.uid === uuid && (
+					<Link href={`/user/personalInfo/${user?.uid}`} className="text-3xl">
 						<IoSettingsOutline />
-					</Link>)
-				}
+					</Link>
+				)}
 			</div>
 			<div className="grid grid-cols-[35%_65%] h-auto gap-10">
 				<AccountInfoCard uuid={uuid} setIsFollowingOpen={setIsFollowingOpen} setIsFollowersOpen={setIsFollowersOpen} />

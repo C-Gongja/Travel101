@@ -9,28 +9,27 @@ import AuthModal from "../auth/AuthModal";
 import SearchBar from "../ui/searchbar/SearchBar";
 import { useSearchBarStore } from "@/store/ui/searchBar/useSearchBarStore";
 import TripCreateBtn from "../ui/buttons/TripCreateBtn";
-import { useIsInView } from "../home/useIsInView";
+import { useAuthModalStore } from "@/store/user/useAuthModalStore";
 
 export default function Navbar() {
-	const router = useRouter();
-	const pathname = usePathname();
-	const isHome = pathname === '/';
 	const isHeroVisible = useSearchBarStore((state) => state.isHeroVisible);
-	const showSearchAndTrip = !isHome || !isHeroVisible;
-
 	const queryClient = useQueryClient();
+	const { onOpen } = useAuthModalStore();
 	const { user, clearUser } = useUserStore();
 	const [menuOpen, setMenuOpen] = useState(false);
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [isSignUp, setIsSignUp] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 	const isLoggedIn = !!user;
 
+	const router = useRouter();
+	const pathname = usePathname();
+	const isHome = pathname === '/';
+	const showSearchAndTrip = !isHome || !isHeroVisible;
 
+	// close dropdown when user click outside 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-				setMenuOpen(false); // 드롭다운 외부 클릭 시 닫기
+				setMenuOpen(false); 
 			}
 		};
 		// 문서에 클릭 이벤트 리스너 추가
@@ -94,7 +93,7 @@ export default function Navbar() {
 				) : (
 					<div className="">
 						<button
-							onClick={() => setIsModalOpen(true)}
+							onClick={() => onOpen()}
 							className="px-4 py-2 bg-maincolor text-white rounded-full shadow-[0px_0px_23px_-4px_rgba(0,_0,_0,_0.1)] 
 							transition duration-150 hover:bg-maindarkcolor">
 							Sign In
@@ -103,12 +102,7 @@ export default function Navbar() {
 				)}
 			</div>
 
-			<AuthModal
-				isOpen={isModalOpen}
-				onClose={() => setIsModalOpen(false)}
-				isSignUp={isSignUp}
-				setIsSignUp={setIsSignUp}
-			/>
+			<AuthModal />
 		</nav>
 	);
 }

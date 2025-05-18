@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/user/user-store";
 import { fetchSignup } from "@/api/auth/authApi";
 import ExternalAuthButtons from "./externalAuth/ExternalAuth";
+import { useAuthModalStore } from "@/store/user/useAuthModalStore";
 
 export interface SignupFormData {
 	name: string;
@@ -13,12 +14,10 @@ export interface SignupFormData {
 }
 
 interface SignUpFormProps {
-	setIsSignUp: Dispatch<SetStateAction<boolean>>;
-	onClose: () => void;
 }
 
-const SignUpForm: React.FC<SignUpFormProps> = ({ setIsSignUp, onClose }) => {
-	const router = useRouter();
+const SignUpForm: React.FC<SignUpFormProps> = () => {
+	const { setIsSignUp, afterAuthCallback, onClose, setAfterAuthCallback } = useAuthModalStore();
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const { setUser, setToken } = useUserStore();
@@ -27,6 +26,15 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setIsSignUp, onClose }) => {
 		email: "",
 		password: "",
 	});
+
+	const handleLoginSuccess = () => {
+
+		if (afterAuthCallback) {
+			afterAuthCallback(); // 원래 하려던 동작 실행
+			setAfterAuthCallback(null); // 콜백 초기화
+		}
+		onClose(); // 모달 닫기
+	};
 
 	const handleSignInClick = () => {
 		setIsSignUp(false);
@@ -47,14 +55,12 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setIsSignUp, onClose }) => {
 			setIsLoading(true);
 			const userInfo = await fetchSignup(formData);
 			setUser(userInfo.user);
-			setToken(userInfo.accessToken)
-			onClose();
-
+			setToken(userInfo.accessToken);
 		} catch (e: any) {
 			setError(e.message);
 		} finally {
 			setIsLoading(false);
-			onClose();
+			handleLoginSuccess();
 		}
 	};
 
@@ -90,11 +96,11 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setIsSignUp, onClose }) => {
 					placeholder="Password"
 					type="password"
 					required
-					className="px-5 py-2 rounded-xl border border-gray-300 text-lgfocus:ring-2 focus:ring-blue-500"
+					className="px-5 py-2 rounded-xl border border-gray-300 text-lgfocus:ring-2 focus:ring-maincolor"
 				/>
 				<input
 					type="submit"
-					value={isLoading ? "Loading..." : "Create Account"}
+					value={isLoading ? "Loading..." : "Submit"}
 					className="cursor-pointer text-white bg-maincolor py-2 px-5 rounded-xl transition-opacity hover:opacity-80"
 				/>
 			</form>

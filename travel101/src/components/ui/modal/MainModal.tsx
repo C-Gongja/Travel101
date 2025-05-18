@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
 
 interface ModalProps {
@@ -8,6 +8,19 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+	useEffect(() => {
+		if (isOpen) {
+			document.body.style.overflow = 'hidden';
+		} else {
+			document.body.style.overflow = '';
+		}
+
+		// Cleanup on unmount
+		return () => {
+			document.body.style.overflow = '';
+		};
+	}, [isOpen]);
+
 	if (!isOpen) return null;
 
 	const handleClickOutside = (e: any) => {

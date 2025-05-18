@@ -1,6 +1,6 @@
 import { patchPersonalInfo } from "@/api/account/personalInfo/PerosnalInfoApi";
 import Button from "@/components/ui/buttons/Button";
-import { useGetAllCountries } from "@/hooks/shared/useGetAllCountries";
+import { useGetAllCountries } from "@/hooks/shared/countries/useGetAllCountries";
 import { PersonalInfoStore } from "@/store/user/user-personal-info-store";
 import { useUserStore } from "@/store/user/user-store";
 import { CountryResponse } from "@/types/trip/tripStoreTypes";

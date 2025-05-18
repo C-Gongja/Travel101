@@ -6,18 +6,18 @@ import { fetchGetTrip } from "@/api/trip/tripApi";
 import { MapProvider } from "../../../../components/trip/map/mapProvider";
 import { MapComponent } from "../../../../components/trip/map/mapComponent";
 import TripCustom from "../../../../components/trip/trip/tripCustom";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUserStore } from "@/store/user/user-store";
 import UserSnippetCard from "@/components/ui/card/UserSnippetCard";
-import { useSnippetStore } from "@/store/user/user-profile-store";
+import { UserSnippet } from "@/types/user/userSnippetTypes";
 
 export default function TripPage() {
 	const { tripUid } = useParams<{ tripUid: string }>();
-	const { trip, setTrip, setIsOwner, setTripOwner } = useTripStore();
-	const { setUserSnippet } = useSnippetStore();
+	const { trip, setTrip, setIsOwner } = useTripStore();
 	const { user, isAuthenticated, isUserLoading } = useUserStore();
 	const [isInitializing, setIsInitializing] = useState(true);
+	const [userSnippet, setUserSnippet] = useState<UserSnippet>();
 
 	const queryClient = useQueryClient();
 
@@ -41,6 +41,12 @@ export default function TripPage() {
 			setIsInitializing(false);
 		}
 	}, [tripData, isInitializing, setTrip, setIsOwner]);
+
+	const toggleFollow = (uuid: string, isFollowing: boolean) => {
+		setUserSnippet(prev =>
+			prev?.uuid == uuid ? { ...prev, isFollowing } : prev
+		);
+	};
 
 	if (isUserLoading || isLoading || isInitializing || !trip) {
 		return <div>Loading trip data...</div>;
@@ -70,7 +76,7 @@ export default function TripPage() {
 			</div>
 			{/* Account info card */}
 			<div className="border-b-2">
-				<UserSnippetCard />
+				{userSnippet && (<UserSnippetCard userSnippet={userSnippet} toggleFollow={toggleFollow} />)}
 			</div>
 		</div>
 	);

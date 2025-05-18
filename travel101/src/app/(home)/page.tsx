@@ -12,9 +12,7 @@ export default function Home() {
 		<div className="">
 			<HeroSection />
 			<TripRecommandation />
-			<div>Top Explorer</div>
 			<TripRecommandation />
-			<div>Top Advanturer</div>
 		</div>
 	);
 }
