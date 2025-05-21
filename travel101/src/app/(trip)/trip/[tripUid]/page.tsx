@@ -11,6 +11,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUserStore } from "@/store/user/user-store";
 import UserSnippetCard from "@/components/ui/card/UserSnippetCard";
 import { UserSnippet } from "@/types/user/userSnippetTypes";
+import { CommentSection } from "@/components/trip/comment/CommentSection";
 
 export default function TripPage() {
 	const { tripUid } = useParams<{ tripUid: string }>();
@@ -18,7 +19,7 @@ export default function TripPage() {
 	const { user, isAuthenticated, isUserLoading } = useUserStore();
 	const [isInitializing, setIsInitializing] = useState(true);
 	const [userSnippet, setUserSnippet] = useState<UserSnippet>();
-
+	const targetType = 'TRIP';
 	const queryClient = useQueryClient();
 
 	const { data: tripData, isLoading } = useQuery({
@@ -75,8 +76,13 @@ export default function TripPage() {
 				</div>
 			</div>
 			{/* Account info card */}
-			<div className="border-b-2">
+			<div className="mb-5">
 				{userSnippet && (<UserSnippetCard userSnippet={userSnippet} toggleFollow={toggleFollow} />)}
+			</div>
+			<div className="border-b-2"></div>
+			{/* comments */}
+			<div className="">
+				<CommentSection targetType={targetType} />
 			</div>
 		</div>
 	);

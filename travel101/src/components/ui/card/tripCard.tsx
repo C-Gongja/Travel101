@@ -2,7 +2,9 @@
 
 import { TripCardListProps } from "@/types/trip/tripCardTypes";
 import { useRouter } from "next/navigation";
+import { FaRegComment } from "react-icons/fa";
 import { FiShare2 } from "react-icons/fi";
+import { BiLike } from "react-icons/bi";
 
 const TripCard = ({ trip }: TripCardListProps) => {
 	const start = new Date(trip.startDate);
@@ -49,6 +51,10 @@ const TripCard = ({ trip }: TripCardListProps) => {
 					<div className="flex flex-row items-center gap-3">
 						<h3 className="text-lg font-semibold">{trip.name}</h3>
 						<div className="flex flex-row items-center gap-1">
+							<BiLike />
+							<p className="text-gray-600">{trip.scripted}</p>
+							<FaRegComment />
+							<p className="text-gray-600">{trip.scripted}</p>
 							<FiShare2 />
 							<p className="text-gray-600">{trip.scripted}</p>
 						</div>

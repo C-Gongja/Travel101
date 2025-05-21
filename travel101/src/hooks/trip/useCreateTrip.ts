@@ -23,7 +23,7 @@ export const useCreateTrip = () => {
 				endDate: defaultEndDate,
 				days: initializeDays(today, defaultEndDate),
 				scripted: 0,
-				isCompleted: false,
+				completed: false,
 				countries: [],
 			};
 

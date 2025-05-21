@@ -2,6 +2,7 @@
 const publicApiClient = async (url: string, options: RequestInit = {}) => {
 
 	const headers: HeadersInit = {
+		"Content-Type": "application/json",
 		...options.headers,
 	};
 
