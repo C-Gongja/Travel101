@@ -1,15 +1,15 @@
-import { addTripComment } from "@/api/trip/comment/tripCommentApi";
+import { addCommentApi } from "@/api/trip/comment/tripCommentApi";
 import { TripCommentRequestProps } from "@/types/trip/comment/tripCommentTypes";
 import { useMutation } from "@tanstack/react-query";
 
-export const useAddTripComment = () => {
+export const useAddComment = () => {
 	const addTripCommentMutation = useMutation({
 		mutationFn: async (newComment: TripCommentRequestProps) => {
 
 			if (!newComment?.tripUid) {
 				throw new Error("No trip provided or trip ID is missing");
 			}
-			const savedComment = await addTripComment(newComment);
+			const savedComment = await addCommentApi(newComment);
 			return savedComment;
 		}
 	});

@@ -6,6 +6,11 @@ export interface TripCommentRequestProps {
 	parentUid: string | null;
 }
 
+export interface CommentEditProps {
+	commentUid: string;
+	content: string;
+}
+
 export interface TripCommentProps {
 	uid: string;
 	content: string;
@@ -24,3 +29,4 @@ export interface FetchCommentOptions {
 	targetType: string;
 	targetUid: string;
 }
+

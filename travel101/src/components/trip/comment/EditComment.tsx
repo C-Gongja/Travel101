@@ -3,43 +3,38 @@
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { useUserStore } from "@/store/user/user-store";
-import { TripCommentRequestProps } from "@/types/trip/comment/tripCommentTypes";
-import { useAddComment } from "@/hooks/trip/comment/useAddComment";
+import { CommentEditProps, TripCommentProps, TripCommentRequestProps } from "@/types/trip/comment/tripCommentTypes";
+import { useEditComment } from "@/hooks/trip/comment/useEditComment";
 
-interface AddCommentProps {
-	tripUid: string;
-	parentUid: string | null;
-	targetType: string;
-	setShowReplyInput?: React.Dispatch<React.SetStateAction<boolean>>;
+interface EditCommentProps {
+	originalComment: TripCommentProps;
+	setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const AddComment = ({ tripUid, parentUid, targetType, setShowReplyInput }: AddCommentProps) => {
+export const EditComment = ({ originalComment, setIsEdit }: EditCommentProps) => {
 	const { user, isAuthenticated } = useUserStore();
-	const { addComment, isSaving, error } = useAddComment();
-	const [commentText, setCommentText] = useState('');
+	const { editComment, isSaving, error } = useEditComment();
+	const [newCommentText, setNewCommentText] = useState(originalComment?.content);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
-	const [isFocused, setIsFocused] = useState(false);
 
 	useEffect(() => {
 		if (textareaRef.current) {
 			textareaRef.current.style.height = 'auto';
 			textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
 		}
-	}, [commentText]);
+	}, [newCommentText]);
 
 	const handleCommentSubmit = () => {
-		if (!commentText.trim() || !user) return;
-		const newComment: TripCommentRequestProps = {
-			tripUid,
-			userUid: user?.uid,
-			targetType: targetType,
-			content: commentText.trim(),
-			parentUid,
+		if (!newCommentText.trim() || !user) return;
+		const newComment: CommentEditProps = {
+			commentUid: originalComment.uid,
+			content: newCommentText.trim(),
 		};
 
-		console.log('Submitting comment:', newComment);
-		addComment(newComment);
-		setCommentText('');
+		console.log('Submitting edit comment:', newComment);
+		// addComment(newComment);
+		editComment(newComment);
+		setIsEdit(false);
 	};
 
 	return (
@@ -60,21 +55,19 @@ export const AddComment = ({ tripUid, parentUid, targetType, setShowReplyInput }
 				<div className="flex-1">
 					<textarea
 						ref={textareaRef}
-						value={commentText}
-						onChange={(e) => setCommentText(e.target.value)}
-						onFocus={() => setIsFocused(true)}
+						value={newCommentText}
+						onChange={(e) => setNewCommentText(e.target.value)}
 						disabled={isSaving}
 						placeholder="write comment..."
 						rows={1}
 						className="w-full p-2 border-b border-gray-300 focus:outline-none focus:border-blue-500 transition-all resize-none overflow-hidden"
 					/>
 
-					{isFocused && (<div className="mt-2 flex justify-end gap-2">
+					<div className="mt-2 flex justify-end gap-2">
 						<button
 							onClick={() => {
-								setIsFocused(false);
-								setShowReplyInput?.(false);
-								setCommentText('');
+								setNewCommentText(originalComment?.content);
+								setIsEdit(false);
 							}}
 							className="px-4 py-1 text-sm text-gray-700 hover:text-black"
 						>
@@ -82,13 +75,13 @@ export const AddComment = ({ tripUid, parentUid, targetType, setShowReplyInput }
 						</button>
 						<button
 							onClick={handleCommentSubmit}
-							disabled={!commentText.trim()}
+							disabled={newCommentText.trim() === originalComment?.content}
 							className="px-4 py-1 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-400"
 						>
 							Post
 						</button>
 					</div>
-					)}
+
 					{error && <p className="text-red-500 text-sm mt-1">Error: {error.message}</p>}
 				</div>
 			</div>

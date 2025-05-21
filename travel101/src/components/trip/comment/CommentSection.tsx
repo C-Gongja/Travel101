@@ -3,7 +3,7 @@ import { useState } from "react";
 import { AddComment } from "./AddComment";
 import { AllComments } from "./AllCommnets";
 import { useTripStore } from "@/store/trip/trip-store";
-import { useGetTripRootComments } from "@/hooks/trip/comment/useGetTripRootComments";
+import { useGetRootComments } from "@/hooks/trip/comment/useGetRootComments";
 
 type CommentSectionProps = {
 	targetType: string;
@@ -16,10 +16,10 @@ export const CommentSection = ({ targetType }: CommentSectionProps) => {
 
 	if (!tripUid) return null; // 또는 로딩 처리, 에러 메시지 등
 
-	const { data: rootComments, isLoading } = useGetTripRootComments(targetType, tripUid);
+	const { data: rootComments, isLoading } = useGetRootComments(targetType, tripUid);
 
 	return (
-		<div className="px-4">
+		<div className="px-4 mt-5">
 			<h2 className="text-xl font-semibold mb-4">Comments</h2>
 			{/* Existing Comments Display */}
 			{/* 댓글 입력 */}
