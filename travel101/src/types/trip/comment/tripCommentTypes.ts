@@ -1,28 +1,29 @@
-export interface TripCommentRequestProps {
-	tripUid: string;
-	userUid: string;
+export interface CommentRequestProps {
+	targetUid: string;
 	content: string;
 	targetType: string;
 	parentUid: string | null;
 }
 
-export interface CommentEditProps {
-	commentUid: string;
+export interface CommentUpdateProps {
+	uid: string;
+	targetType: string;
+	targetUid: string;
+	parentUid: string | null;
 	content: string;
 }
 
-export interface TripCommentProps {
+export interface CommentProps {
 	uid: string;
 	content: string;
 	username: string; // or userId, or both
-	userUid: string;
-	parentUid: string;
+	parentUid: string | null;
 	createdAt: Date;
 	childCount: number;
 }
 
-export interface TripAllCommentsProps {
-	tripComments: TripCommentProps[];
+export interface CommentsProps {
+	tripComments: CommentProps[];
 }
 
 export interface FetchCommentOptions {

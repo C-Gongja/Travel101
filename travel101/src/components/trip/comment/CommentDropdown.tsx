@@ -1,21 +1,20 @@
 // components/CommentDropdown.tsx
 import { useDeleteComment } from '@/hooks/trip/comment/useDeleteComment';
-import { TripCommentProps } from '@/types/trip/comment/tripCommentTypes';
+import { CommentProps } from '@/types/trip/comment/tripCommentTypes';
 import { useEffect, useRef, useState } from 'react';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 
 interface CommentDropdownProps {
 	isOwner: boolean;
-	comment: TripCommentProps;
+	comment: CommentProps;
 	setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const CommentDropdown = ({ isOwner, comment, setIsEdit }: CommentDropdownProps) => {
 	const [showMenu, setShowMenu] = useState(false);
-	const { deleteComment, isSaving, error } = useDeleteComment();
+	const { deleteComment, isDeleting, error } = useDeleteComment();
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
-	// 클릭 바깥 감지하여 닫기
 	useEffect(() => {
 		const handleClickOutside = (e: MouseEvent) => {
 			if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -27,6 +26,11 @@ export const CommentDropdown = ({ isOwner, comment, setIsEdit }: CommentDropdown
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	}, []);
+
+	const handleDelete = async () => {
+		deleteComment(comment.uid);
+		setShowMenu(false);
+	};
 
 	return (
 		<div className="relative" ref={dropdownRef}>
@@ -48,10 +52,7 @@ export const CommentDropdown = ({ isOwner, comment, setIsEdit }: CommentDropdown
 								Edit
 							</button>
 							<button
-								onClick={() => {
-									setShowMenu(false);
-									deleteComment(comment.uid);
-								}}
+								onClick={handleDelete}
 								className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 text-red-500"
 							>
 								Delete

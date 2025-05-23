@@ -1,21 +1,85 @@
 import { addCommentApi } from "@/api/trip/comment/tripCommentApi";
-import { TripCommentRequestProps } from "@/types/trip/comment/tripCommentTypes";
-import { useMutation } from "@tanstack/react-query";
+import { useUserStore } from "@/store/user/user-store";
+import { CommentProps, CommentRequestProps } from "@/types/trip/comment/tripCommentTypes";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useAddComment = () => {
-	const addTripCommentMutation = useMutation({
-		mutationFn: async (newComment: TripCommentRequestProps) => {
+	const queryClient = useQueryClient();
+	const { user } = useUserStore();
+	console.log("add comment");
 
-			if (!newComment?.tripUid) {
-				throw new Error("No trip provided or trip ID is missing");
+	const addCommentMutation = useMutation({
+		mutationFn: addCommentApi,
+		onMutate: async (newComment: CommentRequestProps) => {
+			const queryKey = newComment.parentUid
+				? ['commentReplies', newComment.parentUid]
+				: ['rootComments', newComment.targetType, newComment.targetUid];
+
+			await queryClient.cancelQueries({ queryKey });
+
+			const previousData = queryClient.getQueryData(queryKey);
+			const tempUid = `temp-${Date.now()}`; // 안정적인 temp uid
+
+			const optimisticComment: CommentProps = {
+				uid: tempUid,
+				content: newComment.content,
+				username: user?.username ?? 'user', // 백엔드에서 실제 사용자명 반환
+				parentUid: newComment.parentUid,
+				createdAt: new Date(),
+				childCount: 0,
+			};
+
+			queryClient.setQueryData(queryKey, (old: CommentProps[] = []) =>
+				[optimisticComment, ...old] // always add on the top
+			);
+
+			if (newComment.parentUid) {
+				queryClient.setQueryData(
+					['rootComments', newComment.targetType, newComment.targetUid],
+					(old: CommentProps[] = []) =>
+						old.map((c) =>
+							c.uid === newComment.parentUid ? { ...c, childCount: c.childCount + 1, hasReplies: true } : c
+						)
+				);
 			}
-			const savedComment = await addCommentApi(newComment);
-			return savedComment;
-		}
+
+			return { previousData, queryKey, tempUid };
+		},
+		onSuccess: (data, variables, context) => {
+			const queryKey = context?.queryKey;
+			const tempUid = context?.tempUid;
+
+			if (!queryKey || !tempUid) return;
+
+			queryClient.setQueryData(queryKey, (old: CommentProps[] = []) =>
+				old.map((c) => (c.uid === tempUid ? data : c))
+			);
+		},
+		onError: (error, variables, context) => {
+			if (!context) return;
+
+			queryClient.setQueryData(context.queryKey, context.previousData);
+
+			if (variables.parentUid) {
+				queryClient.setQueryData(
+					['rootComments', variables.targetType, variables.targetUid],
+					(old: CommentProps[] = []) =>
+						old.map((c) =>
+							c.uid === variables.parentUid
+								? { ...c, childCount: c.childCount - 1, hasReplies: c.childCount > 1 }
+								: c
+						)
+				);
+			}
+
+		},
 	});
+
 	return {
-		addComment: addTripCommentMutation.mutate, // 수정된 Trip을 인자로 받을 수 있음
-		isSaving: addTripCommentMutation.isPending, // isLoading 대신 isPending 사용 (React Query 권장)
-		error: addTripCommentMutation.error,
+		addComment: addCommentMutation.mutate,
+		isSaving: addCommentMutation.isPending,
+		error: addCommentMutation.error,
+		isSuccess: addCommentMutation.isSuccess,
+		data: addCommentMutation.data,
 	};
 };

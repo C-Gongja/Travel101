@@ -9,42 +9,49 @@ const apiClient = async (url: string, options: RequestInit = {}) => {
 
 	const headers: HeadersInit = {
 		"Content-Type": "application/json",
-		Authorization: `Bearer ${accessToken}`,
-		...options.headers,
+		Authorization: `Bearer ${accessToken || ''}`,
+		...options?.headers,
 	};
 
 	try {
 		const response = await fetch(url, { ...options, headers });
 		const contentType = response.headers.get("Content-Type");
 
-		if (response.ok) {
+		const getResponseData = async () => {
 			if (contentType && contentType.includes("application/json")) {
 				return await response.json();
-			} else {
-				return await response.text(); // fallback to plain text
 			}
+			return await response.text();
+		};
+
+		if (response.ok) {
+			return getResponseData();
 		}
 
 		if (response.status === 401) {
-			// console.log("access token is expired, use refresh token to get new access token");
-
 			accessToken = await fetchRefreshToken();
 			if (!accessToken) {
 				localStorage.removeItem('accessToken');
 				useUserStore.getState().clearUser();
-				throw new Error('Authentication failed: Please log in again');
+				throw new Error('인증 실패: 다시 로그인해주세요');
 			}
 
 			headers.Authorization = `Bearer ${accessToken}`;
 			const retryResponse = await fetch(url, { ...options, headers });
-
-			if (!retryResponse.ok) throw new Error("Retry request failed");
-
-			return retryResponse.json();
+			if (!retryResponse.ok) {
+				const errorData = await retryResponse.text();
+				throw new Error(`재시도 요청 실패: ${errorData}`);
+			}
+			const retryContentType = retryResponse.headers.get("Content-Type");
+			return retryContentType && retryContentType.includes("application/json")
+				? await retryResponse.json()
+				: await retryResponse.text();
 		}
 		if (response.status === 400) {
-			const errorData = await response.json();
-			throw new Error(errorData.error || "Unknown error");
+			const errorData = await getResponseData();
+			throw new Error(
+				typeof errorData === 'string' ? errorData : errorData.error || '알 수 없는 오류'
+			);
 		}
 
 		throw new Error(`Request failed with status: ${response.status}`);

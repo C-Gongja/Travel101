@@ -3,17 +3,19 @@
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { useUserStore } from "@/store/user/user-store";
-import { CommentEditProps, TripCommentProps, TripCommentRequestProps } from "@/types/trip/comment/tripCommentTypes";
+import { CommentUpdateProps, CommentProps, CommentRequestProps } from "@/types/trip/comment/tripCommentTypes";
 import { useEditComment } from "@/hooks/trip/comment/useEditComment";
 
 interface EditCommentProps {
-	originalComment: TripCommentProps;
+	originalComment: CommentProps;
+	targetType: string;
+	targetUid: string;
 	setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const EditComment = ({ originalComment, setIsEdit }: EditCommentProps) => {
+export const EditComment = ({ originalComment, targetType, targetUid, setIsEdit }: EditCommentProps) => {
 	const { user, isAuthenticated } = useUserStore();
-	const { editComment, isSaving, error } = useEditComment();
+	const { updateComment, isSaving, error } = useEditComment();
 	const [newCommentText, setNewCommentText] = useState(originalComment?.content);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -26,14 +28,16 @@ export const EditComment = ({ originalComment, setIsEdit }: EditCommentProps) =>
 
 	const handleCommentSubmit = () => {
 		if (!newCommentText.trim() || !user) return;
-		const newComment: CommentEditProps = {
-			commentUid: originalComment.uid,
+		const newComment: CommentUpdateProps = {
+			uid: originalComment.uid,
+			targetType: targetType,
+			targetUid: targetUid,
 			content: newCommentText.trim(),
+			parentUid: originalComment.parentUid || null,
 		};
 
 		console.log('Submitting edit comment:', newComment);
-		// addComment(newComment);
-		editComment(newComment);
+		updateComment(newComment);
 		setIsEdit(false);
 	};
 
@@ -53,15 +57,27 @@ export const EditComment = ({ originalComment, setIsEdit }: EditCommentProps) =>
 
 				{/* Input Area */}
 				<div className="flex-1">
-					<textarea
-						ref={textareaRef}
-						value={newCommentText}
-						onChange={(e) => setNewCommentText(e.target.value)}
-						disabled={isSaving}
-						placeholder="write comment..."
-						rows={1}
-						className="w-full p-2 border-b border-gray-300 focus:outline-none focus:border-blue-500 transition-all resize-none overflow-hidden"
-					/>
+
+					<div className="flex-1">
+						<div className='flex flex-row gap-2 items-center'>
+							<p>@{originalComment.username || '익명 사용자'}</p>
+							<p className="text-xs text-gray-500 mt-1">
+								{new Date(originalComment.createdAt).toLocaleString('en-KR')}
+							</p>
+						</div>
+						<textarea
+							ref={textareaRef}
+							value={newCommentText}
+							onChange={(e) => setNewCommentText(e.target.value)}
+							disabled={isSaving}
+							placeholder="write comment..."
+							rows={1}
+							className={clsx(
+								'w-full border-b border-gray-300 focus:outline-none focus:border-blue-500 transition-all resize-none overflow-hidden',
+								isSaving && 'opacity-50'
+							)}
+						/>
+					</div>
 
 					<div className="mt-2 flex justify-end gap-2">
 						<button
@@ -70,15 +86,21 @@ export const EditComment = ({ originalComment, setIsEdit }: EditCommentProps) =>
 								setIsEdit(false);
 							}}
 							className="px-4 py-1 text-sm text-gray-700 hover:text-black"
+							disabled={isSaving}
 						>
 							Cancel
 						</button>
 						<button
 							onClick={handleCommentSubmit}
-							disabled={newCommentText.trim() === originalComment?.content}
-							className="px-4 py-1 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-400"
+							disabled={newCommentText.trim() === originalComment?.content || isSaving}
+							className={clsx(
+								'px-4 py-1 text-sm text-white rounded-md',
+								newCommentText.trim() && !isSaving
+									? 'bg-blue-500 hover:bg-blue-600'
+									: 'bg-gray-400 cursor-not-allowed'
+							)}
 						>
-							Post
+							{isSaving ? 'Posting...' : 'Edit'}
 						</button>
 					</div>
 

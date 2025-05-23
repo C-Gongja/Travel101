@@ -82,7 +82,7 @@ export default function TripPage() {
 			<div className="border-b-2"></div>
 			{/* comments */}
 			<div className="">
-				<CommentSection targetType={targetType} />
+				<CommentSection targetType={targetType} targetUid={tripUid} />
 			</div>
 		</div>
 	);

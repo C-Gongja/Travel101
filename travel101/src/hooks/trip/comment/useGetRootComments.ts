@@ -5,16 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 export const useGetRootComments = (targetType: string, targetUid: string) => {
 	const commentRequest: FetchCommentOptions = {
 		targetType,
-		targetUid
+		targetUid,
 	};
 	return useQuery({
-		queryKey: ["trip_root_comments", targetUid],
-		queryFn: async () => {
-			const response = await getRootComments(commentRequest);
-			return response;
-		},
-		staleTime: 0,
-		gcTime: 0,
-		refetchOnWindowFocus: false,
+		queryKey: ['rootComments', targetType, targetUid], // 개선된 key
+		queryFn: () => getRootComments(commentRequest),
+		refetchOnWindowFocus: true, // 브라우저 다시 활성화 시 refetch
 	});
 };

@@ -1,21 +1,21 @@
 'use client'
 
 import clsx from "clsx";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useUserStore } from "@/store/user/user-store";
-import { TripCommentRequestProps } from "@/types/trip/comment/tripCommentTypes";
+import { CommentRequestProps } from "@/types/trip/comment/tripCommentTypes";
 import { useAddComment } from "@/hooks/trip/comment/useAddComment";
 
 interface AddCommentProps {
-	tripUid: string;
-	parentUid: string | null;
+	targetUid: string;
 	targetType: string;
-	setShowReplyInput?: React.Dispatch<React.SetStateAction<boolean>>;
+	parentUid: string | null;
+	setShowReplyInput?: (show: boolean) => void;
 }
 
-export const AddComment = ({ tripUid, parentUid, targetType, setShowReplyInput }: AddCommentProps) => {
-	const { user, isAuthenticated } = useUserStore();
-	const { addComment, isSaving, error } = useAddComment();
+export const AddComment = ({ targetUid, parentUid, targetType, setShowReplyInput }: AddCommentProps) => {
+	const { user } = useUserStore();
+	const { addComment, isSaving, error, isSuccess } = useAddComment();
 	const [commentText, setCommentText] = useState('');
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const [isFocused, setIsFocused] = useState(false);
@@ -27,20 +27,25 @@ export const AddComment = ({ tripUid, parentUid, targetType, setShowReplyInput }
 		}
 	}, [commentText]);
 
-	const handleCommentSubmit = () => {
-		if (!commentText.trim() || !user) return;
-		const newComment: TripCommentRequestProps = {
-			tripUid,
-			userUid: user?.uid,
-			targetType: targetType,
-			content: commentText.trim(),
-			parentUid,
-		};
+	useEffect(() => {
+		if (isSuccess && !isSaving) {
+			setCommentText('');
+			if (setShowReplyInput) {
+				setShowReplyInput(false);
+			}
+		}
+	}, [isSuccess, isSaving, setShowReplyInput]);
 
-		console.log('Submitting comment:', newComment);
+	const handleCommentSubmit = useCallback(() => {
+		if (!commentText.trim() || !user) return;
+		const newComment: CommentRequestProps = {
+			targetUid,
+			targetType,
+			content: commentText.trim(),
+			parentUid: parentUid || null,
+		};
 		addComment(newComment);
-		setCommentText('');
-	};
+	}, []);
 
 	return (
 		<div className="mb-2">
@@ -66,15 +71,18 @@ export const AddComment = ({ tripUid, parentUid, targetType, setShowReplyInput }
 						disabled={isSaving}
 						placeholder="write comment..."
 						rows={1}
-						className="w-full p-2 border-b border-gray-300 focus:outline-none focus:border-blue-500 transition-all resize-none overflow-hidden"
+						className={clsx(
+							'w-full p-2 border-b border-gray-300 focus:outline-none focus:border-blue-500 transition-all resize-none overflow-hidden',
+							isSaving && 'opacity-50'
+						)}
 					/>
 
-					{isFocused && (<div className="mt-2 flex justify-end gap-2">
+					{isFocused && (<div className="mt-2 flex justify-end items-center gap-2">
+						{error && <p className="text-red-500 text-sm mt-1">Error: {error.message}</p>}
 						<button
 							onClick={() => {
 								setIsFocused(false);
 								setShowReplyInput?.(false);
-								setCommentText('');
 							}}
 							className="px-4 py-1 text-sm text-gray-700 hover:text-black"
 						>
@@ -83,13 +91,17 @@ export const AddComment = ({ tripUid, parentUid, targetType, setShowReplyInput }
 						<button
 							onClick={handleCommentSubmit}
 							disabled={!commentText.trim()}
-							className="px-4 py-1 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-400"
+							className={clsx(
+								'px-4 py-2 text-sm text-white rounded-md',
+								commentText.trim() && !isSaving
+									? 'bg-blue-500 hover:bg-blue-600'
+									: 'bg-gray-400 cursor-not-allowed'
+							)}
 						>
-							Post
+							{isSaving ? 'Posting...' : parentUid ? 'Post replies' : 'Post comment'}
 						</button>
 					</div>
 					)}
-					{error && <p className="text-red-500 text-sm mt-1">Error: {error.message}</p>}
 				</div>
 			</div>
 		</div>

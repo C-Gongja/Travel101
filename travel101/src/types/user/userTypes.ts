@@ -1,6 +1,7 @@
 export interface User {
 	uid: string;
 	name: string;
+	username: string;
 	picture: string;
 	roles: string[];
 }
@@ -12,7 +13,7 @@ export interface UserStore {
 	accessToken: string | null;
 	setToken: (token: string) => void;
 	setUser: (userData: {
-		picture: string; uuid: string; name: string; roles: { authority: string }[]
+		picture: string; uuid: string; name: string; username: string; roles: { authority: string }[]
 	} | null) => void;
 	setIsUserLoading: (isUserLoading: boolean) => void;
 	clearUser: () => void;

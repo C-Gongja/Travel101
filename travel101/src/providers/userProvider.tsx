@@ -17,11 +17,12 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 		try {
 			setIsUserLoading(true);
 			const response = await fetchVerifyUser();
-
+			console.log("response: ", response);
 			if (response?.user) {
 				setUser({
 					uuid: response.user.uuid,
 					name: response.user.name,
+					username: response.user.username,
 					picture: response.user.picture,
 					roles: response.user.roles.map((role: any) => role.authority),
 				});
