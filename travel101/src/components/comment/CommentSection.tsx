@@ -2,8 +2,9 @@ import { useUserStore } from "@/store/user/user-store";
 import { useEffect, useState } from "react";
 import { AddComment } from "./AddComment";
 import { AllComments } from "./AllCommnets";
-import { useGetRootComments } from "@/hooks/trip/comment/useGetRootComments";
-import { CommentProps } from "@/types/trip/comment/tripCommentTypes";
+import { useGetRootComments } from "@/hooks/comment/useGetRootComments";
+import { CommentProps } from "@/types/comment/tripCommentTypes";
+import { useTripStore } from "@/store/trip/trip-store";
 
 export type CommentSectionProps = {
 	targetUid: string;
@@ -12,6 +13,7 @@ export type CommentSectionProps = {
 
 export const CommentSection = ({ targetType, targetUid }: CommentSectionProps) => {
 	const { user, isAuthenticated } = useUserStore();
+	const { trip } = useTripStore();
 
 	if (!targetUid) return null; // 또는 로딩 처리, 에러 메시지 등
 
@@ -23,7 +25,7 @@ export const CommentSection = ({ targetType, targetUid }: CommentSectionProps) =
 
 	return (
 		<div className="px-4 mt-5">
-			<h2 className="text-xl font-semibold mb-4">Comments</h2>
+			<h2 className="text-2xl font-semibold mb-4">{trip?.commentsCount} Comments</h2>
 			{/* Existing Comments Display */}
 			{/* 댓글 입력 */}
 			{isAuthenticated && user ? (

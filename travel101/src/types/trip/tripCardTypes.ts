@@ -4,7 +4,9 @@ export interface TripCardProps {
 	tripUid: string;
 	name: string;
 	username: string;
-	scripted: number;
+	likesCount: number;
+	scriptedCount: number;
+	commentsCount: number;
 	startDate: string;
 	endDate: string;
 	countries: Country[];

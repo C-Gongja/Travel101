@@ -1,29 +1,35 @@
 // CommentItem.tsx
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { AddComment } from './AddComment';
-import { CommentProps } from '@/types/trip/comment/tripCommentTypes';
-import { useGetCommentReplies } from '@/hooks/trip/comment/useGetCommentReplies';
+import { CommentProps } from '@/types/comment/tripCommentTypes';
+import { useGetCommentReplies } from '@/hooks/comment/useGetCommentReplies';
 import { BiCommentDetail, BiLike } from "react-icons/bi";
 import { CommentDropdown } from './CommentDropdown';
 import { useUserStore } from '@/store/user/user-store';
 import { EditComment } from './EditComment';
 import { CommentSectionProps } from './CommentSection';
+import { useAuthModalStore } from '@/store/user/useAuthModalStore';
+import LikesButton from '../ui/buttons/like/LikesButton';
 
 export interface CommentItemProps extends CommentSectionProps {
 	comment: CommentProps;
 }
 
 export const CommentItem = ({ targetUid, comment, targetType }: CommentItemProps) => {
-	const { user } = useUserStore();
+	const router = useRouter();
 	const [showReplies, setShowReplies] = useState(false);
-	const [showReplyInput, setShowReplyInput] = useState(false);
-	const [isEdit, setIsEdit] = useState(false);
-
 	const {
 		data: replyData,
 		isLoading: loadingReplies,
 		isSuccess: repliesLoaded,
 	} = useGetCommentReplies(comment.uid, { enabled: showReplies, });
+	const { setAfterAuthCallback, onOpen } = useAuthModalStore();
+	const { user, isAuthenticated } = useUserStore();
+
+	const [showReplyInput, setShowReplyInput] = useState(false);
+	const [isEdit, setIsEdit] = useState(false);
+	const [isLiked, setIsLiked] = useState(comment?.liked);
 
 	useEffect(() => {
 		if (comment.childCount > 0 && showReplyInput) {
@@ -31,8 +37,23 @@ export const CommentItem = ({ targetUid, comment, targetType }: CommentItemProps
 		}
 	}, [comment.childCount, showReplyInput]);
 
+	// useEffect(() => {
+	// 	console.log("comment: ", comment);
+	// }, [comment]);
+
 	const replies = replyData || [];
 
+	const handleProfileClick = () => {
+		if (!isAuthenticated) {
+			setAfterAuthCallback(() => {
+				router.push(`/profile/${user?.uid}`);
+			});
+			onOpen();
+			return;
+		}
+
+		router.push(`/profile/${user?.uid}`);
+	};
 	return (
 		<div className="">
 			{/* 댓글 본문 */}
@@ -40,13 +61,19 @@ export const CommentItem = ({ targetUid, comment, targetType }: CommentItemProps
 				<>
 					<div className="flex gap-3 items-start">
 						<img
+							onClick={handleProfileClick}
 							src="/img/logo-color.png"
 							alt="User profile"
-							className="w-10 h-10 rounded-full object-cover"
+							className="w-10 h-10 rounded-full object-cover cursor-pointer"
 						/>
 						<div className="flex-1">
 							<div className='flex flex-row gap-2 items-center'>
-								<p>@{comment.username || '익명 사용자'}</p>
+								<p
+									onClick={handleProfileClick}
+									className="cursor-pointer"
+								>
+									@{comment.username || '익명 사용자'}
+								</p>
 								<p className="text-xs text-gray-500 mt-1">
 									{new Date(comment.createdAt).toLocaleString('en-KR')}
 								</p>
@@ -59,10 +86,15 @@ export const CommentItem = ({ targetUid, comment, targetType }: CommentItemProps
 							setIsEdit={setIsEdit}
 						/>
 					</div>
-					<div className="ml-12 pt-2 flex gap-5">
-						<button className="text-lg">
-							<BiLike />
-						</button>
+					<div className="ml-12 pt-2 flex gap-4">
+						<div className='flex gap-2'>
+							<div className="flex items-center text-lg">
+								{(comment) &&
+									<LikesButton targetType={"COMMENT"} targetUid={comment?.uid} isLiked={isLiked} setIsLiked={setIsLiked} />
+								}
+							</div>
+							<p>{comment?.likesCount || 0}</p>
+						</div>
 						<button
 							onClick={() => setShowReplyInput((prev) => !prev)}
 							className="text-lg"

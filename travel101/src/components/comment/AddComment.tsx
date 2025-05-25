@@ -3,8 +3,8 @@
 import clsx from "clsx";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useUserStore } from "@/store/user/user-store";
-import { CommentRequestProps } from "@/types/trip/comment/tripCommentTypes";
-import { useAddComment } from "@/hooks/trip/comment/useAddComment";
+import { CommentRequestProps } from "@/types/comment/tripCommentTypes";
+import { useAddComment } from "@/hooks/comment/useAddComment";
 
 interface AddCommentProps {
 	targetUid: string;
@@ -36,8 +36,12 @@ export const AddComment = ({ targetUid, parentUid, targetType, setShowReplyInput
 		}
 	}, [isSuccess, isSaving, setShowReplyInput]);
 
-	const handleCommentSubmit = useCallback(() => {
+	const handleCommentSubmit = () => {
+		console.log("click add comment btn");
+		console.log("user: ", user);
+		console.log("commentText: ", commentText);
 		if (!commentText.trim() || !user) return;
+		console.log("first pass add comment btn");
 		const newComment: CommentRequestProps = {
 			targetUid,
 			targetType,
@@ -45,7 +49,7 @@ export const AddComment = ({ targetUid, parentUid, targetType, setShowReplyInput
 			parentUid: parentUid || null,
 		};
 		addComment(newComment);
-	}, []);
+	};
 
 	return (
 		<div className="mb-2">

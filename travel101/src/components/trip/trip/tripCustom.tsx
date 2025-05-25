@@ -12,6 +12,8 @@ import { useTripStore } from "@/store/trip/trip-store";
 import useSaveTrip from "@/hooks/trip/useSaveTrip";
 import useDeleteTrip from "@/hooks/trip/useDeleteTrip";
 import useScriptTrip from "@/hooks/trip/useScriptTrip";
+import LikesButton from "@/components/ui/buttons/like/LikesButton";
+import { useUserStore } from "@/store/user/user-store";
 
 export default function TripCustom() {
 	const {
@@ -21,13 +23,18 @@ export default function TripCustom() {
 		addDay,
 		setTrip,
 	} = useTripStore();
-
-	const spanRef = useRef<HTMLSpanElement>(null);
-	const [value, setValue] = useState(trip?.name || "");
-	const [inputWidth, setInputWidth] = useState(10);
+	const { user } = useUserStore();
 	const { saveTrip, isSaving, error } = useSaveTrip();
 	const { deleteTrip, isLoading } = useDeleteTrip();
 	const { scriptTrip } = useScriptTrip();
+	const [value, setValue] = useState(trip?.name || "");
+	const [inputWidth, setInputWidth] = useState(10);
+	const [isLiked, setIsLiked] = useState(trip?.isLiked);
+	const spanRef = useRef<HTMLSpanElement>(null);
+
+	useEffect(() => {
+		console.log("trip: ", trip);
+	}, [trip]);
 
 	useEffect(() => {
 		if (spanRef.current) {
@@ -39,6 +46,11 @@ export default function TripCustom() {
 	const handleTripNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (!isOwner) return;
 		setTripName(e.target.value);
+	};
+
+	const handleScript = async () => {
+		if (!user || !trip) return;
+		scriptTrip(trip.tripUid);
 	};
 
 	const handleSave = async () => {
@@ -106,7 +118,7 @@ export default function TripCustom() {
 	return (
 		<div className="px-6 h-[calc(100vh-500px)]">
 			<div className="flex justify-between items-center">
-				<div className="items-center gap-2">
+				<div className="flex items-center flex-row gap-2">
 					<input
 						onChange={(e) => {
 							setValue(e.target.value);
@@ -136,13 +148,29 @@ export default function TripCustom() {
 					>
 						{value || " "}
 					</span>
-					<button
-						onClick={scriptTrip}
-						className="text-3xl hover:text-maincolor transition duration-200"
-						aria-label="Share trip"
-					>
-						<FiShare2 />
-					</button>
+
+					<div className="flex items-center gap-5">
+						<div className='flex gap-2'>
+							<div className="flex items-center gap-2 text-2xl">
+								{(trip && isLiked !== undefined) &&
+									<LikesButton targetType={"TRIP"} targetUid={trip?.tripUid} isLiked={isLiked} setIsLiked={setIsLiked} />
+								}
+							</div>
+							<p className="text-lg">{trip?.likesCount || 0}</p>
+						</div>
+						<div className='flex gap-2'>
+							<div className="flex items-center gap-2 text-2xl">
+								<button
+									onClick={handleScript}
+									className="text-gray-500 hover:text-maincolor transition duration-200"
+									aria-label="Share trip"
+								>
+									<FiShare2 />
+								</button>
+							</div>
+							<p className="text-lg">{trip?.scriptedCount || 0}</p>
+						</div>
+					</div>
 				</div>
 				{isOwner && (
 					<button

@@ -1,4 +1,4 @@
-import { CommentProps } from "@/types/trip/comment/tripCommentTypes";
+import { CommentProps } from "@/types/comment/tripCommentTypes";
 import { CommentItem } from "./CommentItem";
 import { CommentSectionProps } from "./CommentSection";
 import { useEffect } from "react";

@@ -1,6 +1,6 @@
 // components/CommentDropdown.tsx
-import { useDeleteComment } from '@/hooks/trip/comment/useDeleteComment';
-import { CommentProps } from '@/types/trip/comment/tripCommentTypes';
+import { useDeleteComment } from '@/hooks/comment/useDeleteComment';
+import { CommentProps } from '@/types/comment/tripCommentTypes';
 import { useEffect, useRef, useState } from 'react';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 

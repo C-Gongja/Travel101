@@ -1,4 +1,4 @@
-import { getCommentsReplies } from "@/api/trip/comment/tripCommentApi";
+import { getCommentsReplies } from "@/api/comment/CommentApi";
 import { useQuery } from "@tanstack/react-query";
 
 export const useGetCommentReplies = (parentUid: string, options?: { enabled?: boolean }) => {

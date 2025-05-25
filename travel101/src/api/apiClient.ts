@@ -5,15 +5,35 @@ const AUTH_BASE_URL = "http://localhost:8080/auth";
 const apiClient = async (url: string, options: RequestInit = {}) => {
 	let accessToken = localStorage.getItem("accessToken");
 
-	// if (!accessToken) return null;
-
-	const headers: HeadersInit = {
+	const baseHeaders: Record<string, string> = {
 		"Content-Type": "application/json",
-		Authorization: `Bearer ${accessToken || ''}`,
-		...options?.headers,
 	};
 
+	// headers 병합
+	let mergedHeaders: Record<string, string> = { ...baseHeaders };
+
+	if (options.headers instanceof Headers) {
+		options.headers.forEach((value, key) => {
+			mergedHeaders[key] = value;
+		});
+	} else if (Array.isArray(options.headers)) {
+		options.headers.forEach(([key, value]) => {
+			mergedHeaders[key] = value;
+		});
+	} else if (options.headers) {
+		mergedHeaders = {
+			...mergedHeaders,
+			...options.headers as Record<string, string>,
+		};
+	}
+
+	// Authorization 추가
+	if (accessToken) {
+		mergedHeaders["Authorization"] = `Bearer ${accessToken}`;
+	}
+
 	try {
+		const headers: HeadersInit = mergedHeaders;
 		const response = await fetch(url, { ...options, headers });
 		const contentType = response.headers.get("Content-Type");
 
@@ -28,7 +48,7 @@ const apiClient = async (url: string, options: RequestInit = {}) => {
 			return getResponseData();
 		}
 
-		if (response.status === 401) {
+		if (response.status === 401 && accessToken) {
 			accessToken = await fetchRefreshToken();
 			if (!accessToken) {
 				localStorage.removeItem('accessToken');

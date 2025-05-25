@@ -11,7 +11,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUserStore } from "@/store/user/user-store";
 import UserSnippetCard from "@/components/ui/card/UserSnippetCard";
 import { UserSnippet } from "@/types/user/userSnippetTypes";
-import { CommentSection } from "@/components/trip/comment/CommentSection";
+import { CommentSection } from "@/components/comment/CommentSection";
 
 export default function TripPage() {
 	const { tripUid } = useParams<{ tripUid: string }>();

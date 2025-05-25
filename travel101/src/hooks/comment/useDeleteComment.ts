@@ -1,5 +1,5 @@
-import { deleteCommentApi } from "@/api/trip/comment/tripCommentApi";
-import { CommentProps } from "@/types/trip/comment/tripCommentTypes";
+import { deleteCommentApi } from "@/api/comment/CommentApi";
+import { CommentProps } from "@/types/comment/tripCommentTypes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useDeleteComment = () => {

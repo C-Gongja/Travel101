@@ -66,8 +66,7 @@ export default function FollowerModal() {
 			<div className="flex justify-center items-center px-4 pb-3 border-b border-gray-700">
 				<h2 className="text-xl font-semibold">Followers</h2>
 			</div>
-
-			{/* 화면 사이즈에 맞춰서 w 조절 어떻게 하더라... */}
+			
 			<div className="px-4 py-3">
 				<div className="relative">
 					<FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />

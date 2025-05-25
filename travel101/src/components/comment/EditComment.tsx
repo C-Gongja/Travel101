@@ -3,8 +3,8 @@
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { useUserStore } from "@/store/user/user-store";
-import { CommentUpdateProps, CommentProps, CommentRequestProps } from "@/types/trip/comment/tripCommentTypes";
-import { useEditComment } from "@/hooks/trip/comment/useEditComment";
+import { CommentUpdateProps, CommentProps, CommentRequestProps } from "@/types/comment/tripCommentTypes";
+import { useEditComment } from "@/hooks/comment/useEditComment";
 
 interface EditCommentProps {
 	originalComment: CommentProps;

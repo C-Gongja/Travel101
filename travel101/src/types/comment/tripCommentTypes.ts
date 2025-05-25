@@ -19,6 +19,8 @@ export interface CommentProps {
 	username: string; // or userId, or both
 	parentUid: string | null;
 	createdAt: Date;
+	liked: boolean,
+	likesCount: number,
 	childCount: number;
 }
 

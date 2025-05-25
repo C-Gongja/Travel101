@@ -67,7 +67,6 @@ export default function FollowingModal() {
 				<h2 className="text-xl font-semibold">Following</h2>
 			</div>
 
-			{/* 화면 사이즈에 맞춰서 w 조절 어떻게 하더라... */}
 			<div className="px-4 py-3">
 				<div className="relative">
 					<FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />

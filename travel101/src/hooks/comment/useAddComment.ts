@@ -1,6 +1,7 @@
-import { addCommentApi } from "@/api/trip/comment/tripCommentApi";
+
+import { addCommentApi } from "@/api/comment/CommentApi";
 import { useUserStore } from "@/store/user/user-store";
-import { CommentProps, CommentRequestProps } from "@/types/trip/comment/tripCommentTypes";
+import { CommentProps, CommentRequestProps } from "@/types/comment/tripCommentTypes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useAddComment = () => {
@@ -26,6 +27,8 @@ export const useAddComment = () => {
 				username: user?.username ?? 'user', // 백엔드에서 실제 사용자명 반환
 				parentUid: newComment.parentUid,
 				createdAt: new Date(),
+				liked: false,
+				likesCount: 0,
 				childCount: 0,
 			};
 

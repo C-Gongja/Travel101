@@ -5,7 +5,11 @@ export interface Trip {
 	endDate: Date;
 	days: Day[];
 	createdAt?: string;
+	isLiked: boolean;
 	scripted: number;
+	likesCount: number;
+	scriptedCount: number;
+	commentsCount: number;
 	completed: boolean;
 	countries: Country[];
 }
@@ -18,7 +22,11 @@ export interface TripResponse {
 	endDate: string; // 또는 Date
 	days: Day[];
 	createdAt?: string;
+	isLiked: boolean;
 	scripted: number;
+	likesCount: number;
+	scriptedCount: number;
+	commentsCount: number;
 	completed: boolean;
 	countries: CountryResponse[]; // 백엔드에서 오는 형태
 }

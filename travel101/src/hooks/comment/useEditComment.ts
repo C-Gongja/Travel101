@@ -1,6 +1,6 @@
-import { CommentUpdateProps, CommentProps, CommentRequestProps } from "@/types/trip/comment/tripCommentTypes";
+import { CommentUpdateProps, CommentProps, CommentRequestProps } from "@/types/comment/tripCommentTypes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateCommentApi } from "@/api/trip/comment/tripCommentApi";
+import { updateCommentApi } from "@/api/comment/CommentApi";
 import { useUserStore } from "@/store/user/user-store";
 
 export const useEditComment = () => {
@@ -32,6 +32,8 @@ export const useEditComment = () => {
 				username: user?.username ?? 'user', // 백엔드에서 실제 사용자명 반환
 				parentUid: updateComment.parentUid,
 				createdAt: new Date(),
+				liked: false,
+				likesCount: 0,
 				childCount: 0,
 			};
 

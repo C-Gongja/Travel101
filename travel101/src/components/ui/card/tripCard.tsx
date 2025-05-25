@@ -52,11 +52,11 @@ const TripCard = ({ trip }: TripCardListProps) => {
 						<h3 className="text-lg font-semibold">{trip.name}</h3>
 						<div className="flex flex-row items-center gap-1">
 							<BiLike />
-							<p className="text-gray-600">{trip.scripted}</p>
+							<p className="text-gray-600">{trip.likesCount | 0}</p>
 							<FaRegComment />
-							<p className="text-gray-600">{trip.scripted}</p>
+							<p className="text-gray-600">{trip.commentsCount | 0}</p>
 							<FiShare2 />
-							<p className="text-gray-600">{trip.scripted}</p>
+							<p className="text-gray-600">{trip.scriptedCount | 0}</p>
 						</div>
 					</div>
 				</div>
