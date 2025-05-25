@@ -16,19 +16,9 @@ export interface Trip {
 
 // 백엔드 응답 Trip 인터페이스
 export interface TripResponse {
-	tripUid: string;
-	name: string;
-	startDate: string; // 또는 Date
-	endDate: string; // 또는 Date
-	days: Day[];
-	createdAt?: string;
-	isLiked: boolean;
-	scripted: number;
-	likesCount: number;
-	scriptedCount: number;
-	commentsCount: number;
-	completed: boolean;
-	countries: CountryResponse[]; // 백엔드에서 오는 형태
+	trip: Trip;
+	userSnippet: TripOwnerSnippet;
+	editable: boolean;
 }
 
 // 백엔드 요청 Trip 인터페이스
@@ -121,7 +111,7 @@ export interface TripStore {
 }
 
 // 어댑터 함수: 백엔드 응답을 프론트엔드 모델로 변환
-export function adaptTripResponseToModel(response: TripResponse): Trip {
+export function adaptTripResponseToModel(response: Trip): Trip {
 	return {
 		...response,
 		startDate: new Date(response.startDate),

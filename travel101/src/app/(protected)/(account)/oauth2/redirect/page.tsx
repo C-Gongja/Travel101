@@ -15,7 +15,7 @@ export default function OAuth2RedirectPage() {
 		console.log("redirect verify");
 		try {
 			const response = await fetchVerifyUser();
-
+			console.log("response: ", response);
 			if (response?.user) {
 				setUser({
 					uuid: response.user.uuid,

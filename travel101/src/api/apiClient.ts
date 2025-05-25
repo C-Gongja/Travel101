@@ -48,7 +48,7 @@ const apiClient = async (url: string, options: RequestInit = {}) => {
 			return getResponseData();
 		}
 
-		if (response.status === 401 && accessToken) {
+		if (response.status === 401) {
 			accessToken = await fetchRefreshToken();
 			if (!accessToken) {
 				localStorage.removeItem('accessToken');

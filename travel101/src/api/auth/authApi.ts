@@ -59,7 +59,7 @@ const fetchVerifyUser = async (): Promise<any> => {
 		const data = await apiClient(`${VERIFY_BASE_URL}`, { method: "GET" });
 		return data;
 	} catch (error) {
-		console.error("Error fetching user profile:", error);
+		console.error("Error verify user:", error);
 		return null;
 	}
 }
