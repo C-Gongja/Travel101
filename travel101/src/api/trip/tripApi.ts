@@ -2,6 +2,7 @@ import { apiClient } from "../apiClient";
 import { Trip, TripRequest } from "@/types/trip/tripStoreTypes";
 import { publicApiClient } from "../publicApiClient";
 import { useUserStore } from "@/store/user/user-store";
+import { ScriptDay, ScriptLocation } from "@/types/trip/tripScriptTypes";
 
 const TRIP_BASE_URL = "http://localhost:8080/api/trip";
 const TRIP_PUBLIC_URL = "http://localhost:8080/public/trip";
@@ -116,9 +117,23 @@ const fetchScriptTrip = async (tripUuid: string): Promise<any> => {
 }
 
 const tripScriptApi = async (tripUid: string): Promise<any> => {
-	return await apiClient(`http://localhost:8080/api/tripScript/script?tripUid=${tripUid}`, {
+	return await apiClient(`http://localhost:8080/api/script/scriptTrip?tripUid=${tripUid}`, {
 		method: 'POST',
 	});
 };
 
-export { fetchCreateTrip, fetchGetTrip, fetchSaveTrip, fetchUpdateTrip, fetchScriptTrip, fetchDeleteTrip, tripScriptApi }
+const tripScriptDayApi = async (body: ScriptDay): Promise<any> => {
+	return await apiClient(`http://localhost:8080/api/script/scriptDay`, {
+		method: 'POST',
+		body: JSON.stringify(body),
+	});
+};
+
+const tripScriptLocationApi = async (body: ScriptLocation): Promise<any> => {
+	return await apiClient(`http://localhost:8080/api/script/scriptLocation`, {
+		method: 'POST',
+		body: JSON.stringify(body),
+	});
+};
+
+export { fetchCreateTrip, fetchGetTrip, fetchSaveTrip, fetchUpdateTrip, fetchScriptTrip, fetchDeleteTrip, tripScriptApi, tripScriptDayApi, tripScriptLocationApi }

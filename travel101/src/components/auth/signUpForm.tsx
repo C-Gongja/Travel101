@@ -1,7 +1,6 @@
 'use client'
 
-import { Dispatch, SetStateAction, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useUserStore } from "@/store/user/user-store";
 import { fetchSignup } from "@/api/auth/authApi";
 import ExternalAuthButtons from "./externalAuth/ExternalAuth";

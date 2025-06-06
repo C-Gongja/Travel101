@@ -6,10 +6,12 @@ import { IoIosAddCircle } from "react-icons/io";
 import { MdDeleteOutline } from "react-icons/md";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { FiShare2 } from "react-icons/fi";
+import { FaClone } from "react-icons/fa6";
 import LocationComponent from "./locationComponent";
 import { useTripStore } from "@/store/trip/trip-store";
 import { Day } from "@/types/trip/tripStoreTypes";
+import Modal from "@/components/ui/modal/MainModal";
+import { CloneDay } from "./clone/CloneDay";
 
 interface DraggableDayProps {
 	day: Day;
@@ -19,6 +21,8 @@ interface DraggableDayProps {
 const DayComponent: React.FC<DraggableDayProps> = ({ day, dayIndex }) => {
 	const { isOwner, setSelectedDay, removeDay, searchLocation } = useTripStore();
 	const [isCollapsed, setIsCollapsed] = useState(false); // 접힘 상태 관리
+	const [isCloneOpen, setIsCloneOpen] = useState(false);
+	const [cloneDayNum, setCloneDayNum] = useState(0);
 
 	const toggleCollapse = () => {
 		setIsCollapsed((prev) => !prev); // 접힘/펼침 토글
@@ -37,6 +41,12 @@ const DayComponent: React.FC<DraggableDayProps> = ({ day, dayIndex }) => {
 			setSelectedDay(day.number);
 		}
 	};
+
+	const handleDayCloneClick = (dayNum: number) => {
+		setIsCloneOpen(true);
+		setCloneDayNum(dayNum);
+		console.log("clone dayNum: ", dayNum);
+	}
 
 	return (
 		<Draggable key={`day-${dayIndex}`} draggableId={`day-${dayIndex}`} index={dayIndex} isDragDisabled={!isOwner}>
@@ -57,8 +67,10 @@ const DayComponent: React.FC<DraggableDayProps> = ({ day, dayIndex }) => {
 								<RxHamburgerMenu />
 							</span>
 							<span {...provided.dragHandleProps}>Day {day.number}</span>
-							<button className="hover:text-maincolor transition duration-200">
-								<FiShare2 className="text-3xl" />
+							<button
+								onClick={() => handleDayCloneClick(day.number)}
+								className="text-gray-500 hover:text-maincolor transition duration-200">
+								<FaClone className="text-lg" />
 							</button>
 						</div>
 						<div className="flex items-center space-x-2">
@@ -116,6 +128,11 @@ const DayComponent: React.FC<DraggableDayProps> = ({ day, dayIndex }) => {
 							<IoIosAddCircle className="text-xl" /> Location
 						</button>
 					</div>
+					{isCloneOpen &&
+						<Modal isOpen={isCloneOpen} onClose={() => setIsCloneOpen(false)}>
+							<CloneDay cloneDayNum={cloneDayNum} />
+						</Modal>
+					}
 				</div>
 			)}
 		</Draggable>

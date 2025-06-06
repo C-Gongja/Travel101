@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { IoIosAddCircle } from "react-icons/io";
 import { MdDeleteOutline } from "react-icons/md";
-import { FiShare2 } from "react-icons/fi";
+import { FaClone } from "react-icons/fa6";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import DayComponent from "./dayComponent";
 import DateComponent from "./dateComponent";
@@ -159,13 +159,13 @@ export default function TripCustom() {
 							<p className="text-lg">{trip?.likesCount || 0}</p>
 						</div>
 						<div className='flex gap-2'>
-							<div className="flex items-center gap-2 text-2xl">
+							<div className="flex items-center gap-2 text-xl">
 								<button
 									onClick={handleScript}
 									className="text-gray-500 hover:text-maincolor transition duration-200"
 									aria-label="Share trip"
 								>
-									<FiShare2 />
+									<FaClone />
 								</button>
 							</div>
 							<p className="text-lg">{trip?.scriptedCount || 0}</p>

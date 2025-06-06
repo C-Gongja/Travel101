@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useTripStore } from "@/store/trip/trip-store";
 import { fetchGetTrip } from "@/api/trip/tripApi";
 import { MapProvider } from "../../../../components/trip/map/mapProvider";
-import { MapComponent } from "../../../../components/trip/map/mapComponent";
 import TripCustom from "../../../../components/trip/trip/tripCustom";
 import { useParams } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -12,6 +11,7 @@ import { useUserStore } from "@/store/user/user-store";
 import UserSnippetCard from "@/components/ui/card/UserSnippetCard";
 import { UserSnippet } from "@/types/user/userSnippetTypes";
 import { CommentSection } from "@/components/comment/CommentSection";
+import MapController from "@/components/trip/map/MapController";
 
 export default function TripPage() {
 	const { tripUid } = useParams<{ tripUid: string }>();
@@ -64,7 +64,7 @@ export default function TripPage() {
 						:
 						(
 							<MapProvider>
-								<MapComponent />
+								<MapController />
 							</MapProvider>
 						)
 					}

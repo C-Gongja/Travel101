@@ -1,11 +1,12 @@
 import { apiClient } from "../apiClient";
 import { publicApiClient } from "../publicApiClient";
 
-const TRIP_BASE_URL = "http://localhost:8080/public/trip";
+const PUBLIC_TRIP_URL = "http://localhost:8080/public/trip";
+const TRIP_URL = "http://localhost:8080/api/trip";
 
 const fetchUserTrips = async (userUuid: string): Promise<any> => {
 	try {
-		const response = await publicApiClient(`${TRIP_BASE_URL}/all/${encodeURIComponent(userUuid)}`, {
+		const response = await publicApiClient(`${PUBLIC_TRIP_URL}/all/${encodeURIComponent(userUuid)}`, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -20,7 +21,7 @@ const fetchUserTrips = async (userUuid: string): Promise<any> => {
 
 const fetchAllTrips = async (): Promise<any> => {
 	try {
-		const response = await publicApiClient(`${TRIP_BASE_URL}/all`, {
+		const response = await publicApiClient(`${PUBLIC_TRIP_URL}/all`, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -33,4 +34,10 @@ const fetchAllTrips = async (): Promise<any> => {
 	}
 }
 
-export { fetchUserTrips, fetchAllTrips }
+const fetchCloneTrips = async (userUuid: string): Promise<any> => {
+	return await apiClient(`${TRIP_URL}/getCloneTripList?userUid=${userUuid}`, {
+		method: "GET"
+	});
+}
+
+export { fetchUserTrips, fetchAllTrips, fetchCloneTrips }

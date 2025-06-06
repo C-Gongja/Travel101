@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useFetchProfile } from "@/hooks/profile/useGetProfile";
+import { useGetProfile } from "@/hooks/profile/useGetProfile";
 import { CgProfile } from "react-icons/cg";
 
 interface PersonalInfoProps {
@@ -7,7 +7,7 @@ interface PersonalInfoProps {
 }
 
 const PersonalInfo: React.FC<PersonalInfoProps> = ({ uuid }) => {
-	const { data: profile, isLoading } = useFetchProfile(uuid);
+	const { data: profile, isLoading } = useGetProfile(uuid);
 
 	return (
 		<div className="p-5 rounded-xl shadow-[0px_0px_15px_7px_rgba(0,_0,_0,_0.1)] 

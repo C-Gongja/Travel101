@@ -4,7 +4,10 @@ import { Draggable } from "@hello-pangea/dnd";
 import { MdDeleteOutline } from "react-icons/md";
 import { useRef, useState, useEffect } from "react";
 import { useTripStore } from "@/store/trip/trip-store";
+import { FaClone } from "react-icons/fa6";
 import { Location } from "@/types/trip/tripStoreTypes";
+import Modal from "@/components/ui/modal/MainModal";
+import { CloneLocation } from "./clone/CloneLocation";
 
 interface LocationProps {
 	location: Location;
@@ -23,6 +26,15 @@ const LocationComponent: React.FC<LocationProps> = ({
 	const [lineHeight, setLineHeight] = useState<number>(0);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const { isOwner, setDescription, removeLocation } = useTripStore();
+	const [isCloneOpen, setIsCloneOpen] = useState(false);
+	const [cloneDayNum, setCloneDayNum] = useState(0);
+	const [cloneLocNum, setCloneLocNum] = useState(0);
+
+	const handleLocCloneClick = (dayNum: number, locNum: number) => {
+		setIsCloneOpen(true)
+		setCloneDayNum(dayNum + 1);
+		setCloneLocNum(locNum);
+	}
 
 	const handleDescriptionChange = (
 		e: React.ChangeEvent<HTMLTextAreaElement>,
@@ -82,7 +94,15 @@ const LocationComponent: React.FC<LocationProps> = ({
 
 					{/* 장소 정보 */}
 					<div ref={contentRef} className="flex flex-col flex-grow">
-						<div className="font-semibold">{location.name}</div>
+						<div className="flex gap-5 font-semibold">
+							{location.name}
+							<button
+								onClick={() => handleLocCloneClick(dayIndex, location.number)}
+								className="text-gray-500 hover:text-maincolor transition duration-200">
+								<FaClone className="text-lg" />
+							</button>
+						</div>
+
 						{/* <div className="text-gray-600">{location.address || "address"}</div> */}
 						<textarea
 							ref={textareaRef}
@@ -104,6 +124,12 @@ const LocationComponent: React.FC<LocationProps> = ({
 					>
 						<MdDeleteOutline size={18} />
 					</button>
+
+					{isCloneOpen &&
+						<Modal isOpen={isCloneOpen} onClose={() => setIsCloneOpen(false)}>
+							<CloneLocation dayNum={cloneDayNum} locNum={cloneLocNum} />
+						</Modal>
+					}
 				</div>
 			)}
 		</Draggable>

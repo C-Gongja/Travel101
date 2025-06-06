@@ -20,6 +20,7 @@ export default function OAuth2RedirectPage() {
 				setUser({
 					uuid: response.user.uuid,
 					name: response.user.name,
+					username: response.user.username,
 					picture: response.user.picture,
 					roles: response.user.roles.map((role: any) => role.authority),
 				});

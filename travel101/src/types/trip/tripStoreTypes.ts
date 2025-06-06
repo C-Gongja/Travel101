@@ -60,16 +60,19 @@ export interface Day {
 export interface Location {
 	number: number;
 	name: string;
-	longitude: number | null;
-	latitude: number | null;
+	longitude: number;
+	latitude: number;
 	description: string;
+	countryIso2: string;
 }
 
 export interface SelectedLocation {
 	name?: string;
 	address?: string;
 	place_id?: string;
-	country?: string;
+	longitude: number;
+	latitude: number;
+	countryIso2?: string;
 }
 
 export interface TripOwnerSnippet {
@@ -86,7 +89,7 @@ export interface TripStore {
 	isLoading: boolean;
 	searchQuery: string | null;
 	selectedDay: number;
-	location: Partial<Location> | null;
+	// location: Partial<Location> | null;
 	setTrip: (trip: Trip) => void;
 	setIsOwner: (editable: boolean) => void;
 	setTripOwner: (tripOwner: TripOwnerSnippet) => void;
@@ -99,8 +102,8 @@ export interface TripStore {
 	removeDay: (dayIndex: number) => void;
 	setSearchQuery: (query: string) => void;
 	searchLocation: () => void;
-	setLocation: (loc: Partial<Location>) => void;
-	addLocation: (dayIndex: number, loc: Partial<Location>, selectedLoc: SelectedLocation) => void;
+	// setLocation: (loc: Partial<Location>) => void;
+	addLocation: (dayIndex: number, selectedLoc: SelectedLocation) => void;
 	updateLocation: (dayIndex: number, locIndex: number, location: Location) => void;
 	removeLocation: (dayIndex: number, locIndex: number) => void;
 	setDescription: (dayIndex: number, locIndex: number, description: string) => void;

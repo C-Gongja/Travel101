@@ -16,7 +16,6 @@ export const useTripStore = create<TripStore>((set, get) => ({
 	isOwner: false,
 	tripOwner: null,
 	selectedDay: 1,
-	location: null,
 	isLoading: false,
 	searchQuery: null,
 
@@ -158,21 +157,17 @@ export const useTripStore = create<TripStore>((set, get) => ({
 		set({ searchQuery: search });
 	},
 
-	setLocation: (loc: Partial<Location>) => {
-		set({ location: loc });
-	},
-
-	addLocation: (dayIndex: number, loc: Partial<Location>, selectedLoc: SelectedLocation) =>
+	addLocation: (dayIndex: number, selectedLoc: SelectedLocation) =>
 		set((state) => {
 			if (!state.trip || dayIndex >= state.trip.days.length) return state;
 
-			// 새로운 Location 객체 생성
 			const newLocation: Location = {
-				number: state.trip.days[dayIndex].locations.length + 1, // 기존 위치 수 + 1
-				name: loc.name ?? '',
-				longitude: loc.longitude ?? null,
-				latitude: loc.latitude ?? null,
-				description: '', // 기본값
+				number: state.trip.days[dayIndex].locations.length + 1,
+				name: selectedLoc.name ?? '',
+				longitude: selectedLoc.longitude ?? null,
+				latitude: selectedLoc.latitude ?? null,
+				description: '',
+				countryIso2: selectedLoc.countryIso2 ?? '',
 			};
 
 			const updatedDays = [...state.trip.days];
@@ -183,7 +178,7 @@ export const useTripStore = create<TripStore>((set, get) => ({
 
 			let updatedCountries = state.trip.countries;
 			console.log("before updatedCountries: ", updatedCountries)
-			const country = selectedLoc.country;
+			const country = selectedLoc.countryIso2;
 			console.log("updating country: ", country)
 			if (country) {
 				const iso2 = typeof country === 'string' ? country : country;
@@ -226,6 +221,7 @@ export const useTripStore = create<TripStore>((set, get) => ({
 	removeLocation: (dayIndex: number, locIndex: number) =>
 		set((state) => {
 			if (!state.trip || dayIndex >= state.trip.days.length) return state;
+			// 전체 day 복사가 필요한 것인가 아니지 location이 remove된 것만 바꾸면됨
 			const updatedDays = [...state.trip.days];
 
 			// 🗑️ 해당 위치 제거 후 number 재정렬
@@ -236,8 +232,20 @@ export const useTripStore = create<TripStore>((set, get) => ({
 					number: newIndex + 1, // 📌 number를 1부터 다시 매김
 				}));
 
+			// 🌎 사용된 iso2만 수집
+			const usedIso2s = updatedDays
+				.flatMap((day) => day.locations.map((loc) => loc.countryIso2))
+				.filter((iso2): iso2 is string => !!iso2); // null/undefined 제거
+
+			const usedIso2Set = new Set(usedIso2s);
+
+			// 🧹 실제로 사용 중인 국가만 유지
+			const updatedCountries = state.trip.countries.filter((country) =>
+				usedIso2Set.has(country.iso2)
+			);
+
 			return {
-				trip: { ...state.trip, days: updatedDays },
+				trip: { ...state.trip, days: updatedDays, countries: updatedCountries, },
 			};
 		}),
 
@@ -264,11 +272,6 @@ export const useTripStore = create<TripStore>((set, get) => ({
 		set((state) => ({
 			trip: state.trip ? { ...state.trip, isCompleted } : null,
 		})),
-
-	// setCountries: (countries: string[]) =>
-	// 	set((state) => ({
-	// 		trip: state.trip ? { ...state.trip, countries } : null,
-	// 	})),
 }));
 
 // ... may need functions that tracks changes

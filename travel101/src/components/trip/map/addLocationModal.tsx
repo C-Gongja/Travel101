@@ -11,7 +11,7 @@ interface AddLocationModalProps {
 }
 
 const AddLocationModal: React.FC<AddLocationModalProps> = ({ selectedPlace, onClose }) => {
-	const { trip, location, addLocation } = useTripStore();
+	const { trip, addLocation } = useTripStore();
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -20,7 +20,8 @@ const AddLocationModal: React.FC<AddLocationModalProps> = ({ selectedPlace, onCl
 		try {
 			setIsLoading(true);
 			console.log("selected Place:", selectedPlace);
-			addLocation(dayIndex, location, selectedPlace); // 위치 추가
+			if (!selectedPlace) return;
+			addLocation(dayIndex, selectedPlace); // 위치 추가
 			onClose();
 		} catch (err) {
 			setError("Failed to add location");
