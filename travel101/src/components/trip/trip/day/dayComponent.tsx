@@ -7,11 +7,11 @@ import { MdDeleteOutline } from "react-icons/md";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FaClone } from "react-icons/fa6";
-import LocationComponent from "./locationComponent";
+import LocationComponent from "../location/locationComponent";
 import { useTripStore } from "@/store/trip/trip-store";
 import { Day } from "@/types/trip/tripStoreTypes";
 import Modal from "@/components/ui/modal/MainModal";
-import { CloneDay } from "./clone/CloneDay";
+import { CloneDay } from "../clone/CloneDay";
 
 interface DraggableDayProps {
 	day: Day;

@@ -177,9 +177,9 @@ export const useTripStore = create<TripStore>((set, get) => ({
 			};
 
 			let updatedCountries = state.trip.countries;
-			console.log("before updatedCountries: ", updatedCountries)
+			// console.log("before updatedCountries: ", updatedCountries)
 			const country = selectedLoc.countryIso2;
-			console.log("updating country: ", country)
+			// console.log("updating country: ", country)
 			if (country) {
 				const iso2 = typeof country === 'string' ? country : country;
 				const countryExists = updatedCountries.some(c => c.iso2 === iso2);
@@ -197,7 +197,7 @@ export const useTripStore = create<TripStore>((set, get) => ({
 				}
 			}
 
-			console.log("updatedCountries: ", updatedCountries)
+			// console.log("updatedCountries: ", updatedCountries)
 			return {
 				trip: {
 					...state.trip,
@@ -215,6 +215,28 @@ export const useTripStore = create<TripStore>((set, get) => ({
 			updatedDays[dayIndex].locations[locIndex] = location;
 			return {
 				trip: { ...state.trip, days: updatedDays },
+			};
+		}),
+
+	updateLocationMedia: (dayIndex, locIndex, newMedia) =>
+		set((state) => {
+			if (!state.trip) return state;
+			const updatedDays = state.trip.days.map((day, dIdx) => {
+				if (dIdx === dayIndex) {
+					return {
+						...day,
+						locations: day.locations.map((loc, lIdx) =>
+							lIdx === locIndex ? { ...loc, media: newMedia } : loc
+						),
+					};
+				}
+				return day;
+			});
+			return {
+				trip: {
+					...state.trip,
+					days: updatedDays,
+				},
 			};
 		}),
 

@@ -19,7 +19,7 @@ const PlaceSearchBox = ({ onPlaceSelect }: PlaceSearchBoxProps) => {
 	};
 
 	return (
-		<div className="absolute top-2 left-1/2 transform -translate-x-1/2 z-10 w-3/4 max-w-md">
+		<div className="absolute top-2 left-1/2 transform -translate-x-1/2 z-10 w-2/5 max-w-md">
 			<StandaloneSearchBox
 				onLoad={(ref) => (searchBoxRef.current = ref)}
 				onPlacesChanged={handlePlacesChanged}

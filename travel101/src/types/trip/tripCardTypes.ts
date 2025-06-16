@@ -10,6 +10,7 @@ export interface TripCardProps {
 	startDate: string;
 	endDate: string;
 	countries: Country[];
+	media?: string[];
 }
 
 export interface TripCardListProps {

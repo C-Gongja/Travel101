@@ -1,4 +1,5 @@
 import { useCreateTrip } from "@/hooks/trip/useCreateTrip";
+import { useAuthModalStore } from "@/store/user/useAuthModalStore";
 import { useUserStore } from "@/store/user/user-store";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -13,28 +14,20 @@ interface TripCreateBtnProps {
 
 const TripCreateBtn: React.FC<TripCreateBtnProps> = ({ text = "Create a New Trip", width = 'auto', height = 'auto', margin = '0' }) => {
 	const router = useRouter();
-	const queryClient = useQueryClient();
 	const { user, isAuthenticated } = useUserStore();
-	const { mutate: createTrip, isPending, data, error } = useCreateTrip();
+	const { setAfterAuthCallback, onOpen } = useAuthModalStore();
+	// const { mutate: createTrip, isPending, data, error } = useCreateTrip();
 
 	const handleClickBuildTrip = () => {
-		if (isAuthenticated) {
-			createTrip(undefined, {
-				onSuccess: ({ trip, editable, redirectUrl }) => {
-					const createdTrip = {
-						trip,
-						editable, // editable 속성을 추가
-					};
-					queryClient.setQueryData(['trip', trip.uuid], createdTrip);
-					console.log("redirectUrl: ", redirectUrl);
-					router.push(redirectUrl);
-				},
+		if (!isAuthenticated) {
+			setAfterAuthCallback(() => {
+				router.push('/trip');
 			});
-		} else {
-			//use contextapi or zustand to manage this
-			setIsModalOpen(true); // 로그인 안 된 경우 모달 열기
+			onOpen();
+			return;
 		}
-		localStorage.removeItem("tripId"); // 항상 tripId 제거
+		router.push('/trip');
+		// localStorage.removeItem("tripId"); // 항상 tripId 제거
 	};
 
 	return (

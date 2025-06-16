@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTripStore } from "@/store/trip/trip-store";
 import { fetchGetTrip } from "@/api/trip/tripApi";
-import { MapProvider } from "../../../../components/trip/map/mapProvider";
+import { MapProvider } from "../../../../components/trip/map/MapProvider";
 import TripCustom from "../../../../components/trip/trip/tripCustom";
 import { useParams } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -12,13 +12,15 @@ import UserSnippetCard from "@/components/ui/card/UserSnippetCard";
 import { UserSnippet } from "@/types/user/userSnippetTypes";
 import { CommentSection } from "@/components/comment/CommentSection";
 import MapController from "@/components/trip/map/MapController";
+import useSaveTrip from "@/hooks/trip/useSaveTrip";
 
 export default function TripPage() {
 	const { tripUid } = useParams<{ tripUid: string }>();
-	const { trip, setTrip, setIsOwner } = useTripStore();
+	const { trip, isOwner, setTrip, setIsOwner } = useTripStore();
 	const { user, isAuthenticated, isUserLoading } = useUserStore();
 	const [isInitializing, setIsInitializing] = useState(true);
 	const [userSnippet, setUserSnippet] = useState<UserSnippet>();
+	const { saveTrip, isSaving, error } = useSaveTrip();
 	const targetType = 'TRIP';
 	const queryClient = useQueryClient();
 
@@ -26,7 +28,7 @@ export default function TripPage() {
 		queryKey: ['trip', tripUid],
 		queryFn: () => fetchGetTrip({ tripUid: tripUid, isAuthenticated, user }),
 		initialData: () => queryClient.getQueryData(['trip', tripUid]), // Home에서 캐싱된 데이터 사용
-		staleTime: 5 * 60 * 1000, // 5분 동안 캐시 유지
+		staleTime: 1 * 60 * 1000, // 1분 동안 캐시 유지
 		enabled: isAuthenticated !== null, // user 상태가 로드된 후에만 실행
 	});
 
@@ -47,6 +49,12 @@ export default function TripPage() {
 		setUserSnippet(prev =>
 			prev?.uuid == uuid ? { ...prev, isFollowing } : prev
 		);
+	};
+
+	const handleSave = async () => {
+		if (!isOwner || !trip) return; // 소유자가 아니면 저장 불가
+		const updatedTrip = { ...trip }; // 예시 수정
+		saveTrip(updatedTrip);
 	};
 
 	if (isUserLoading || isLoading || isInitializing || !trip) {
@@ -74,6 +82,12 @@ export default function TripPage() {
 				<div className="bg-white p-4 rounded-lg overflow-y-auto no-scrollbar">
 					<TripCustom />
 				</div>
+				<button
+					onClick={handleSave}
+					className="px-4 py-2 text-xl text-maincolor border border-maincolor rounded-md hover:bg-maincolor hover:text-white transition duration-200"
+				>
+					Save
+				</button>
 			</div>
 			{/* Account info card */}
 			<div className="mb-5">

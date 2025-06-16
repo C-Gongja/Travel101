@@ -5,12 +5,14 @@ const AUTH_BASE_URL = "http://localhost:8080/auth";
 const apiClient = async (url: string, options: RequestInit = {}) => {
 	let accessToken = localStorage.getItem("accessToken");
 
-	const baseHeaders: Record<string, string> = {
-		"Content-Type": "application/json",
-	};
+	// Initialize mergedHeaders without a default Content-Type
+	let mergedHeaders: Record<string, string> = {};
 
-	// headers 병합
-	let mergedHeaders: Record<string, string> = { ...baseHeaders };
+	// If a body is FormData, do NOT set Content-Type. Browser will handle it.
+	// Otherwise, set to application/json by default.
+	if (!(options.body instanceof FormData)) {
+		mergedHeaders["Content-Type"] = "application/json";
+	}
 
 	if (options.headers instanceof Headers) {
 		options.headers.forEach((value, key) => {
@@ -56,7 +58,12 @@ const apiClient = async (url: string, options: RequestInit = {}) => {
 				throw new Error('인증 실패: 다시 로그인해주세요');
 			}
 
-			headers.Authorization = `Bearer ${accessToken}`;
+			const retryHeaders: Record<string, string> = { ...mergedHeaders, Authorization: `Bearer ${accessToken}` }; // Use mergedHeaders as base
+			if (options.body instanceof FormData) {
+				// If original body was FormData, ensure Content-Type is NOT set for retry
+				delete retryHeaders['Content-Type'];
+			}
+
 			const retryResponse = await fetch(url, { ...options, headers });
 			if (!retryResponse.ok) {
 				const errorData = await retryResponse.text();

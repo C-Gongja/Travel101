@@ -10,11 +10,11 @@ import { locationUtils } from '@/util/googleMapsutils';
 
 import GoogleMapWrapper from './GoogleMapWrapper';
 import PlaceSearchBox from './PlaceSearchBox';
-import CustomMarker from './customMarker';
-import DayLocationsMap from './dayLocationsMap';
+import CustomMarker from './CustomMarker';
+import DayLocationsMap from './DayLocationsMap';
 import Modal from '@/components/ui/modal/MainModal';
-import AddLocationModal from './addLocationModal';
-import SelectedPlaceInfo from './\bselectedPlaceInfo';
+import AddLocationModal from './AddLocationModal';
+import SelectedPlaceInfo from './SelectedPlaceInfo';
 
 const MapController = () => {
 	const [map, setMap] = useState<google.maps.Map | null>(null);

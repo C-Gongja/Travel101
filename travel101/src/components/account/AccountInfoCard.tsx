@@ -7,6 +7,7 @@ import { SocialLink } from "@/types/user/userPersonalInfoTypes";
 import UnfollowButton from "../ui/buttons/follow/UnfollowButton";
 import FollowButton from "../ui/buttons/follow/FollowButton";
 import { UserSnippet } from "@/types/user/userSnippetTypes";
+import Image from "next/image";
 
 interface AccountInfoProps {
 	uuid: string;
@@ -18,7 +19,7 @@ const AccountInfoCard: React.FC<AccountInfoProps> = ({ uuid, setIsFollowingOpen,
 	const { user } = useUserStore();
 	const { data: profileData, isLoading } = useGetProfile(uuid);
 	const [userSnippet, setUserSnippet] = useState<UserSnippet>();
-
+	console.log(user);
 	useEffect(() => {
 		setUserSnippet(profileData?.userSnippet);
 	}, [profileData]);
@@ -42,10 +43,12 @@ const AccountInfoCard: React.FC<AccountInfoProps> = ({ uuid, setIsFollowingOpen,
 			<div className="flex flex-row items-center gap-3 mb-4">
 				{/* Profile Image */}
 				<div className="w-28 h-28 mr-4">
-					<img
-						src={'/img/logo-color.png'}
-						alt="thumbnail"
+					<Image
+						src={user?.picture || '/img/logo-color.png'}
+						alt="user pic"
 						className="object-cover rounded-full border-2"
+						width={120}
+						height={120}
 						onError={(e: React.SyntheticEvent<HTMLImageElement>) =>
 							(e.currentTarget.src = '')
 						}

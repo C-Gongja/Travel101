@@ -1,5 +1,6 @@
 // CommentItem.tsx
 import { useEffect, useState } from 'react';
+import Image from "next/image";
 import { useRouter } from 'next/navigation';
 import { AddComment } from './AddComment';
 import { CommentProps } from '@/types/comment/tripCommentTypes';
@@ -37,10 +38,6 @@ export const CommentItem = ({ targetUid, comment, targetType }: CommentItemProps
 		}
 	}, [comment.childCount, showReplyInput]);
 
-	// useEffect(() => {
-	// 	console.log("comment: ", comment);
-	// }, [comment]);
-
 	const replies = replyData || [];
 
 	const handleProfileClick = () => {
@@ -60,10 +57,12 @@ export const CommentItem = ({ targetUid, comment, targetType }: CommentItemProps
 			{!isEdit ? (
 				<>
 					<div className="flex gap-3 items-start">
-						<img
+						<Image
 							onClick={handleProfileClick}
-							src="/img/logo-color.png"
-							alt="User profile"
+							src={comment?.picture || '/img/logo-color.png'}
+							alt="User Profile"
+							width={40}
+							height={40}
 							className="w-10 h-10 rounded-full object-cover cursor-pointer"
 						/>
 						<div className="flex-1">

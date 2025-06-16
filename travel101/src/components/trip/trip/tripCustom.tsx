@@ -5,7 +5,7 @@ import { IoIosAddCircle } from "react-icons/io";
 import { MdDeleteOutline } from "react-icons/md";
 import { FaClone } from "react-icons/fa6";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
-import DayComponent from "./dayComponent";
+import DayComponent from "./day/dayComponent";
 import DateComponent from "./dateComponent";
 import { updateDaysOrder, updateLocationsOrder } from "@/util/TripDragDropUtil";
 import { useTripStore } from "@/store/trip/trip-store";
@@ -24,9 +24,11 @@ export default function TripCustom() {
 		setTrip,
 	} = useTripStore();
 	const { user } = useUserStore();
+	// make these in components
 	const { saveTrip, isSaving, error } = useSaveTrip();
 	const { deleteTrip, isLoading } = useDeleteTrip();
 	const { scriptTrip } = useScriptTrip();
+
 	const [value, setValue] = useState(trip?.name || "");
 	const [inputWidth, setInputWidth] = useState(10);
 	const [isLiked, setIsLiked] = useState(trip?.isLiked);
@@ -152,7 +154,7 @@ export default function TripCustom() {
 					<div className="flex items-center gap-5">
 						<div className='flex gap-2'>
 							<div className="flex items-center gap-2 text-2xl">
-								{(trip && isLiked !== undefined) &&
+								{(trip) &&
 									<LikesButton targetType={"TRIP"} targetUid={trip?.tripUid} isLiked={isLiked} setIsLiked={setIsLiked} />
 								}
 							</div>
@@ -185,7 +187,7 @@ export default function TripCustom() {
 
 			<div className="mt-2 ml-1 text-lg text-gray-500">
 				<DateComponent />
-				{trip?.completed ? "completed" : "not"}
+				{trip?.completed ? "conquered" : "unexplored"}
 			</div>
 
 			<DragDropContext onDragEnd={onDragEnd}>

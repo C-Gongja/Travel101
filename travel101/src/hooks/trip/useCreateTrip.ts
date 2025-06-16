@@ -1,33 +1,27 @@
 import { fetchCreateTrip } from '@/api/trip/tripApi';
 import { Day, Trip } from '@/types/trip/tripStoreTypes';
-import { useMutation } from '@tanstack/react-query';
-
-const initializeDays = (startDate: Date, endDate: Date): Day[] => {
-	const dayCount = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
-	return Array.from({ length: dayCount }, (_, index) => ({
-		number: index + 1,
-		locations: [],
-	}));
-};
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 export const useCreateTrip = () => {
+	const queryClient = useQueryClient();
+	const router = useRouter();
+
 	return useMutation({
 		mutationFn: async () => {
-			const today = new Date();
-			const defaultEndDate = new Date(today);
-			defaultEndDate.setDate(today.getDate() + 2);
-
-			const defaultTrip: Trip = {
-				name: 'New Trip',
-				startDate: today,
-				endDate: defaultEndDate,
-				days: initializeDays(today, defaultEndDate),
-				scripted: 0,
-				completed: false,
-				countries: [],
+			return await fetchCreateTrip();
+		},
+		onSuccess: ({ trip, editable, redirectUrl }) => {
+			const createdTrip = {
+				trip,
+				editable, // editable 속성을 추가
 			};
-
-			return await fetchCreateTrip(defaultTrip);
+			queryClient.setQueryData(['trip', trip.uuid], createdTrip);
+			console.log("redirectUrl: ", redirectUrl);
+			router.push(redirectUrl);
+		},
+		onError: (error) => {
+			console.log("create trip hook error: ", error);
 		},
 	});
 };

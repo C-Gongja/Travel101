@@ -1,3 +1,5 @@
+import { S3Location } from "../S3/trip/S3TripTypes";
+
 export interface Trip {
 	tripUid: string;
 	name: string;
@@ -64,6 +66,7 @@ export interface Location {
 	latitude: number;
 	description: string;
 	countryIso2: string;
+	media?: S3Location[] | undefined;
 }
 
 export interface SelectedLocation {
@@ -105,6 +108,7 @@ export interface TripStore {
 	// setLocation: (loc: Partial<Location>) => void;
 	addLocation: (dayIndex: number, selectedLoc: SelectedLocation) => void;
 	updateLocation: (dayIndex: number, locIndex: number, location: Location) => void;
+	updateLocationMedia: (dayIndex: number, locIndex: number, newMedia: S3Location[]) => void;
 	removeLocation: (dayIndex: number, locIndex: number) => void;
 	setDescription: (dayIndex: number, locIndex: number, description: string) => void;
 	setTotalCost: (totalCost: bigint) => void;

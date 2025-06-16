@@ -16,6 +16,7 @@ export interface CommentUpdateProps {
 export interface CommentProps {
 	uid: string;
 	content: string;
+	picture: string;
 	username: string; // or userId, or both
 	parentUid: string | null;
 	createdAt: Date;

@@ -35,7 +35,7 @@ export const CommentSection = ({ targetType, targetUid }: CommentSectionProps) =
 					targetType={targetType}
 				/>
 			) : (
-				<p className="text-gray-500 mb-4">댓글을 작성하려면 로그인하세요.</p>
+				<p className="text-gray-500 mb-4">Please Login to write a comment.</p>
 			)}
 			<AllComments
 				targetUid={targetUid}

@@ -29,7 +29,7 @@ export default function Navbar() {
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-				setMenuOpen(false); 
+				setMenuOpen(false);
 			}
 		};
 		// 문서에 클릭 이벤트 리스너 추가
@@ -65,7 +65,7 @@ export default function Navbar() {
 					<div className="relative" >
 						<button onClick={() => setMenuOpen(!menuOpen)}>
 							<Image
-								src={user.picture || '/default-profile.png'}
+								src={user.picture || '/img/logo-color.png'}
 								alt="User Profile"
 								width={40}
 								height={40}

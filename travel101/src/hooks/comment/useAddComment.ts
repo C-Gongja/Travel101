@@ -30,6 +30,7 @@ export const useAddComment = () => {
 				liked: false,
 				likesCount: 0,
 				childCount: 0,
+				picture: user?.picture ?? '',
 			};
 
 			queryClient.setQueryData(queryKey, (old: CommentProps[] = []) =>
