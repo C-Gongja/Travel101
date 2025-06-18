@@ -55,11 +55,11 @@ const SignUpForm: React.FC<SignUpFormProps> = () => {
 			const userInfo = await fetchSignup(formData);
 			setUser(userInfo.user);
 			setToken(userInfo.accessToken);
+			handleLoginSuccess();
 		} catch (e: any) {
 			setError(e.message);
 		} finally {
 			setIsLoading(false);
-			handleLoginSuccess();
 		}
 	};
 

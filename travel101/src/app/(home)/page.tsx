@@ -12,7 +12,6 @@ export default function Home() {
 		<div className="">
 			<HeroSection />
 			<TripRecommandation />
-			<TripRecommandation />
 		</div>
 	);
 }

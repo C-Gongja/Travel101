@@ -6,6 +6,7 @@ import { useUserStore } from "@/store/user/user-store";
 import ExternalAuthButtons from "./externalAuth/ExternalAuth";
 import { fetchLogin } from "@/api/auth/authApi";
 import { useAuthModalStore } from "@/store/user/useAuthModalStore";
+import { useSignIn } from "@/hooks/auth/useSignIn";
 
 export interface SignInFormData {
 	email: string;
@@ -17,9 +18,6 @@ interface SignInFormProps {
 
 const SignInForm: React.FC<SignInFormProps> = () => {
 	const { setIsSignUp, afterAuthCallback, onClose, setAfterAuthCallback } = useAuthModalStore();
-	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState("");
-	const { setUser, setToken } = useUserStore();
 	const [formData, setFormData] = useState<SignInFormData>({
 		email: "",
 		password: "",
@@ -33,6 +31,10 @@ const SignInForm: React.FC<SignInFormProps> = () => {
 		onClose();
 	};
 
+	const { mutate: signIn, isPending: isLoading, error } = useSignIn(handleLoginSuccess);
+
+	const displayError = error?.message || "";
+
 	const handleSignUpClick = () => {
 		setIsSignUp(true);  // 회원가입 폼으로 전환
 	};
@@ -43,28 +45,8 @@ const SignInForm: React.FC<SignInFormProps> = () => {
 	};
 
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		setError("");
-		try {
-			setIsLoading(true);
-			const userInfo = await fetchLogin(formData);
-			setUser(userInfo.user);
-			setToken(userInfo.accessToken);
-		} catch (e: any) {
-			const error = JSON.parse(e.message);
-			if (error.errorCode === "EMAIL_NOT_FOUND") {
-				setError(error.message);
-			} else if (error.errorCode === "INVALID_PASSWORD") {
-				setError(error.message);
-			} else if (error.errorCode === "MISSING_FIELDS") {
-				setError(error.message);
-			} else {
-				setError("Login failed. Please try again."); // 기본 에러 메시지
-			}
-		} finally {
-			setIsLoading(false);
-			handleLoginSuccess();
-		}
+		e.preventDefault(); // 기본 폼 제출 동작(페이지 새로고침)을 막습니다.
+		signIn(formData); // `useSignIn` 훅의 뮤테이션 함수를 호출하여 로그인 요청을 보냅니다.
 	};
 
 	return (
@@ -74,9 +56,6 @@ const SignInForm: React.FC<SignInFormProps> = () => {
 				onSubmit={onSubmit}
 				className="flex flex-col gap-5 w-full mt-14 mb-2"
 			>
-				{error && (
-					<span className="text-red-500 text-sm ml-7">{error}</span>
-				)}
 				<input
 					onChange={onChange}
 					name="email"
@@ -92,6 +71,9 @@ const SignInForm: React.FC<SignInFormProps> = () => {
 					placeholder="Password"
 					className="px-5 py-2 rounded-xl border border-gray-300 text-lg"
 				/>
+				{displayError && (
+					<span className="text-red-500 text-sm ml-2">{displayError}</span>
+				)}
 				<input
 					type="submit"
 					value={isLoading ? "Loading..." : "Sign In"}

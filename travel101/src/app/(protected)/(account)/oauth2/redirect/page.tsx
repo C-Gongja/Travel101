@@ -1,44 +1,38 @@
-// pages/oauth2/redirect.tsx (Next.js 15 예시)
-"use client";
+// // pages/oauth2/redirect.tsx (Next.js 15 예시)
+// "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useUserStore } from "@/store/user/user-store";
-import { fetchVerifyUser } from "@/api/auth/authApi";
+// import { useEffect } from "react";
+// import { useRouter } from "next/navigation";
+// import { useUserStore } from "@/store/user/user-store";
+// import { fetchVerifyUser } from "@/api/auth/authApi";
 
-// but the truth is that I don't need to do this since I have userProvider which will do user verify if it has a refreshTOken.
-export default function OAuth2RedirectPage() {
-	const router = useRouter();
-	const { setUser, setToken } = useUserStore();
+// // but the truth is that I don't need to do this since I have userProvider which will do user verify if it has a refreshTOken.
+// export default function OAuth2RedirectPage() {
+// 	const router = useRouter();
+// 	const { setUser, setToken } = useUserStore();
 
-	const verifyUser = async () => {
-		console.log("redirect verify");
-		try {
-			const response = await fetchVerifyUser();
-			console.log("response: ", response);
-			if (response?.user) {
-				setUser({
-					uuid: response.user.uuid,
-					name: response.user.name,
-					username: response.user.username,
-					picture: response.user.picture,
-					roles: response.user.roles.map((role: any) => role.authority),
-				});
-				setToken(response.accessToken);
-			} else {
-				setUser(null);
-			}
-		} catch (error) {
-			console.error("User verification failed:", error);
-			setUser(null);
-		} finally {
-			router.push('/');
-		}
-	};
+// 	const verifyUser = async () => {
+// 		console.log("redirect verify");
+// 		try {
+// 			const response = await fetchVerifyUser();
+// 			console.log("response: ", response);
+// 			if (response?.user) {
+// 				setUser(response.user);
+// 				setToken(response.accessToken);
+// 			} else {
+// 				setUser(null);
+// 			}
+// 		} catch (error) {
+// 			console.error("User verification failed:", error);
+// 			setUser(null);
+// 		} finally {
+// 			router.push('/');
+// 		}
+// 	};
 
-	useEffect(() => {
-		verifyUser();
-	}, []);
+// 	useEffect(() => {
+// 		verifyUser();
+// 	}, []);
 
-	return <div>로그인 중입니다...</div>;
-}
+// 	return <div>로그인 중입니다...</div>;
+// }

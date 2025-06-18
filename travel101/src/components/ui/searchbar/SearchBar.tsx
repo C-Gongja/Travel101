@@ -8,20 +8,19 @@ interface Props {
 }
 
 const SearchBar: React.FC<Props> = ({ width = '100%', height = 'auto', margin = '0' }) => {
-	const heightValue = height === 'auto' ? 0 : parseFloat(height.replace(/[^0-9.]/g, '')) || 0;
-	const showPlaceholder = heightValue > 60;
 	const router = useRouter();
-	const [searchInput, setSearchInput] = useState("");
-	const [isDaysActive, setIsDaysActive] = useState(false);
-	const [isLocationActive, setIsLocationActive] = useState(false);
+	const [searchInput, setSearchInput] = useState('');
+	const [daysInput, setDaysInput] = useState('');
+	const [isLocationFocused, setIsLocationFocused] = useState(false);
+	const [isDaysFocused, setIsDaysFocused] = useState(false);
 	const searchBarRef = useRef<HTMLDivElement>(null);
 
 	// Handle clicks outside the SearchBar to reset active states
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (searchBarRef.current && !searchBarRef.current.contains(event.target as Node)) {
-				setIsDaysActive(false);
-				setIsLocationActive(false);
+				setIsLocationFocused(false);
+				setIsDaysFocused(false);
 			}
 		};
 
@@ -32,65 +31,66 @@ const SearchBar: React.FC<Props> = ({ width = '100%', height = 'auto', margin = 
 	}, []);
 
 	// Enter 키로 검색 실행
-	const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === "Enter") {
-			if (searchInput.trim()) {
-				router.push(`/search?keyword=${encodeURIComponent(searchInput)}`);
-			}
+	const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === 'Enter' && searchInput.trim()) {
+			router.push(`/search?keyword=${encodeURIComponent(searchInput)}`);
 		}
 	};
+
 
 	return (
 		<div
 			ref={searchBarRef}
-			className="flex items-center bg-white border border-maincolor rounded-full shadow-[0px_0px_23px_-4px_rgba(0,_0,_0,_0.1)] p-2 w-full"
+			// shadow-[0px_0px_23px_-4px_rgba(0,_0,_0,_0.1)]
+			className="flex items-center bg-white border border-maincolor rounded-full p-2 w-full"
 			style={{ width, height, margin }}
 		>
-			<div className="w-2/3 px-4 py-2 border-r border-gray-300">
+			{/* Location Input */}
+			<div className="relative w-2/3 px-4 py-2 border-r border-gray-300">
 				<label
-					className={`block font-medium px-3 transition duration-150 ${showPlaceholder
-						? isLocationActive
-							? 'text-xs text-maincolor'
-							: 'text-sm text-gray-900'
-						: 'hidden'
-						}`}
+					className={`
+            absolute left-5 transition-all duration-200 pointer-events-none 
+            ${isLocationFocused || searchInput
+							? 'text-base text-maincolor -top-2 scale-90 transform bg-white px-2'
+							: 'text-xl text-gray-400 top-2.5'}
+          `}
 				>
 					Where
 				</label>
 				<input
 					type="text"
-					onClick={() => {
-						setIsLocationActive(true);
-						setIsDaysActive(false);
-					}}
+					onFocus={() => setIsLocationFocused(true)}
+					onBlur={() => setIsLocationFocused(false)}
 					onChange={(e) => setSearchInput(e.target.value)}
 					onKeyDown={handleSearch}
 					value={searchInput}
-					placeholder={showPlaceholder ? "Search Locations" : "Where"}
-					className="w-full text-[17px] text-gray-500 bg-transparent focus:outline-none px-3"
+					className="w-full text-[17px] text-gray-900 bg-transparent focus:outline-none pt-1 pb-1 px-3"
 				/>
 			</div>
-			<div className="w-1/3 px-4 py-2 border-gray-200">
+
+			{/* Days Input */}
+			<div className="relative w-1/3 px-4 py-2">
 				<label
-					className={`block font-medium px-3 transition duration-150 ${showPlaceholder
-						? isDaysActive
-							? 'text-xs text-maincolor'
-							: 'text-sm text-gray-900'
-						: 'hidden'
-						}`}
+					className={`
+            absolute left-5 transition-all duration-200 pointer-events-none 
+            ${isDaysFocused || daysInput
+							? 'text-base text-maincolor -top-2 scale-90 transform bg-white px-2'
+							: 'text-xl text-gray-400 top-2.5'}
+          `}
 				>
 					Days
 				</label>
 				<input
 					type="text"
-					onClick={() => {
-						setIsDaysActive(true);
-						setIsLocationActive(false);
-					}}
-					placeholder={showPlaceholder ? "Add Days" : "Days"}
-					className="w-full text-[17px] text-gray-500 bg-transparent focus:outline-none px-3"
+					onFocus={() => setIsDaysFocused(true)}
+					onBlur={() => setIsDaysFocused(false)}
+					onChange={(e) => setDaysInput(e.target.value)}
+					value={daysInput}
+					className="w-full text-[17px] text-gray-900 bg-transparent focus:outline-none pt-1 pb-1 px-3"
 				/>
 			</div>
+
+			{/* Search Button */}
 			<button className="ml-2 p-2 bg-maincolor rounded-full text-white transition duration-150 hover:bg-maindarkcolor">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

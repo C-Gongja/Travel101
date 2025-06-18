@@ -15,10 +15,9 @@ export default function Navbar() {
 	const isHeroVisible = useSearchBarStore((state) => state.isHeroVisible);
 	const queryClient = useQueryClient();
 	const { onOpen } = useAuthModalStore();
-	const { user, clearUser } = useUserStore();
+	const { isAuthenticated, user, clearUser } = useUserStore();
 	const [menuOpen, setMenuOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
-	const isLoggedIn = !!user;
 
 	const router = useRouter();
 	const pathname = usePathname();
@@ -61,22 +60,22 @@ export default function Navbar() {
 			)}
 
 			<div className="flex items-center gap-4">
-				{isLoggedIn ? (
+				{isAuthenticated ? (
 					<div className="relative" >
 						<button onClick={() => setMenuOpen(!menuOpen)}>
 							<Image
-								src={user.picture || '/img/logo-color.png'}
+								src={user?.picture || '/img/logo-color.png'}
 								alt="User Profile"
 								width={40}
 								height={40}
-								className="rounded-full cursor-pointer shadow-md"
+								className="rounded-full cursor-pointer shadow-md border border-maincolor"
 							/>
 						</button>
 
 						{menuOpen && (
 							<div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2" ref={dropdownRef}>
 								<Link
-									href={`/profile/${user.uid}`}
+									href={`/profile/${user?.uuid}`}
 									className="block px-4 py-2 text-black hover:bg-gray-100 "
 									onClick={() => setMenuOpen(false)}>
 									Account

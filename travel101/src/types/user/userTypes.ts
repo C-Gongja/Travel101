@@ -1,9 +1,14 @@
+export interface UserAuthResponse {
+	user: User;
+	accessToken: string;
+}
+
 export interface User {
-	uid: string;
+	uuid: string;
 	name: string;
 	username: string;
 	picture: string;
-	roles: string[];
+	roles: { authority: string; }[];
 }
 
 export interface UserStore {

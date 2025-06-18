@@ -64,7 +64,7 @@ const apiClient = async (url: string, options: RequestInit = {}) => {
 				delete retryHeaders['Content-Type'];
 			}
 
-			const retryResponse = await fetch(url, { ...options, headers });
+			const retryResponse = await fetch(url, { ...options, headers: retryHeaders });
 			if (!retryResponse.ok) {
 				const errorData = await retryResponse.text();
 				throw new Error(`재시도 요청 실패: ${errorData}`);

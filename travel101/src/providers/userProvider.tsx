@@ -2,6 +2,7 @@
 
 import { fetchVerifyUser } from "@/api/auth/authApi";
 import { useUserStore } from "@/store/user/user-store";
+import { useParams, useSearchParams } from "next/navigation";
 import React, { useState, useEffect, ReactNode } from "react";
 
 interface UserProviderProps {
@@ -11,21 +12,14 @@ interface UserProviderProps {
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 	const [isUserInitialized, setIsUserInitialized] = useState(false);
 	const { setUser, setToken, setIsUserLoading } = useUserStore();
+	const params = useParams()
 
 	const verifyUser = async () => {
-		console.log("user provider verify");
 		try {
 			setIsUserLoading(true);
 			const response = await fetchVerifyUser();
-			console.log("response: ", response);
 			if (response?.user) {
-				setUser({
-					uuid: response.user.uuid,
-					name: response.user.name,
-					username: response.user.username,
-					picture: response.user.picture,
-					roles: response.user.roles.map((role: any) => role.authority),
-				});
+				setUser(response.user);
 				setToken(response.accessToken);
 			} else {
 				setUser(null);

@@ -24,11 +24,11 @@ export const useUserStore = create<UserStore>((set) => ({
 		} else {
 			set({
 				user: {
-					uid: userData.uuid,
+					uuid: userData.uuid,
 					name: userData.name,
 					username: userData.username,
 					picture: userData.picture,
-					roles: userData.roles.map((role) => role.authority),
+					roles: userData.roles,
 				},
 				isAuthenticated: true,
 			});
@@ -40,16 +40,13 @@ export const useUserStore = create<UserStore>((set) => ({
 		if (typeof window !== "undefined") {
 			localStorage.removeItem("accessToken");
 		}
-
 		// 2. refreshToken 삭제 (서버에서 HttpOnly 쿠키 삭제 요청)
 		fetchLogout();
-
 		set({
 			user: null,
 			isAuthenticated: false,
 			accessToken: null,
 		});
-
 		// need to refresh
 	},
 }));

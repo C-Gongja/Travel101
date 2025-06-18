@@ -1,3 +1,4 @@
+import { S3Location } from "../S3/trip/S3TripTypes";
 import { Country } from "./tripStoreTypes";
 
 export interface TripCardProps {
@@ -10,7 +11,7 @@ export interface TripCardProps {
 	startDate: string;
 	endDate: string;
 	countries: Country[];
-	media?: string[];
+	media?: S3Location[];
 }
 
 export interface TripCardListProps {

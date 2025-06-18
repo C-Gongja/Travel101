@@ -11,9 +11,10 @@ const publicApiClient = async (url: string, options: RequestInit = {}) => {
 		if (response.ok) {
 			return response.json();
 		}
-		throw new Error(`Request failed with status: ${response.status}`);
+		const errorBody = await response.json();
+		throw errorBody;
 	} catch (error) {
-		console.error("API request error:", error);
+		// console.error("API request error:", error);
 		throw error;
 	}
 };

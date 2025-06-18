@@ -1,6 +1,8 @@
 import { SignupFormData } from "@/components/auth/SignUpForm";
 import { apiClient } from "../apiClient";
 import { SignInFormData } from "@/components/auth/SignInForm";
+import { publicApiClient } from "../publicApiClient";
+import { UserAuthResponse } from "@/types/user/userTypes";
 
 const AUTH_BASE_URL = "http://localhost:8080/auth";
 const VERIFY_BASE_URL = "http://localhost:8080/api/user/verify";
@@ -31,29 +33,19 @@ const fetchSignup = async (credentials: SignupFormData): Promise<any> => {
 	}
 }
 
-const fetchLogin = async (credentials: SignInFormData): Promise<any> => {
-	try {
-		const response = await fetch(`${AUTH_BASE_URL}/signin`, {
-			headers: {
-				"Content-Type": "application/json",
-			},
-			method: "POST",
-			body: JSON.stringify({
-				email: credentials.email,
-				password: credentials.password,
-			}),
-			credentials: "include",
-		});
-
-		if (!response.ok) {
-			const errorData = await response.json();
-			throw new Error(JSON.stringify(errorData));
-		}
-		return await response.json();
-	} catch (error) {
-		throw error;
-	}
+const fetchLogin = async (credentials: SignInFormData): Promise<UserAuthResponse> => {
+	const response = await publicApiClient(`${AUTH_BASE_URL}/signin`, {
+		headers: {
+			"Content-Type": "application/json",
+		},
+		method: "POST",
+		body: JSON.stringify(credentials),
+		credentials: "include",
+	});
+	console.log("fetch login: ", response);
+	return response;
 }
+
 const fetchVerifyUser = async (): Promise<any> => {
 	try {
 		const data = await apiClient(`${VERIFY_BASE_URL}`, { method: "GET" });
