@@ -80,7 +80,7 @@ const AccountInfoCard: React.FC<AccountInfoProps> = ({ uuid, setIsFollowingOpen,
 			</div>
 			{/* Follow Btn */}
 			<div className="mb-4 flex justify-center items-center">
-				{(userSnippet && user?.uid !== uuid) && (
+				{(userSnippet && user?.uuid !== uuid) && (
 					userSnippet?.isFollowing ? (
 						<UnfollowButton targetUser={userSnippet} onToggleFollow={toggleFollow} width="100%" padding="8px 0px" rounded="rounded-xl" />
 					) : (

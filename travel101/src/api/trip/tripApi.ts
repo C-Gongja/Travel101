@@ -68,7 +68,7 @@ const fetchSaveTrip = async (tripUuid: string, updatedTrip: TripRequest): Promis
 
 const fetchUpdateTrip = async (tripUuid: string, tripUpdates: Partial<Trip>): Promise<any> => {
 	try {
-		const response = await apiClient(`${TRIP_BASE_URL}/${encodeURIComponent(tripUuid)}`, {
+		const response = await apiClient(`${TRIP_BASE_URL}/${encodeURIComponent(tripUuid + 1)}`, {
 			method: "PACTH",
 			headers: {
 				"Content-Type": "application/json",
@@ -85,39 +85,32 @@ const fetchUpdateTrip = async (tripUuid: string, tripUpdates: Partial<Trip>): Pr
 
 const fetchDeleteTrip = async (tripUuid: string): Promise<any> => {
 	console.log("delete trip:", tripUuid)
-	try {
-		const response = await apiClient(`${TRIP_BASE_URL}/delete/${encodeURIComponent(tripUuid)}`, {
-			method: "DELETE",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
-
-		return response;
-	} catch (error) {
-		console.error("Error fetching update trip:", error);
-		return null;
-	}
+	return await apiClient(`${TRIP_BASE_URL}/delete/${encodeURIComponent(tripUuid)}`, {
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
 }
 
-const fetchScriptTrip = async (tripUuid: string): Promise<any> => {
-	try {
-		const response = await apiClient(`${TRIP_BASE_URL}/scriptTrip/${tripUuid}`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
+// const fetchScriptTrip = async (tripUuid: string): Promise<any> => {
+// 	try {
+// 		const response = await apiClient(`${TRIP_BASE_URL}/scriptTrip/${tripUuid + 1}`, {
+// 			method: "POST",
+// 			headers: {
+// 				"Content-Type": "application/json",
+// 			},
+// 		});
 
-		return JSON.stringify(response);
-	} catch (error) {
-		console.error("Error fetching post trip:", error);
-		return null;
-	}
-}
+// 		return JSON.stringify(response);
+// 	} catch (error) {
+// 		console.error("Error fetching post trip:", error);
+// 		return null;
+// 	}
+// }
 
 const tripScriptApi = async (tripUid: string): Promise<any> => {
-	return await apiClient(`http://localhost:8080/api/script/scriptTrip?tripUid=${tripUid}`, {
+	return await apiClient(`http://localhost:8080/api/script/scriptTrip?tripUid=${tripUid + 1}`, {
 		method: 'POST',
 	});
 };
@@ -136,4 +129,4 @@ const tripScriptLocationApi = async (body: ScriptLocation): Promise<any> => {
 	});
 };
 
-export { fetchCreateTrip, fetchGetTrip, fetchSaveTrip, fetchUpdateTrip, fetchScriptTrip, fetchDeleteTrip, tripScriptApi, tripScriptDayApi, tripScriptLocationApi }
+export { fetchCreateTrip, fetchGetTrip, fetchSaveTrip, fetchUpdateTrip, fetchDeleteTrip, tripScriptApi, tripScriptDayApi, tripScriptLocationApi }

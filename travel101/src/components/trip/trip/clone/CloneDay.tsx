@@ -14,7 +14,7 @@ interface CloneDayProps {
 export const CloneDay = ({ cloneDayNum }: CloneDayProps) => {
 	const { user } = useUserStore();
 	const { trip } = useTripStore();
-	const { data: tripList, isLoading: isTripsLoading, isError: isTripsError } = useFetchUserTrips(user?.uid);
+	const { data: tripList, isLoading: isTripsLoading, isError: isTripsError } = useFetchUserTrips(user?.uuid);
 	const { scriptTripDay } = useScriptDay();
 	const [selectedTrip, setSelectedTrip] = useState<string>("");
 
@@ -35,7 +35,7 @@ export const CloneDay = ({ cloneDayNum }: CloneDayProps) => {
 
 	return (
 		<div className="w-full max-w-[600px] min-w-[400px]">
-			<div className="text-3xl text-center mb-5">{user?.username}'s Trip</div>
+			<h2 className="text-3xl text-center mb-5">{user?.username}'s Trip</h2>
 			{tripList &&
 				tripList.map((trip: any, index: number) => {
 					const isSelected = trip.tripUid === selectedTrip;

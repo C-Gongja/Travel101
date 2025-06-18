@@ -1,7 +1,7 @@
 // src/hooks/useGoogleMapsApi.ts
 
 import { useState, useMemo, useCallback } from 'react';
-import { locationUtils } from '@/util/googleMapsutils';
+import { locationUtils } from '@/util/googleMapsUtils';
 import { SelectedLocation } from '@/types/trip/tripStoreTypes';
 
 interface MapLocation {

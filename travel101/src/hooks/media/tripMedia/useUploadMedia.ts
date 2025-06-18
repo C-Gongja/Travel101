@@ -19,10 +19,10 @@ export const useS3MediaUpload = ({ tripUid, dayIndex, locIndex }: UseS3MediaUplo
 	const s3MediaUploadMutation = useMutation({
 		mutationFn: uploadMedia,
 		onMutate: async (newMediaRequest: S3LocationRequest) => {
-			if (!user?.uid) {
+			if (!user?.uuid) {
 				throw new Error("User must be authenticated to upload media.");
 			}
-			const ownerId = user.uid;
+			const ownerId = user.uuid;
 
 			// --- 낙관적 업데이트 로직 시작 (Zustand 직접 업데이트) ---
 			// 현재 Zustand 스토어의 Trip 상태에서 해당 Location의 media를 가져옵니다.

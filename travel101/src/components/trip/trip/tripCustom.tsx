@@ -14,20 +14,30 @@ import useDeleteTrip from "@/hooks/trip/useDeleteTrip";
 import useScriptTrip from "@/hooks/trip/useScriptTrip";
 import LikesButton from "@/components/ui/buttons/like/LikesButton";
 import { useUserStore } from "@/store/user/user-store";
+import Modal from "@/components/ui/modal/MainModal";
+import ConfirmModal from "./buttons/ConfirmModal";
+import useConfirmModal from "@/hooks/shared/tripConfirmModal/useConfirmModal";
 
 export default function TripCustom() {
-	const {
-		trip,
-		isOwner,
-		setTripName,
-		addDay,
-		setTrip,
-	} = useTripStore();
+	const { trip, isOwner, setTripName, addDay, setTrip } = useTripStore();
 	const { user } = useUserStore();
-	// make these in components
-	const { saveTrip, isSaving, error } = useSaveTrip();
-	const { deleteTrip, isLoading } = useDeleteTrip();
-	const { scriptTrip } = useScriptTrip();
+
+	const { saveTrip, isSaving } = useSaveTrip();
+	const { scriptTrip, isSaving: isCloning } = useScriptTrip();
+	const { deleteTrip, isLoading: isDeleting } = useDeleteTrip();
+
+	const {
+		showConfirmModal,
+		modalTitle,
+		modalMessage,
+		confirmButtonText,
+		confirmButtonColor,
+		modalError,
+		isModalSuccess,
+		openConfirmModal,
+		closeConfirmModal,
+		handleConfirmAction,
+	} = useConfirmModal();
 
 	const [value, setValue] = useState(trip?.name || "");
 	const [inputWidth, setInputWidth] = useState(10);
@@ -43,22 +53,52 @@ export default function TripCustom() {
 			const width = spanRef.current.offsetWidth;
 			setInputWidth(width + 20); // padding 조금 추가
 		}
-	}, [trip?.name]);
+	}, [value]);
 
 	const handleTripNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (!isOwner) return;
 		setTripName(e.target.value);
 	};
 
-	const handleScript = async () => {
-		if (!user || !trip) return;
-		scriptTrip(trip.tripUid);
+	// --- 모달을 띄우는 핸들러들 (이제 useConfirmModal 사용) ---
+	const handleScriptClick = () => {
+		if (!user || !trip) {
+			openConfirmModal(
+				'custom',
+				async () => { },
+				"User or trip data is missing for cloning.",
+				trip?.name
+			);
+			return;
+		}
+		openConfirmModal(
+			'script',
+			async () => {
+				await scriptTrip(trip.tripUid);
+			},
+			undefined, // 초기 메시지는 훅에서 정의된 기본값 사용
+			trip.name // 트립 이름 전달
+		);
 	};
 
-	const handleSave = async () => {
-		if (!isOwner || !trip) return; // 소유자가 아니면 저장 불가
-		const updatedTrip = { ...trip }; // 예시 수정
-		saveTrip(updatedTrip);
+	const handleDeleteClick = () => {
+		if (!isOwner || !trip) {
+			openConfirmModal(
+				'custom',
+				async () => { },
+				"You don't have permission to delete this trip.",
+				trip?.name
+			);
+			return;
+		}
+		openConfirmModal(
+			'delete',
+			async () => {
+				await deleteTrip();
+			},
+			undefined, // 초기 메시지는 훅에서 정의된 기본값 사용
+			trip.name // 트립 이름 전달
+		);
 	};
 
 	const onDragEnd = (result: any) => {
@@ -67,7 +107,6 @@ export default function TripCustom() {
 			return;
 		}
 
-		// There should be better way to control this. this method should be refactor.
 		if (!trip || !isOwner) {
 			console.error("Trip is null, cannot proceed with drag and drop.");
 			return;
@@ -82,20 +121,14 @@ export default function TripCustom() {
 			const destDayIndex = parseInt(destination.droppableId, 10);
 
 			if (sourceDayIndex === destDayIndex) {
-				// ✅ 같은 day 내에서 순서 변경
 				updatedTrip.days = updateLocationsOrder(trip.days, sourceDayIndex, source.index, destination.index);
 			} else {
-				// ✅ 다른 day로 이동
 				let sourceDay = { ...trip.days[sourceDayIndex] };
 				let destDay = { ...trip.days[destDayIndex] };
 
-				// 🔹 1️⃣ 이동할 location 찾기
 				const [movedLocation] = sourceDay.locations.splice(source.index, 1);
-
-				// 🔹 2️⃣ 새로운 day의 원하는 위치에 삽입
 				destDay.locations.splice(destination.index, 0, movedLocation);
 
-				// 🔹 3️⃣ number 재정렬
 				sourceDay.locations = sourceDay.locations.map((loc, index) => ({
 					...loc,
 					number: index + 1,
@@ -106,16 +139,20 @@ export default function TripCustom() {
 					number: index + 1,
 				}));
 
-				// 🔹 4️⃣ 상태 업데이트
 				updatedTrip.days[sourceDayIndex] = sourceDay;
 				updatedTrip.days[destDayIndex] = destDay;
 			}
 		}
-
 		setTrip(updatedTrip);
 	};
 
-	if (isSaving) return (<div>Saving tripCustom...</div>);
+	// if (isSaving || isDeleting || isCloning) {
+	// 	return (
+	// 		<div className="flex justify-center items-center h-screen text-xl text-gray-700">
+	// 			{isDeleting ? "여행을 삭제 중입니다..." : "여행 정보를 저장 중입니다..."}
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<div className="px-6 h-[calc(100vh-500px)]">
@@ -124,7 +161,7 @@ export default function TripCustom() {
 					<input
 						onChange={(e) => {
 							setValue(e.target.value);
-							handleTripNameChange(e); // 너가 정의한 함수
+							handleTripNameChange(e);
 						}}
 						placeholder="Trip Name"
 						value={trip?.name || ""}
@@ -133,7 +170,6 @@ export default function TripCustom() {
 						style={{ width: `${inputWidth}px` }}
 						className="text-4xl font-bold p-2 input-style outline-none"
 					/>
-					{/* 숨겨진 span (실제 길이 측정용) */}
 					<span
 						className="absolute invisible whitespace-pre pointer-events-none overflow-hidden"
 						style={{
@@ -141,8 +177,8 @@ export default function TripCustom() {
 							whiteSpace: "pre",
 							visibility: "hidden",
 							position: "absolute",
-							padding: "0 8px", // input과 동일하게!
-							fontSize: "2.25rem", // text-4xl
+							padding: "0 8px",
+							fontSize: "2.25rem",
 							fontWeight: "bold",
 							fontFamily: "inherit",
 						}}
@@ -163,9 +199,9 @@ export default function TripCustom() {
 						<div className='flex gap-2'>
 							<div className="flex items-center gap-2 text-xl">
 								<button
-									onClick={handleScript}
+									onClick={handleScriptClick}
 									className="text-gray-500 hover:text-maincolor transition duration-200"
-									aria-label="Share trip"
+									aria-label="Clone trip"
 								>
 									<FaClone />
 								</button>
@@ -176,7 +212,7 @@ export default function TripCustom() {
 				</div>
 				{isOwner && (
 					<button
-						onClick={deleteTrip}
+						onClick={handleDeleteClick}
 						className="w-8 h-8 text-red-500 rounded-full flex items-center justify-center hover:text-white hover:bg-red-500 transition duration-200"
 						aria-label="Delete trip"
 					>
@@ -212,14 +248,21 @@ export default function TripCustom() {
 						<IoIosAddCircle className="text-2xl" />
 						Day
 					</button>
-					<button
-						onClick={handleSave}
-						className="px-4 py-2 text-xl text-maincolor border border-maincolor rounded-md hover:bg-maincolor hover:text-white transition duration-200"
-					>
-						Save
-					</button>
 				</div>
 			)}
+
+			<Modal isOpen={showConfirmModal} onClose={closeConfirmModal}>
+				<ConfirmModal
+					title={modalTitle}
+					message={modalMessage}
+					onConfirm={handleConfirmAction}
+					onCancel={closeConfirmModal}
+					confirmButtonText={confirmButtonText}
+					confirmButtonColor={confirmButtonColor}
+					error={modalError}
+					isSuccess={isModalSuccess}
+				/>
+			</Modal>
 		</div>
 	);
 }

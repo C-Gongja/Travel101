@@ -35,7 +35,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 			onClick={handleClickOutside}
 		>
 			<div className="modal p-[20px] rounded-xl shadow-lg relative">
-				<button className="absolute top-4 right-4 text-gray-600 hover:text-maincolor" onClick={onClose}>
+				<button className="absolute top-4 right-4 text-gray-600 hover:text-maincolor z-99"
+					onClick={onClose}>
 					<IoIosCloseCircle className="text-3xl" />
 				</button>
 				{children}

@@ -1,6 +1,6 @@
 import { fetchSaveTrip } from "@/api/trip/tripApi";
 import { useTripStore } from "@/store/trip/trip-store";
-import { adaptTripModelToRequest, Trip } from "@/types/trip/tripStoreTypes";
+import { adaptTripModelToRequest, Trip, TripResponse } from "@/types/trip/tripStoreTypes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useSaveTrip = () => {
@@ -24,7 +24,6 @@ const useSaveTrip = () => {
 			setIsLoading(true); // 로딩 상태 활성화
 		},
 		onSuccess: (savedTrip: Trip) => {
-			// Zustand 상태 업데이트
 			const updatedTrip = {
 				...savedTrip,
 				startDate: new Date(savedTrip.startDate),
@@ -46,7 +45,7 @@ const useSaveTrip = () => {
 	});
 
 	return {
-		saveTrip: saveTripMutation.mutate, // 수정된 Trip을 인자로 받을 수 있음
+		saveTrip: saveTripMutation.mutateAsync, // 수정된 Trip을 인자로 받을 수 있음
 		isSaving: saveTripMutation.isPending, // isLoading 대신 isPending 사용 (React Query 권장)
 		error: saveTripMutation.error,
 	};

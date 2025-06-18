@@ -180,7 +180,9 @@ const TripCard = ({ trip }: TripCardListProps) => {
 						<div className="flex gap-2">
 							{trip?.countries && trip.countries.length > 0 ? (
 								trip.countries.map((country) => (
-									<span key={country.iso2} className="text-2xl" role="img" aria-label={country.name}>
+									<span key={country.iso2} className="text-2xl" role="img"
+									// aria-label={country.name}
+									>
 										{country.flag}
 									</span>
 								))

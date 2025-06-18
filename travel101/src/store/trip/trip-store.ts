@@ -1,4 +1,4 @@
-import { fetchCreateTrip, fetchSaveTrip, fetchUpdateTrip, fetchScriptTrip, fetchDeleteTrip } from '@/api/trip/tripApi';
+import { fetchUpdateTrip } from '@/api/trip/tripApi';
 import { TripStore, Trip, Day, Location, SelectedLocation, TripOwnerSnippet, Country } from '@/types/trip/tripStoreTypes';
 import { create } from 'zustand';
 

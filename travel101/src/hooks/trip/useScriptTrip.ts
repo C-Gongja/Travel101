@@ -39,8 +39,7 @@ export const useScriptTrip = () => {
 			if (trip && trip.tripUid === tripUid) {
 				const updatedTrip = {
 					...trip,
-					scripted: data.trip.scripted ?? (trip.scripted || 0),
-					scriptedCount: data.trip.scripted ?? (trip.scriptedCount || 0), // Handle scriptedCount
+					scriptedCount: trip.scriptedCount + 1, // Handle scriptedCount
 				};
 				setTrip(updatedTrip);
 				// Update cache
@@ -65,7 +64,7 @@ export const useScriptTrip = () => {
 	});
 
 	return {
-		scriptTrip: scriptTripMutation.mutate,
+		scriptTrip: scriptTripMutation.mutateAsync,
 		isSaving: scriptTripMutation.isPending,
 		error: scriptTripMutation.error,
 		isSuccess: scriptTripMutation.isSuccess,

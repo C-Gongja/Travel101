@@ -20,7 +20,7 @@ export const useScriptDay = () => {
 
 	return {
 		scriptTripDay: scriptTripDayMutation.mutate,
-		isSaving: scriptTripDayMutation.isPending,
+		isCloning: scriptTripDayMutation.isPending,
 		error: scriptTripDayMutation.error,
 		isSuccess: scriptTripDayMutation.isSuccess,
 		data: scriptTripDayMutation.data,

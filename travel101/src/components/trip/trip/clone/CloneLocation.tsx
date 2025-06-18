@@ -17,7 +17,7 @@ export const CloneLocation = ({ dayNum, locNum }: ClonLocationProps) => {
 	const { user } = useUserStore();
 	const { trip } = useTripStore();
 	// make separate api? or filter imcomplete trip here?
-	const { data: tripList, isLoading: isTripsLoading, isError: isTripsError } = useGetCloneTripList(user?.uid);
+	const { data: tripList, isLoading: isTripsLoading, isError: isTripsError } = useGetCloneTripList(user?.uuid);
 	const { scriptTripLocation } = useScriptLocation();
 
 	const [openTripUid, setOpenTripUid] = useState<string | null>(null);

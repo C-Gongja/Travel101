@@ -49,7 +49,7 @@ const UserSnippetCard: React.FC<{
 						<p className="text-sm text-gray-600">@{userSnippet?.username}</p>
 					</div>
 				</div>
-				{(isAuthenticated && user?.uid !== userSnippet?.uuid) && (
+				{(isAuthenticated && user?.uuid !== userSnippet?.uuid) && (
 					userSnippet?.isFollowing ? (
 						<UnfollowButton targetUser={userSnippet} onToggleFollow={toggleFollow} padding="6px 15px" rounded="rounded-full" />
 					) : (
