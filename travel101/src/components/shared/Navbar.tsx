@@ -68,12 +68,13 @@ export default function Navbar() {
 								alt="User Profile"
 								width={40}
 								height={40}
-								className="rounded-full cursor-pointer shadow-md border border-maincolor"
+								className="rounded-full cursor-pointer border border-maincolor shadow-[0px_0px_17px_0px_rgba(0,_0,_0,_0.1)]"
 							/>
 						</button>
 
 						{menuOpen && (
-							<div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2" ref={dropdownRef}>
+							<div className="absolute right-0 mt-2 w-48 bg-white shadow-[0px_0px_17px_0px_rgba(0,_0,_0,_0.1)] rounded-lg py-2 "
+								ref={dropdownRef}>
 								<Link
 									href={`/profile/${user?.uuid}`}
 									className="block px-4 py-2 text-black hover:bg-gray-100 "

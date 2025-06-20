@@ -4,16 +4,17 @@ import { useEffect, useState } from "react";
 import { useTripStore } from "@/store/trip/trip-store";
 import { fetchGetTrip } from "@/api/trip/tripApi";
 import { MapProvider } from "../../../../components/trip/map/MapProvider";
-import TripCustom from "../../../../components/trip/trip/tripCustom";
 import { useParams } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUserStore } from "@/store/user/user-store";
-import UserSnippetCard from "@/components/ui/card/UserSnippetCard";
 import { UserSnippet } from "@/types/user/userSnippetTypes";
 import { CommentSection } from "@/components/comment/CommentSection";
-import MapController from "@/components/trip/map/MapController";
-import useSaveTrip from "@/hooks/trip/useSaveTrip";
+import { DotsSpinner } from "@/components/ui/spinner/DotsSpinner";
 import useConfirmModal from "@/hooks/shared/tripConfirmModal/useConfirmModal";
+import useSaveTrip from "@/hooks/trip/useSaveTrip";
+import TripCustom from "../../../../components/trip/trip/tripCustom";
+import UserSnippetCard from "@/components/ui/card/UserSnippetCard";
+import MapController from "@/components/trip/map/MapController";
 import Modal from "@/components/ui/modal/MainModal";
 import ConfirmModal from "@/components/trip/trip/buttons/ConfirmModal";
 
@@ -86,13 +87,17 @@ export default function TripPage() {
 			async () => { // 실제 saveTrip 로직을 콜백으로 전달
 				await saveTrip(trip);
 			},
-			'Do you want to save the changes?', // 초기 확인 메시지
+			undefined,
 			trip.name // 트립 이름 전달
 		);
 	};
 
 	if (isUserLoading || isLoading || isInitializing || !trip) {
-		return <div>Loading trip data...</div>;
+		return (
+			<div className="flex items-center justify-center min-h-[80vh]">
+				<DotsSpinner />
+			</div>
+		);
 	}
 
 	return (

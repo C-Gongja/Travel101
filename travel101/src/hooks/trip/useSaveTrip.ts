@@ -4,13 +4,6 @@ import { adaptTripModelToRequest, Trip, TripOwnerSnippet, TripResponse } from "@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
-interface CreateTripResponse {
-	trip: Trip;
-	userSnippet: TripOwnerSnippet;
-	editable: boolean;
-	redirectUrl: string;
-}
-
 type SaveTripMutationResult = {
 	actionType: 'CREATE' | 'UPDATE';
 	data: TripResponse; // fetchCreateTrip 또는 fetchSaveTrip의 실제 결과

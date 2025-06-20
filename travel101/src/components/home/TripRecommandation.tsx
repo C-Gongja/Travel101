@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { TripCardProps } from "@/types/trip/tripCardTypes";
 import { fetchAllTrips } from "@/api/trip/tripListApi";
 import TripCard from "@/components/ui/card/TripCard";
+import { DotsSpinner } from "../ui/spinner/DotsSpinner";
 
 export default function TripRecommandation() {
 	const [tripList, setTripList] = useState<TripCardProps[] | null>(null);
@@ -20,6 +21,14 @@ export default function TripRecommandation() {
 		};
 		loadAllTrips();
 	}, [setTripList])
+
+	if (!tripList) {
+		return (
+			<div className="flex items-center justify-center min-h-[50vh]">
+				<DotsSpinner />
+			</div>
+		);
+	}
 
 	return (
 		<div className="mt-10">

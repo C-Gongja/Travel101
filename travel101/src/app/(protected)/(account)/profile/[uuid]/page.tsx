@@ -43,13 +43,13 @@ export default function ProfilePage() {
 				<div className="pt-10">
 					<button
 						onClick={clearUser}
-						className="p-2 border border-red-600"
+						className="py-2 px-4 border border-red-600 rounded-md"
 					>
 						Logout
 					</button>
 				</div>
 			)}
-			
+
 			{isFollowersOpen && (
 				<Modal isOpen={isFollowersOpen} onClose={() => setIsFollowersOpen(false)}>
 					<FollowersModal />

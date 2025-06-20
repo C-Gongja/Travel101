@@ -162,7 +162,7 @@ const TripCard = ({ trip }: TripCardListProps) => {
 					</>
 				) : (
 					// 이미지가 없을 경우 대체 UI
-					<div className="bg-gray-200 h-full w-full flex items-center justify-center text-gray-500">
+					<div className="bg-maincolor/20 h-full w-full flex items-center justify-center text-gray-500">
 						<img
 							className="w-16 h-16 text-gray-400"
 							src='/img/logo-color.png'
