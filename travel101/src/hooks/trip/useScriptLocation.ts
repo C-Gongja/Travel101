@@ -18,7 +18,7 @@ export const useScriptLocation = () => {
 	});
 
 	return {
-		scriptTripLocation: scriptTripLocationMutation.mutate,
+		scriptTripLocation: scriptTripLocationMutation.mutateAsync,
 		isSaving: scriptTripLocationMutation.isPending,
 		error: scriptTripLocationMutation.error,
 		isSuccess: scriptTripLocationMutation.isSuccess,

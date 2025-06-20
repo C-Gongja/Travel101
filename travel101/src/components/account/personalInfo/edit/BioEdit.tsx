@@ -17,8 +17,8 @@ const BioEdit = ({ currentBio, onSaveSuccess }: BioEditProps) => {
 		const { user } = useUserStore.getState();
 		const patch = { bio: updatedBio };
 		console.log("updatedBio", patch);
-		if (user?.uid) {
-			await patchPersonalInfo(patch, user?.uid);
+		if (user?.uuid) {
+			await patchPersonalInfo(patch, user?.uuid);
 		}
 		updateField('bio', updatedBio);
 		onSaveSuccess();

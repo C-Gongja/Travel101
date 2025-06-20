@@ -1,4 +1,5 @@
 import { useCreateTrip } from "@/hooks/trip/useCreateTrip";
+import { useTripStore } from "@/store/trip/trip-store";
 import { useAuthModalStore } from "@/store/user/useAuthModalStore";
 import { useUserStore } from "@/store/user/user-store";
 import { useQueryClient } from "@tanstack/react-query";
@@ -15,6 +16,7 @@ interface TripCreateBtnProps {
 const TripCreateBtn: React.FC<TripCreateBtnProps> = ({ text = "Create a New Trip", width = 'auto', height = 'auto', margin = '0' }) => {
 	const router = useRouter();
 	const { user, isAuthenticated } = useUserStore();
+	const { resetTripStore } = useTripStore();
 	const { setAfterAuthCallback, onOpen } = useAuthModalStore();
 	// const { mutate: createTrip, isPending, data, error } = useCreateTrip();
 
@@ -26,6 +28,7 @@ const TripCreateBtn: React.FC<TripCreateBtnProps> = ({ text = "Create a New Trip
 			onOpen();
 			return;
 		}
+		resetTripStore();
 		router.push('/trip');
 		// localStorage.removeItem("tripId"); // 항상 tripId 제거
 	};

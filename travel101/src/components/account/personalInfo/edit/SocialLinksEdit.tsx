@@ -34,8 +34,8 @@ const SocialLinksEdit: React.FC<SocialLinksEditProps> = ({ socialLinks, onSaveSu
 		const { user } = useUserStore.getState();
 		const patch = { socialLinks: updatedSocialLinks };
 		console.log("currentSocialLinks", patch);
-		if (user?.uid) {
-			await patchPersonalInfo(patch, user?.uid);
+		if (user?.uuid) {
+			await patchPersonalInfo(patch, user?.uuid);
 		}
 		updateField('socialLinks', updatedSocialLinks);
 		onSaveSuccess();

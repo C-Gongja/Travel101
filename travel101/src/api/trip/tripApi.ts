@@ -7,7 +7,7 @@ import { ScriptDay, ScriptLocation } from "@/types/trip/tripScriptTypes";
 const TRIP_BASE_URL = "http://localhost:8080/api/trip";
 const TRIP_PUBLIC_URL = "http://localhost:8080/public/trip";
 
-const fetchCreateTrip = async (trip: Trip): Promise<any> => {
+const fetchCreateTrip = async (trip: TripRequest): Promise<any> => {
 	try {
 		const response = await apiClient(`${TRIP_BASE_URL}/post`, {
 			method: "POST",

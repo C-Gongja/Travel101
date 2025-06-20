@@ -18,6 +18,7 @@ export interface CommentProps {
 	content: string;
 	picture: string;
 	username: string; // or userId, or both
+	userUid: string;
 	parentUid: string | null;
 	createdAt: Date;
 	liked: boolean,

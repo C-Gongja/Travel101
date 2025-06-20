@@ -9,6 +9,8 @@ import FollowButton from "../ui/buttons/follow/FollowButton";
 import { UserSnippet } from "@/types/user/userSnippetTypes";
 import Image from "next/image";
 
+// 지금 여기 3번 rendering 되는중. 그니깐 총 6번이 rerendering이 되는중.
+
 interface AccountInfoProps {
 	uuid: string;
 	setIsFollowingOpen: Dispatch<SetStateAction<boolean>>;
@@ -19,7 +21,9 @@ const AccountInfoCard: React.FC<AccountInfoProps> = ({ uuid, setIsFollowingOpen,
 	const { user } = useUserStore();
 	const { data: profileData, isLoading } = useGetProfile(uuid);
 	const [userSnippet, setUserSnippet] = useState<UserSnippet>();
+
 	console.log(user);
+
 	useEffect(() => {
 		setUserSnippet(profileData?.userSnippet);
 	}, [profileData]);

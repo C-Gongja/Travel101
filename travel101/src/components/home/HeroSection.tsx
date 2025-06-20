@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import SearchBar from "../ui/searchbar/SearchBar";
 import { useSearchBarStore } from "@/store/ui/searchBar/useSearchBarStore";
 import { useIsInView } from "./useIsInView";
-import TripCreateBtn from "../ui/buttons/TripCreateBtn";
+import TripCreateBtn from "../ui/buttons/trip/TripCreateBtn";
 
 export default function HeroSection() {
 	const { ref, isInView } = useIsInView();

@@ -43,13 +43,13 @@ export const CommentItem = ({ targetUid, comment, targetType }: CommentItemProps
 	const handleProfileClick = () => {
 		if (!isAuthenticated) {
 			setAfterAuthCallback(() => {
-				router.push(`/profile/${user?.uid}`);
+				router.push(`/profile/${comment?.userUid}`);
 			});
 			onOpen();
 			return;
 		}
 
-		router.push(`/profile/${user?.uid}`);
+		router.push(`/profile/${comment?.userUid}`);
 	};
 	return (
 		<div className="">

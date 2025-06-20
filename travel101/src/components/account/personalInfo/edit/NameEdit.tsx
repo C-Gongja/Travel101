@@ -20,8 +20,8 @@ const NameEdit = ({ currentName, onSaveSuccess }: NameEditProps) => {
 	const handleSave = async () => {
 		const { user } = useUserStore.getState();
 		const patch = { name: name };
-		if (user?.uid) {
-			await patchPersonalInfo(patch, user?.uid);
+		if (user?.uuid) {
+			await patchPersonalInfo(patch, user?.uuid);
 		}
 		updateField('name', name);
 		onSaveSuccess();

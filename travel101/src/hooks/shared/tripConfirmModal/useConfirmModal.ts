@@ -56,7 +56,7 @@ const useConfirmModal = (): UseConfirmModalReturn => {
 		// 3. 초기 확인 메시지 (성공/에러 이전)
 		if (initialCustomMessage) {
 			return {
-				title: contextTripName ? `Confirm Action for '${contextTripName}'` : 'Confirm Action',
+				title: contextTripName ? `Create '${contextTripName}'?` : 'Confirm Action',
 				message: initialCustomMessage,
 				confirmButtonText: 'Confirm', // 초기 커스텀 메시지일 때는 'Confirm'으로
 				confirmButtonColor: 'bg-maincolor hover:bg-maindarkcolor', // 기본 색상으로

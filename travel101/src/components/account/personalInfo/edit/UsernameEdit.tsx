@@ -18,10 +18,10 @@ const UsernameEdit = ({ currentUsername, onSaveSuccess }: UsernameEditProps) => 
 	const handleSave = async () => {
 		const { user } = useUserStore.getState();
 		const patch = { username: username };
-		if (!user?.uid) return;
+		if (!user?.uuid) return;
 
 		try {
-			await patchPersonalInfo(patch, user.uid);
+			await patchPersonalInfo(patch, user.uuid);
 			updateField('username', username);
 			onSaveSuccess();
 			setError(''); // 성공하면 에러 초기화

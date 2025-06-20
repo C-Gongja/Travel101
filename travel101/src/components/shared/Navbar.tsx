@@ -8,7 +8,7 @@ import { useUserStore } from "@/store/user/user-store";
 import AuthModal from "../auth/AuthModal";
 import SearchBar from "../ui/searchbar/SearchBar";
 import { useSearchBarStore } from "@/store/ui/searchBar/useSearchBarStore";
-import TripCreateBtn from "../ui/buttons/TripCreateBtn";
+import TripCreateBtn from "../ui/buttons/trip/TripCreateBtn";
 import { useAuthModalStore } from "@/store/user/useAuthModalStore";
 
 export default function Navbar() {

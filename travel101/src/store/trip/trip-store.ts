@@ -1,6 +1,7 @@
 import { fetchUpdateTrip } from '@/api/trip/tripApi';
 import { TripStore, Trip, Day, Location, SelectedLocation, TripOwnerSnippet, Country } from '@/types/trip/tripStoreTypes';
 import { create } from 'zustand';
+import { v4 as uuidv4 } from 'uuid';
 
 // 날짜 범위에 따라 days 배열을 초기화하는 헬퍼 함수
 const initializeDays = (startDate: Date, endDate: Date): Day[] => {
@@ -293,6 +294,40 @@ export const useTripStore = create<TripStore>((set, get) => ({
 	setIsCompleted: (isCompleted: boolean) =>
 		set((state) => ({
 			trip: state.trip ? { ...state.trip, isCompleted } : null,
+		})),
+	// ✨ 새로운 여행 초기화 로직
+	initializeNewTrip: () =>
+		set((state) => {
+			const now = new Date();
+			// 날짜를 ISO 8601 문자열로 저장하는 것이 더 일관적일 수 있습니다.
+			// 백엔드와 프론트엔드 간 Date 객체 직렬화/역직렬화 문제가 발생할 경우 문자열로 변경 고려.
+			// 여기서는 일단 Date 객체로 유지.
+			const tomorrow = new Date(now);
+			tomorrow.setDate(now.getDate() + 1);
+			const newDays = initializeDays(now, tomorrow);
+
+			return { // 새로운 상태 객체를 반환
+				trip: {
+					tripUid: `temp-${uuidv4()}`,
+					name: "New Trip",
+					startDate: now,
+					endDate: tomorrow,
+					days: newDays,
+					isLiked: false,
+					scripted: 0,
+					likesCount: 0,
+					scriptedCount: 0,
+					commentsCount: 0,
+					completed: false,
+					countries: [],
+				},
+				isOwner: true,
+			};
+		}),
+	resetTripStore: () =>
+		set(() => ({
+			trip: null,
+			isOwner: false,
 		})),
 }));
 

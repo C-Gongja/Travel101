@@ -115,6 +115,8 @@ export interface TripStore {
 	setIsCompleted: (completed: boolean) => void;
 	// setCountries: (countries: string[]) => void;
 	setIsLoading: (loading: boolean) => void;
+	initializeNewTrip: () => void; // 새로운 여행 초기화
+	resetTripStore: () => void; // 스토어 초기화 (로그아웃, 페이지 이동 시 유용)
 }
 
 // 어댑터 함수: 백엔드 응답을 프론트엔드 모델로 변환

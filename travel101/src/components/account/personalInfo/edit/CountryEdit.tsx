@@ -19,8 +19,8 @@ const CountryEdit = ({ currentCountry, onSaveSuccess }: CountryEditProps) => {
 	const handleSave = async () => {
 		const { user } = useUserStore.getState();
 		const patch = { country: country };
-		if (user?.uid) {
-			await patchPersonalInfo(patch, user?.uid);
+		if (user?.uuid) {
+			await patchPersonalInfo(patch, user?.uuid);
 		}
 		updateField('country', country);
 		onSaveSuccess();

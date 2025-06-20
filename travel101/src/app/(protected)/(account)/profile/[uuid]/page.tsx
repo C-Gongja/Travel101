@@ -22,8 +22,8 @@ export default function ProfilePage() {
 		<div className="px-[100px]">
 			<div className="mb-6 flex gap-3 items-center">
 				<h1 className="">Profiles</h1>
-				{user?.uid === uuid && (
-					<Link href={`/user/personalInfo/${user?.uid}`} className="text-3xl">
+				{user?.uuid === uuid && (
+					<Link href={`/user/personalInfo/${user?.uuid}`} className="text-3xl">
 						<IoSettingsOutline />
 					</Link>
 				)}
@@ -39,15 +39,17 @@ export default function ProfilePage() {
 				<UserTrips uuid={uuid} />
 			</div>
 
-			<div className="pt-10">
-				<button
-					onClick={clearUser}
-					className="p-2 border border-red-600"
-				>
-					Logout
-				</button>
-			</div>
-
+			{user?.uuid == uuid && (
+				<div className="pt-10">
+					<button
+						onClick={clearUser}
+						className="p-2 border border-red-600"
+					>
+						Logout
+					</button>
+				</div>
+			)}
+			
 			{isFollowersOpen && (
 				<Modal isOpen={isFollowersOpen} onClose={() => setIsFollowersOpen(false)}>
 					<FollowersModal />

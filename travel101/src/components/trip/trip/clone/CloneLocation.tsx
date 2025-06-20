@@ -4,6 +4,8 @@ import useScriptLocation from "@/hooks/trip/useScriptLocation";
 import { useGetCloneTripList } from "@/hooks/tripList/useGetCloneTripList";
 import { useTripStore } from "@/store/trip/trip-store";
 import { useUserStore } from "@/store/user/user-store";
+import { Location } from "@/types/trip/tripStoreTypes";
+import clsx from "clsx";
 import { LargeNumberLike } from "crypto";
 import { useEffect, useRef, useState } from "react";
 
@@ -18,13 +20,23 @@ export const CloneLocation = ({ dayNum, locNum }: ClonLocationProps) => {
 	const { trip } = useTripStore();
 	// make separate api? or filter imcomplete trip here?
 	const { data: tripList, isLoading: isTripsLoading, isError: isTripsError } = useGetCloneTripList(user?.uuid);
-	const { scriptTripLocation } = useScriptLocation();
+	const { scriptTripLocation, isSaving, error: scriptError, isSuccess: isScriptSuccess } = useScriptLocation();
 
 	const [openTripUid, setOpenTripUid] = useState<string | null>(null);
 	const [selectedDay, setSelectedDay] = useState<{ tripUid: string, number: number } | null>(null);
+	const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
 	// 각 Day 버튼의 ref를 저장하는 map
 	const dayRefs = useRef<Record<number, HTMLButtonElement | null>>({});
+
+	useEffect(() => {
+		if (isScriptSuccess) {
+			setMessage({ type: 'success', text: 'Successfully cloned!' });
+			// 성공 후 추가 액션 (예: 폼 초기화, 모달 닫기 지연 등)
+		} else if (scriptError) {
+			setMessage({ type: 'error', text: scriptError.message || 'An unknown error occurred during cloning.' });
+		}
+	}, [isScriptSuccess, scriptError]);
 
 	useEffect(() => {
 		if (tripList?.length) {
@@ -35,6 +47,7 @@ export const CloneLocation = ({ dayNum, locNum }: ClonLocationProps) => {
 	const handleClickTrip = (tripUid: string) => {
 		setSelectedDay(null);
 		setOpenTripUid(prev => (prev === tripUid ? null : tripUid));
+		setMessage(null); // 다른 트립 선택 시 메시지 초기화
 	};
 
 	const handleClickDay = (tripUid: string, number: number) => {
@@ -49,18 +62,36 @@ export const CloneLocation = ({ dayNum, locNum }: ClonLocationProps) => {
 		}, 100); // 렌더링 이후 실행
 	};
 
-	const handleCloneClick = () => {
-		// set an Error
-		if (!trip || !selectedDay)
+	const handleCloneClick = async () => {
+		if (!trip) {
+			setMessage({ type: 'error', text: 'Current trip data is missing.' });
 			return;
+		}
+		if (!openTripUid) {
+			setMessage({ type: 'error', text: 'Please select a destination trip.' });
+			return;
+		}
+		if (!selectedDay) {
+			setMessage({ type: 'error', text: 'Please select a destination day.' });
+			return;
+		}
 
-		scriptTripLocation({
-			tripUid: trip?.tripUid,
-			dayNum: dayNum,
-			locNum: locNum,
-			targetTripUid: selectedDay?.tripUid,
-			targetDayNum: selectedDay?.number
-		});
+		setMessage(null); // 새로운 요청 전 메시지 초기화
+		// resetScriptState(); // useScriptDay 훅의 상태 초기화 (mutation.reset())
+		try {
+			await scriptTripLocation({
+				tripUid: trip?.tripUid,
+				dayNum: dayNum,
+				locNum: locNum,
+				targetTripUid: selectedDay?.tripUid,
+				targetDayNum: selectedDay?.number
+			});
+			setSelectedDay(null);
+			// 성공 메시지는 useEffect에서 처리됩니다.
+		} catch (err) {
+			// 에러 메시지는 useEffect에서 처리됩니다.
+			console.error("Clone operation failed in component:", err);
+		}
 
 		console.log("tripUid: ", trip?.tripUid);
 		console.log("dayNum: ", dayNum);
@@ -137,8 +168,8 @@ export const CloneLocation = ({ dayNum, locNum }: ClonLocationProps) => {
 							{selectedDay?.tripUid === trip.tripUid && (
 								<div className="mt-3 max-h-[150px] overflow-y-auto border-t pt-2">
 									{trip.days
-										.find(d => d.number === selectedDay.number)
-										?.locations?.map((loc, idx) => (
+										.find(d => d.number === selectedDay?.number)
+										?.locations?.map((loc: Location, idx: number) => (
 											<div key={idx} className="py-1 border-b">
 												{loc.name}
 											</div>
@@ -149,12 +180,23 @@ export const CloneLocation = ({ dayNum, locNum }: ClonLocationProps) => {
 					)}
 				</div>
 			))}
-			<button
-				className="ml-auto block rounded-xl py-2 px-4 mt-3 text-white bg-maincolor hover:bg-maindarkcolor"
-				onClick={handleCloneClick}
-			>
-				Clone
-			</button>
+			<div className="flex items-center">
+				{message && (
+					<span className={clsx("block text-center mt-3", {
+						"text-green-500": message.type === 'success',
+						"text-red-500": message.type === 'error',
+					})}>
+						{message.text}
+					</span>
+				)}
+				<button
+					className="ml-auto block rounded-xl py-2 px-4 mt-3 text-white bg-maincolor hover:bg-maindarkcolor disabled:opacity-50 disabled:cursor-not-allowed"
+					onClick={handleCloneClick}
+					disabled={isSaving || !selectedDay} // 복제 중이거나 선택된 트립이 없으면 비활성화
+				>
+					{isSaving ? 'Cloning...' : 'Clone'}
+				</button>
+			</div>
 		</div>
 	);
 };
