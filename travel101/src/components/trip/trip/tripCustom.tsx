@@ -9,7 +9,6 @@ import DayComponent from "./day/dayComponent";
 import DateComponent from "./dateComponent";
 import { updateDaysOrder, updateLocationsOrder } from "@/util/TripDragDropUtil";
 import { useTripStore } from "@/store/trip/trip-store";
-import useSaveTrip from "@/hooks/trip/useSaveTrip";
 import useDeleteTrip from "@/hooks/trip/useDeleteTrip";
 import useScriptTrip from "@/hooks/trip/useScriptTrip";
 import LikesButton from "@/components/ui/buttons/like/LikesButton";
@@ -22,7 +21,6 @@ export default function TripCustom() {
 	const { trip, isOwner, setTripName, addDay, setTrip } = useTripStore();
 	const { user } = useUserStore();
 
-	const { saveTrip, isSaving } = useSaveTrip();
 	const { scriptTrip, isSaving: isCloning } = useScriptTrip();
 	const { deleteTrip, isLoading: isDeleting } = useDeleteTrip();
 

@@ -4,6 +4,7 @@ import "./globals.css";
 import ClientProvider from "@/providers/clientProvider";
 import Navbar from "../components/shared/Navbar";
 import { UserProvider } from "@/providers/userProvider";
+import Footer from "./Footer";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -40,6 +41,7 @@ export default function RootLayout({
 						<div className="py-[100px] px-[150px]">
 							{children}
 						</div>
+						<Footer />
 					</ClientProvider>
 				</UserProvider>
 			</body>
