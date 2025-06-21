@@ -24,13 +24,14 @@ export const useAddComment = () => {
 			const optimisticComment: CommentProps = {
 				uid: tempUid,
 				content: newComment.content,
+				picture: user?.picture ?? '',
+				userUid: user?.uuid ?? 'temp-123',
 				username: user?.username ?? 'user', // 백엔드에서 실제 사용자명 반환
 				parentUid: newComment.parentUid,
 				createdAt: new Date(),
 				liked: false,
 				likesCount: 0,
 				childCount: 0,
-				picture: user?.picture ?? '',
 			};
 
 			queryClient.setQueryData(queryKey, (old: CommentProps[] = []) =>
@@ -54,6 +55,8 @@ export const useAddComment = () => {
 			const tempUid = context?.tempUid;
 
 			if (!queryKey || !tempUid) return;
+
+			console.log("data: ", data)
 
 			queryClient.setQueryData(queryKey, (old: CommentProps[] = []) =>
 				old.map((c) => (c.uid === tempUid ? data : c))

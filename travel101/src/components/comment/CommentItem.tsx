@@ -32,6 +32,7 @@ export const CommentItem = ({ targetUid, comment, targetType }: CommentItemProps
 	const [isEdit, setIsEdit] = useState(false);
 	const [isLiked, setIsLiked] = useState(comment?.liked);
 
+
 	useEffect(() => {
 		if (comment.childCount > 0 && showReplyInput) {
 			setShowReplies(true);

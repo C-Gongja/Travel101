@@ -19,6 +19,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 			setIsUserLoading(true);
 			const response = await fetchVerifyUser();
 			if (response?.user) {
+				console.log("response?.user: ", response?.user);
 				setUser(response.user);
 				setToken(response.accessToken);
 			} else {

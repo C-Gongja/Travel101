@@ -34,7 +34,7 @@ const UserSnippetCard: React.FC<{
 					{/* Profile Image */}
 					<div className="w-12 h-12">
 						<img
-							src={'/img/logo-color.png'}
+							src={userSnippet?.picture || '/img/logo-color.png'}
 							alt="thumbnail"
 							className="object-cover rounded-full w-full h-full"
 							onError={(e: React.SyntheticEvent<HTMLImageElement>) =>

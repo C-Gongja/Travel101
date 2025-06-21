@@ -1,5 +1,6 @@
 export interface UserSnippet {
 	uuid: string;
+	picture: string;
 	name: string;
 	username: string;
 	isFollowing: boolean;

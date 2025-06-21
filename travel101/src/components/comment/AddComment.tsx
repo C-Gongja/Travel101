@@ -57,7 +57,7 @@ export const AddComment = ({ targetUid, parentUid, targetType, setShowReplyInput
 				{/* Profile Image */}
 				<div className="w-10 h-10 flex-shrink-0">
 					<img
-						src="/img/logo-color.png"
+						src={user?.picture || '/img/logo-color.png'}
 						alt="thumbnail"
 						className="object-cover rounded-full w-full h-full"
 						onError={(e) => (e.currentTarget.src = '')}
