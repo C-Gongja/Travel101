@@ -118,15 +118,17 @@ const DayComponent: React.FC<DraggableDayProps> = ({ day, dayIndex }) => {
 							)}
 						</Droppable>
 
-						<button
-							onClick={(e) => {
-								e.stopPropagation();
-								searchLocation();
-							}}
-							className="mt-2 px-4 py-2 rounded-lg flex items-center gap-2 text-maincolor hover:bg-maincolor hover:text-white transition duration-200"
-						>
-							<IoIosAddCircle className="text-xl" /> Location
-						</button>
+						{isOwner && (
+							<button
+								onClick={(e) => {
+									e.stopPropagation();
+									searchLocation();
+								}}
+								className="mt-2 px-4 py-2 rounded-lg flex items-center gap-2 text-maincolor hover:bg-maincolor hover:text-white transition duration-200"
+							>
+								<IoIosAddCircle className="text-xl" /> Location
+							</button>
+						)}
 					</div>
 					{isCloneOpen &&
 						<Modal isOpen={isCloneOpen} onClose={() => setIsCloneOpen(false)}>

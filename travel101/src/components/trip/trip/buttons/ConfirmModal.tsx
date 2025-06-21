@@ -29,7 +29,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 
 	// 모달 내부 컨테이너의 동적인 스타일
 	const modalInnerClasses = `
-    max-w-[600px] min-w-[400px] text-center
+    max-w-[600px] min-w-[400px] text-center p-4
     transform transition-all duration-300 ease-out
     ${isSuccessState ? 'scale-105' : 'scale-100'}
   `;

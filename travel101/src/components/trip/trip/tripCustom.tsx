@@ -219,9 +219,9 @@ export default function TripCustom() {
 				)}
 			</div>
 
-			<div className="mt-2 ml-1 text-lg text-gray-500">
+			<div className="flex items-center justify-between mt-2 text-lg text-gray-500">
 				<DateComponent />
-				{trip?.completed ? "conquered" : "unexplored"}
+				{trip?.completed ? "Explored" : "Unexplored"}
 			</div>
 
 			<DragDropContext onDragEnd={onDragEnd}>

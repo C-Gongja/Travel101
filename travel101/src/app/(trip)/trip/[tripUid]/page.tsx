@@ -28,7 +28,7 @@ export default function TripPage() {
 	const queryClient = useQueryClient();
 
 	const { saveTrip, isSaving, error: saveError } = useSaveTrip();
-	// ✨ useConfirmModal 훅 사용 (TripPage용)
+
 	const {
 		showConfirmModal, // 이름이 겹치므로 TripPage용으로 변경
 		modalTitle,
@@ -71,7 +71,6 @@ export default function TripPage() {
 
 	const handleSave = async () => {
 		if (!isOwner || !trip) {
-			// 권한 없음 메시지를 즉시 모달로 띄움
 			openConfirmModal(
 				'custom',
 				async () => { }, // 실행할 액션은 없으므로 빈 함수
@@ -81,7 +80,6 @@ export default function TripPage() {
 			return;
 		}
 
-		// Save 액션을 ConfirmModal에 전달합니다.
 		openConfirmModal(
 			'save', // 'save' 액션 타입
 			async () => { // 실제 saveTrip 로직을 콜백으로 전달
@@ -126,7 +124,7 @@ export default function TripPage() {
 			{isOwner && (
 				<button
 					onClick={handleSave}
-					className="mb-8 px-4 py-2 text-xl text-white border border-maincolor bg-maincolor rounded-md 
+					className="mb-8 py-3 text-xl text-white border border-maincolor bg-maincolor rounded-md 
 					hover:bg-white hover:text-maincolor transition duration-200"
 				>
 					Save

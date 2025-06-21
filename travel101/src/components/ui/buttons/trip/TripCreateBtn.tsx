@@ -39,7 +39,7 @@ const TripCreateBtn: React.FC<TripCreateBtnProps> = ({ text = "Create a New Trip
 				onClick={handleClickBuildTrip}
 				style={{ width, height, margin }}
 				className="flex justify-center items-center rounded-full bg-maincolor text-white gap-2 p-4 cursor-pointer
-							transition duration-150 hover:scale-105 hover:bg-maindarkcolor"
+							transition duration-150 hover:scale-105 hover:bg-maindarkcolor hover:border-maincolor/60 hover:shadow-glow-main"
 			>
 				{text}
 			</button>

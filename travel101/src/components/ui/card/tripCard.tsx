@@ -76,8 +76,9 @@ const TripCard = ({ trip }: TripCardListProps) => {
 	return (
 		<li
 			onClick={handleClick}
-			className="border rounded-lg shadow-[0px_0px_15px_7px_rgba(0,_0,_0,_0.1)] overflow-hidden
-      transition duration-150 bg-white cursor-pointer hover:shadow-[0px_0px_20px_10px_rgba(0,_0,_0,_0.15)]"
+			className="border border-gray-300 rounded-lg overflow-hidden 
+			transition-all duration-300 ease-in-out bg-white cursor-pointer 
+			hover:border-maincolor/50 hover:shadow-glow-main"
 		>
 			{/* 1. 이미지 슬라이더 섹션 */}
 			{/* `group` 클래스를 추가하여 하위 요소들이 이 컨테이너의 hover 상태를 감지할 수 있도록 함 */}

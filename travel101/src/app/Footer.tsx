@@ -9,7 +9,7 @@ const Footer: React.FC = () => {
 				<div className="flex flex-col md:flex-row justify-between items-start gap-8">
 					{/* Logo & Description */}
 					<div>
-						<h2 className="text-2xl font-bold text-black">Sharavel</h2>
+						<h2 className="text-2xl font-bold text-maincolor">Sharavel</h2>
 						<p className="mt-2 text-sm max-w-sm">
 							Building modern web experiences with speed, accessibility, and great design.
 						</p>
