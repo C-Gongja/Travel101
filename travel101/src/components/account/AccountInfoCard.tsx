@@ -48,7 +48,7 @@ const AccountInfoCard: React.FC<AccountInfoProps> = ({ uuid, setIsFollowingOpen,
 				{/* Profile Image */}
 				<div className="w-28 h-28 mr-4">
 					<Image
-						src={user?.picture || '/img/logo-color.png'}
+						src={userSnippet?.picture || '/img/logo-color.png'}
 						alt="user pic"
 						className="object-cover rounded-full border-2"
 						width={120}

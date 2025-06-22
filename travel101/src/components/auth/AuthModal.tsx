@@ -10,11 +10,13 @@ export default function AuthModal() {
 
 	return (
 		<Modal isOpen={isOpen} onClose={onClose}>
-			{isSignUp ? (
-				<SignUpForm />
-			) : (
-				<SignInForm />
-			)}
+			<div className="p-3">
+				{isSignUp ? (
+					<SignUpForm />
+				) : (
+					<SignInForm />
+				)}
+			</div>
 		</Modal>
 	);
 }

@@ -36,7 +36,7 @@ export default function TripRecommandation() {
 				<h1>Trip List</h1>
 			</div>
 			{tripList && Array.isArray(tripList) && tripList.length > 0 ? (
-				<ul className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-6">
+				<ul className="flex flex-wrap gap-5">
 					{tripList.map((trip) => (
 						<TripCard key={trip.tripUid} trip={trip} />
 					))}

@@ -76,7 +76,7 @@ const TripCard = ({ trip }: TripCardListProps) => {
 	return (
 		<li
 			onClick={handleClick}
-			className="border border-gray-300 rounded-lg overflow-hidden 
+			className="border border-gray-300 rounded-lg overflow-hidden  min-w-[250px]
 			transition-all duration-300 ease-in-out bg-white cursor-pointer 
 			hover:border-maincolor/50 hover:shadow-glow-main"
 		>
