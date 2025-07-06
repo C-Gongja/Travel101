@@ -15,6 +15,7 @@ import { CloneDay } from "../clone/CloneDay";
 import { useAuthModalStore } from "@/store/user/useAuthModalStore";
 import { useUserStore } from "@/store/user/user-store";
 import { usePathname, useRouter } from "next/navigation";
+import { useAuthAction } from "@/hooks/auth/useAuthGuard";
 
 interface DraggableDayProps {
 	day: Day;
@@ -22,11 +23,7 @@ interface DraggableDayProps {
 }
 
 const DayComponent: React.FC<DraggableDayProps> = ({ day, dayIndex }) => {
-	const router = useRouter();
-	const pathname = usePathname();
-	const { user, isAuthenticated } = useUserStore();
-	const { setAfterAuthCallback, onOpen } = useAuthModalStore();
-	
+	const { executeWithAuth } = useAuthAction();
 	const { isOwner, setSelectedDay, removeDay, searchLocation } = useTripStore();
 	const [isCollapsed, setIsCollapsed] = useState(false); // 접힘 상태 관리
 	const [isCloneOpen, setIsCloneOpen] = useState(false);
@@ -50,18 +47,11 @@ const DayComponent: React.FC<DraggableDayProps> = ({ day, dayIndex }) => {
 		}
 	};
 
-	const handleDayCloneClick = (dayNum: number) => {
-		if (!user) {
-			setAfterAuthCallback(() => {
-				router.push(pathname);
-			});
-			onOpen();
-			return;
-		}
+	const handleDayCloneClick = executeWithAuth((dayNum: number) => {
 		setIsCloneOpen(true);
 		setCloneDayNum(dayNum);
 		console.log("clone dayNum: ", dayNum);
-	}
+	});
 
 	return (
 		<Draggable key={`day-${dayIndex}`} draggableId={`day-${dayIndex}`} index={dayIndex} isDragDisabled={!isOwner}>

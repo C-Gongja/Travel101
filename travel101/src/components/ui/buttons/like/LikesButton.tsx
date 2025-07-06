@@ -1,26 +1,29 @@
 'use client'
 
-import { useLikes } from "@/hooks/likes/useLikes";
-import clsx from "clsx";
 import { useState } from "react";
+import clsx from "clsx";
 import { BiSolidLike, BiLike } from "react-icons/bi";
+
+import { useLikes } from "@/hooks/likes/useLikes";
+import { useAuthAction } from "@/hooks/auth/useAuthGuard";
 
 interface LikesButtonProps {
 	targetType: string;
 	targetUid: string;
-	isLiked: boolean;
+	isLiked: boolean | undefined;
 	setIsLiked: (isLiked: boolean) => void;
 };
 
 const LikesButton = ({ targetType, targetUid, isLiked, setIsLiked }: LikesButtonProps) => {
+	const { executeWithAuth } = useAuthAction();
 	const { mutateLikes, isSaving, error } = useLikes({
 		isLiked,
 		onToggleLike: setIsLiked,
 	});
 
-	const handleLikesClick = () => {
+	const handleLikesClick = executeWithAuth(() => {
 		mutateLikes({ targetType, targetUid });
-	};
+	});
 
 	return (
 		<div className="flex items-center gap-2">

@@ -6,7 +6,7 @@ import { LikesRequest } from "@/types/likes/likesTypes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface UseAddLikesProps {
-	isLiked: boolean;
+	isLiked: boolean | undefined;
 	onToggleLike?: (newIsLiked: boolean) => void;
 }
 
