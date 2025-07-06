@@ -16,8 +16,8 @@ interface TripCreateBtnProps {
 const TripCreateBtn: React.FC<TripCreateBtnProps> = ({ text = "Create a New Trip", width = 'auto', height = 'auto', margin = '0' }) => {
 	const router = useRouter();
 	const { user, isAuthenticated } = useUserStore();
-	const { resetTripStore } = useTripStore();
 	const { setAfterAuthCallback, onOpen } = useAuthModalStore();
+	const { resetTripStore } = useTripStore();
 	// const { mutate: createTrip, isPending, data, error } = useCreateTrip();
 
 	const handleClickBuildTrip = () => {

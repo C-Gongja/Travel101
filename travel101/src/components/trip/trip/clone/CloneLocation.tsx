@@ -1,13 +1,14 @@
 'use client'
 
-import useScriptLocation from "@/hooks/trip/useScriptLocation";
-import { useGetCloneTripList } from "@/hooks/tripList/useGetCloneTripList";
+import { useEffect, useRef, useState } from "react";
+import clsx from "clsx";
 import { useTripStore } from "@/store/trip/trip-store";
 import { useUserStore } from "@/store/user/user-store";
+
+import useScriptLocation from "@/hooks/trip/useScriptLocation";
+import { useGetCloneTripList } from "@/hooks/tripList/useGetCloneTripList";
+
 import { Location } from "@/types/trip/tripStoreTypes";
-import clsx from "clsx";
-import { LargeNumberLike } from "crypto";
-import { useEffect, useRef, useState } from "react";
 
 
 interface ClonLocationProps {

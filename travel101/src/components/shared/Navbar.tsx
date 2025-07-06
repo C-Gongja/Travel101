@@ -45,7 +45,7 @@ export default function Navbar() {
 	}
 
 	return (
-		<nav className={`fixed top-0 w-full flex items-center justify-between bg-white px-[150px] py-5 z-50
+		<nav className={`fixed top-0 w-full flex items-center justify-between bg-white px-[150px] py-5 z-50 max-h-[80px]
 			${showSearchAndTrip ? 'border-b border-gray-200 shadow-sm' : ''
 			}`}>
 			<Link href="/" className="text-3xl font-bold text-maincolor">

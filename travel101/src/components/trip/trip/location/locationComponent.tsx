@@ -11,6 +11,9 @@ import LocationHeader from "./LocationHeader";
 import LocationDescription from "./LocationDescription";
 import LocationMedia from "./LocationMedia";
 import { S3Location } from "@/types/S3/trip/S3TripTypes";
+import { useAuthModalStore } from "@/store/user/useAuthModalStore";
+import { useUserStore } from "@/store/user/user-store";
+import { usePathname, useRouter } from "next/navigation";
 
 interface LocationProps {
 	location: Location;
@@ -25,6 +28,11 @@ const LocationComponent: React.FC<LocationProps> = ({
 	locIndex,
 	isLast,
 }) => {
+	const router = useRouter();
+	const pathname = usePathname();
+	const { user, isAuthenticated } = useUserStore();
+	const { setAfterAuthCallback, onOpen } = useAuthModalStore();
+
 	const contentRef = useRef<HTMLDivElement>(null);
 	const [lineHeight, setLineHeight] = useState<number>(0);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -34,6 +42,13 @@ const LocationComponent: React.FC<LocationProps> = ({
 	const [cloneLocNum, setCloneLocNum] = useState(0);
 
 	const handleLocCloneClick = (dayNum: number, locNum: number) => {
+		if (!user) {
+			setAfterAuthCallback(() => {
+				router.push(pathname);
+			});
+			onOpen();
+			return;
+		}
 		setIsCloneOpen(true)
 		setCloneDayNum(dayNum + 1);
 		setCloneLocNum(locNum);

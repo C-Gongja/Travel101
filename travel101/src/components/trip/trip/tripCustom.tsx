@@ -1,25 +1,36 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { IoIosAddCircle } from "react-icons/io";
-import { MdDeleteOutline } from "react-icons/md";
-import { FaClone } from "react-icons/fa6";
+import { usePathname, useRouter } from "next/navigation";
+
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
-import DayComponent from "./day/dayComponent";
-import DateComponent from "./dateComponent";
 import { updateDaysOrder, updateLocationsOrder } from "@/util/TripDragDropUtil";
+
+import { useUserStore } from "@/store/user/user-store";
 import { useTripStore } from "@/store/trip/trip-store";
+
 import useDeleteTrip from "@/hooks/trip/useDeleteTrip";
 import useScriptTrip from "@/hooks/trip/useScriptTrip";
-import LikesButton from "@/components/ui/buttons/like/LikesButton";
-import { useUserStore } from "@/store/user/user-store";
-import Modal from "@/components/ui/modal/MainModal";
-import ConfirmModal from "./buttons/ConfirmModal";
 import useConfirmModal from "@/hooks/shared/tripConfirmModal/useConfirmModal";
 
+import Modal from "@/components/ui/modal/MainModal";
+import LikesButton from "@/components/ui/buttons/like/LikesButton";
+
+import DateComponent from "./dateComponent";
+import DayComponent from "./day/dayComponent";
+import ConfirmModal from "./buttons/ConfirmModal";
+
+import { FaClone } from "react-icons/fa6";
+import { IoIosAddCircle } from "react-icons/io";
+import { MdDeleteOutline } from "react-icons/md";
+import { useAuthModalStore } from "@/store/user/useAuthModalStore";
+
 export default function TripCustom() {
+	const router = useRouter();
+	const pathname = usePathname();
+	const { user, isAuthenticated } = useUserStore();
+	const { setAfterAuthCallback, onOpen } = useAuthModalStore();
 	const { trip, isOwner, setTripName, addDay, setTrip } = useTripStore();
-	const { user } = useUserStore();
 
 	const { scriptTrip, isSaving: isCloning } = useScriptTrip();
 	const { deleteTrip, isLoading: isDeleting } = useDeleteTrip();
@@ -41,10 +52,10 @@ export default function TripCustom() {
 	const [inputWidth, setInputWidth] = useState(10);
 	const [isLiked, setIsLiked] = useState(trip?.isLiked);
 	const spanRef = useRef<HTMLSpanElement>(null);
-
-	useEffect(() => {
-		console.log("trip: ", trip);
-	}, [trip]);
+	console.log(pathname);
+	// useEffect(() => {
+	// 	console.log("trip: ", trip);
+	// }, [trip]);
 
 	useEffect(() => {
 		if (spanRef.current) {
@@ -61,12 +72,10 @@ export default function TripCustom() {
 	// --- 모달을 띄우는 핸들러들 (이제 useConfirmModal 사용) ---
 	const handleScriptClick = () => {
 		if (!user || !trip) {
-			openConfirmModal(
-				'custom',
-				async () => { },
-				"User or trip data is missing for cloning.",
-				trip?.name
-			);
+			setAfterAuthCallback(() => {
+				router.push(pathname);
+			});
+			onOpen();
 			return;
 		}
 		openConfirmModal(

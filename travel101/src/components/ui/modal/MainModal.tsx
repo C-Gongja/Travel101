@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { IoIosCloseCircle } from "react-icons/io";
+import { IoMdClose } from "react-icons/io";
 
 interface ModalProps {
 	isOpen: boolean;
@@ -37,7 +37,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 			<div className="modal p-[20px] rounded-xl shadow-lg relative">
 				<button className="absolute top-4 right-4 text-gray-600 hover:text-maincolor z-99"
 					onClick={onClose}>
-					<IoIosCloseCircle className="text-3xl" />
+					<IoMdClose className="text-3xl" />
 				</button>
 				{children}
 			</div>

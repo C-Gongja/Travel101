@@ -31,10 +31,12 @@ const AddLocationModal: React.FC<AddLocationModalProps> = ({ selectedPlace, onCl
 	};
 
 	return (
-		<div className="flex flex-col items-center w-[420px]">
-			<h1>{trip?.name}</h1>
-			<h2>Add to</h2>
-			<div className="flex flex-row gap-6 mt-5">
+		<div className="flex flex-col p-3 gap-5 w-[420px]">
+			<div className="flex flex-col items-center justify-center gap-5">
+				<span className="ml-6 text-3xl">Add</span>
+				<span className="text-xl font-bold">"{selectedPlace.name}"</span>
+			</div>
+			<div className="flex flex-row items-center justify-center gap-6 mt-5">
 				{trip?.days.map((day, dayIndex) => (
 					<div
 						key={dayIndex}

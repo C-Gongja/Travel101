@@ -82,7 +82,7 @@ const TripCard = ({ trip }: TripCardListProps) => {
 		>
 			{/* 1. 이미지 슬라이더 섹션 */}
 			{/* `group` 클래스를 추가하여 하위 요소들이 이 컨테이너의 hover 상태를 감지할 수 있도록 함 */}
-			<div className="w-full h-[250px] relative overflow-hidden group">
+			<div className="w-full h-[250px] relative overflow-hidden group transition-all duration-300">
 				{hasMedia ? (
 					<>
 						<div
@@ -93,7 +93,7 @@ const TripCard = ({ trip }: TripCardListProps) => {
 							{mediaToDisplay.map((file, index) => (
 								<div
 									key={`${trip.tripUid}-${file.s3Key || index}`}
-									className="relative flex-shrink-0 w-full h-full snap-center"
+									className="relative flex-shrink-0 w-full h-full snap-center hover:scale-105 transition-all duration-300"
 								>
 									{file.s3Key.toLowerCase().endsWith('.mp4') || file.s3Key.toLowerCase().endsWith('.mov') ? (
 										<video
@@ -163,7 +163,7 @@ const TripCard = ({ trip }: TripCardListProps) => {
 					</>
 				) : (
 					// 이미지가 없을 경우 대체 UI
-					<div className="bg-maincolor/20 h-full w-full flex items-center justify-center text-gray-500">
+					<div className="bg-maincolor/20 h-full w-full flex items-center justify-center text-gray-500 hover:scale-105">
 						<img
 							className="w-16 h-16 text-gray-400"
 							src='/img/logo-color.png'
