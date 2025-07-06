@@ -16,7 +16,7 @@ import TripCustom from "../../../../components/trip/trip/tripCustom";
 import UserSnippetCard from "@/components/ui/card/UserSnippetCard";
 import MapController from "@/components/trip/map/MapController";
 import Modal from "@/components/ui/modal/MainModal";
-import ConfirmModal from "@/components/trip/trip/buttons/ConfirmModal";
+import ConfirmModal from "@/components/trip/trip/ConfirmModal";
 
 export default function TripPage() {
 	const { tripUid } = useParams<{ tripUid: string }>();

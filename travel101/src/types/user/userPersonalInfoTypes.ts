@@ -1,6 +1,7 @@
 export interface UserPersonalInfo {
 	uuid: string;
 	name: string;
+	picture: string;
 	username: string;
 	email: string;
 	country?: string;

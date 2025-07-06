@@ -2,12 +2,8 @@
 
 import ProfileField from "@/components/account/personalInfo/display/ProfileField";
 import SocialLinksDisplay from "@/components/account/personalInfo/display/SocialLinksDisplay";
-import BioEdit from "@/components/account/personalInfo/edit/BioEdit";
-import CountryEdit from "@/components/account/personalInfo/edit/CountryEdit";
-import EmailEdit from "@/components/account/personalInfo/edit/EmailEdit";
-import NameEdit from "@/components/account/personalInfo/edit/NameEdit";
+import PersonalInfoEditField from "@/components/account/personalInfo/edit/PersonalInfoEdit";
 import SocialLinksEdit from "@/components/account/personalInfo/edit/SocialLinksEdit";
-import UsernameEdit from "@/components/account/personalInfo/edit/UsernameEdit";
 import { useGetPersonalInfo } from "@/hooks/profile/personalInfo/useGetPersonalInfo";
 import { PersonalInfoStore } from "@/store/user/user-personal-info-store";
 import { useParams } from "next/navigation";
@@ -22,40 +18,82 @@ const PROFILE_FIELDS: {
 	label: string;
 	getEditComponent: (personalInfo: any, onSaveSuccess: () => void) => React.ReactNode;
 	displayValue?: (personalInfo: any) => React.ReactNode;
+	inputType?: 'text' | 'email' | 'textarea' | 'select'; // Added inputType
 }[] = [
 		{
 			id: 'name',
 			label: 'Name',
-			getEditComponent: (info, onSaveSuccess) => <NameEdit currentName={info?.name} onSaveSuccess={onSaveSuccess} />,
+			inputType: 'text', // Specify input type
+			getEditComponent: (info, onSaveSuccess) => (
+				<PersonalInfoEditField
+					fieldKey="name"
+					currentValue={info?.name}
+					onSaveSuccess={onSaveSuccess}
+					inputType="text"
+				/>
+			),
 			displayValue: (info) => <span className="ml-4 mb-4 flex justify-between items-center text-gray-500">{info?.name || "No name provided"}</span>
 		},
 		{
 			id: 'username',
 			label: 'Username',
-			getEditComponent: (info, onSaveSuccess) => <UsernameEdit currentUsername={info?.username} onSaveSuccess={onSaveSuccess} />,
+			inputType: 'text', // Specify input type
+			getEditComponent: (info, onSaveSuccess) => (
+				<PersonalInfoEditField
+					fieldKey="username"
+					currentValue={info?.username}
+					onSaveSuccess={onSaveSuccess}
+					inputType="text"
+				/>
+			),
 			displayValue: (info) => <span className="ml-4 mb-4 flex justify-between items-center text-gray-500">{info?.username || "No username provided"}</span>
 		},
 		{
 			id: 'email',
 			label: 'Email',
-			getEditComponent: (info, onSaveSuccess) => <EmailEdit currentEmail={info?.email} onSaveSuccess={onSaveSuccess} />,
-			displayValue: (info) => <span className="ml-4 mb-4 flex justify-between items-center text-gray-500">{info?.email || "No country provided"}</span>
+			inputType: 'email', // Specify input type
+			getEditComponent: (info, onSaveSuccess) => (
+				<PersonalInfoEditField
+					fieldKey="email"
+					currentValue={info?.email}
+					onSaveSuccess={onSaveSuccess}
+					inputType="email"
+				/>
+			),
+			displayValue: (info) => <span className="ml-4 mb-4 flex justify-between items-center text-gray-500">{info?.email || "No email provided"}</span>
 		},
 		{
 			id: 'country',
 			label: 'Country',
-			getEditComponent: (info, onSaveSuccess) => <CountryEdit currentCountry={info?.country} onSaveSuccess={onSaveSuccess} />,
+			inputType: 'select', // Specify input type as select
+			getEditComponent: (info, onSaveSuccess) => (
+				<PersonalInfoEditField
+					fieldKey="country"
+					currentValue={info?.country}
+					onSaveSuccess={onSaveSuccess}
+					inputType="select" // Use 'select' for countries
+				/>
+			),
 			displayValue: (info) => <span className="ml-4 mb-4 flex justify-between items-center text-gray-500">{info?.country || "No country provided"}</span>
 		},
 		{
 			id: 'bio',
 			label: 'Bio',
-			getEditComponent: (info, onSaveSuccess) => <BioEdit currentBio={info?.bio} onSaveSuccess={onSaveSuccess} />,
+			inputType: 'textarea', // Specify input type as textarea
+			getEditComponent: (info, onSaveSuccess) => (
+				<PersonalInfoEditField
+					fieldKey="bio"
+					currentValue={info?.bio}
+					onSaveSuccess={onSaveSuccess}
+					inputType="textarea" // Use 'textarea' for bio
+				/>
+			),
 			displayValue: (info) => <span className="ml-4 mb-4 flex justify-between items-center text-gray-500">{info?.bio || "No bio provided"}</span>
 		},
 		{
 			id: 'socialLinks',
 			label: 'Social Links',
+			// Social links are more complex, so we keep their dedicated edit component
 			getEditComponent: (info, onSaveSuccess) => <SocialLinksEdit socialLinks={info?.socialLinks} onSaveSuccess={onSaveSuccess} />,
 			displayValue: (info) => <SocialLinksDisplay socialLinks={info?.socialLinks} />
 		}

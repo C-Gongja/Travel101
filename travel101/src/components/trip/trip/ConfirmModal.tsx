@@ -19,7 +19,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 	onCancel,
 	confirmButtonText = 'Ok',
 	cancelButtonText = 'Cancel',
-	confirmButtonColor = 'bg-blue-500 hover:bg-blue-600', // 기본 색상은 파란색으로 변경
+	confirmButtonColor = 'bg-maincolor hover:bg-maindarkcolor', // 기본 색상은 파란색으로 변경
 	error = null,
 	isSuccess = false,
 }) => {
@@ -37,7 +37,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 	// 제목의 동적인 스타일
 	const titleClasses = `
     text-2xl font-bold mb-4
-    ${isSuccessState ? 'text-green-600' : isErrorState ? 'text-red-600' : 'text-gray-800'}
+    ${isSuccessState ? 'text-maincolor' : isErrorState ? 'text-red-600' : 'text-gray-800'}
   `;
 
 	// 메시지의 동적인 스타일 (여기서는 크게 변동 없음)
@@ -48,8 +48,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 
 	// 확인 버튼의 동적인 스타일
 	const confirmButtonClasses = `
-    w-full py-2 rounded-lg text-white font-semibold transition-all duration-200
-    ${isSuccessState ? 'bg-green-500 hover:bg-green-600' : confirmButtonColor}
+    w-full py-2 rounded-lg text-white font-semibold
+    ${isSuccessState ? 'bg-maincolor hover:bg-maindarkcolor' : confirmButtonColor}
   `;
 
 	// 취소 버튼의 동적인 스타일
@@ -64,7 +64,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 			{/* 성공/실패 아이콘 렌더링 */}
 			<div className="flex justify-center items-center mb-4">
 				{isSuccessState && (
-					<svg className="w-20 h-20 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<svg className="w-20 h-20 text-maincolor" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
 					</svg>
 				)}

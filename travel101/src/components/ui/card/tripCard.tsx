@@ -87,7 +87,7 @@ const TripCard = ({ trip }: TripCardListProps) => {
 					<>
 						<div
 							ref={scrollContainerRef}
-							className="flex w-full h-full overflow-x-hidden scroll-smooth snap-x snap-mandatory"
+							className="flex w-full h-full overflow-x-hidden overflow-y-hidden scroll-smooth snap-x snap-mandatory"
 							onScroll={handleScroll}
 						>
 							{mediaToDisplay.map((file, index) => (

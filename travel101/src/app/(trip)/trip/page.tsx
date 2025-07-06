@@ -13,7 +13,7 @@ import MapController from "@/components/trip/map/MapController";
 import TripCustom from "@/components/trip/trip/tripCustom";
 import useConfirmModal from "@/hooks/shared/tripConfirmModal/useConfirmModal";
 import Modal from "@/components/ui/modal/MainModal";
-import ConfirmModal from "@/components/trip/trip/buttons/ConfirmModal";
+import ConfirmModal from "@/components/trip/trip/ConfirmModal";
 import useSaveTrip from "@/hooks/trip/useSaveTrip";
 
 export default function TripCreatePage() {

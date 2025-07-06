@@ -18,7 +18,7 @@ import LikesButton from "@/components/ui/buttons/like/LikesButton";
 
 import DateComponent from "./dateComponent";
 import DayComponent from "./day/dayComponent";
-import ConfirmModal from "./buttons/ConfirmModal";
+import ConfirmModal from "./ConfirmModal";
 
 import { FaClone } from "react-icons/fa6";
 import { IoIosAddCircle } from "react-icons/io";

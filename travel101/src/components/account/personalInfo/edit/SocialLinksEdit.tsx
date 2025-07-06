@@ -110,7 +110,7 @@ const SocialLinksEdit: React.FC<SocialLinksEditProps> = ({ socialLinks, onSaveSu
 				+ Add Social Link
 			</button>
 			<div className="mt-2">
-				<Button onClick={handleSave} text="Save" padding="10px 20px" />
+				<Button onClick={handleSave} text="Save" padding="5px 15px" />
 			</div>
 		</>
 	);

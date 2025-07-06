@@ -1,13 +1,18 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useGetProfile } from "@/hooks/profile/useGetProfile";
 import { FaInstagram, FaYoutube, FaFacebook, FaTwitter } from "react-icons/fa";
-import { useUserStore } from "@/store/user/user-store";
+import Image from "next/image";
+
 import { Country } from "@/types/trip/tripStoreTypes";
+import { UserSnippet } from "@/types/user/userSnippetTypes";
 import { SocialLink } from "@/types/user/userPersonalInfoTypes";
+
+import { useUserStore } from "@/store/user/user-store";
+
+import { useGetProfile } from "@/hooks/profile/useGetProfile";
+
 import UnfollowButton from "../ui/buttons/follow/UnfollowButton";
 import FollowButton from "../ui/buttons/follow/FollowButton";
-import { UserSnippet } from "@/types/user/userSnippetTypes";
-import Image from "next/image";
+import ProfilePicture from "./ProfilePicture";
 
 // 지금 여기 3번 rendering 되는중. 그니깐 총 6번이 rerendering이 되는중.
 
@@ -46,23 +51,11 @@ const AccountInfoCard: React.FC<AccountInfoProps> = ({ uuid, setIsFollowingOpen,
 		transition duration-150 bg-white">
 			<div className="flex flex-row items-center gap-3 mb-4">
 				{/* Profile Image */}
-				<div className="w-28 h-28 mr-4">
-					<Image
-						src={userSnippet?.picture || '/img/logo-color.png'}
-						alt="user pic"
-						className="object-cover rounded-full border-2"
-						width={120}
-						height={120}
-						onError={(e: React.SyntheticEvent<HTMLImageElement>) =>
-							(e.currentTarget.src = '')
-						}
-						loading="lazy"
-					/>
-				</div>
+				<ProfilePicture pictureUrl={userSnippet?.picture} />
 
 				{/* User Info */}
 				<div className="flex-1">
-					<div className="ml-3">
+					<div className="">
 						<h3 className="text-3xl font-bold text-gray-900">{userSnippet?.name}</h3>
 						<p className="text-base text-gray-600">@{userSnippet?.username}</p>
 

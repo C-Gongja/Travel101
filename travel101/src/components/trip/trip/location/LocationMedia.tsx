@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { IoIosAddCircle } from 'react-icons/io';
-import { MdDeleteForever } from 'react-icons/md';
+import { MdDeleteOutline } from "react-icons/md";
 import { FaFileUpload } from 'react-icons/fa';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'; // 스크롤 버튼 아이콘
 import { useTripStore } from '@/store/trip/trip-store';
@@ -241,7 +241,7 @@ const LocationMedia: React.FC<LocationMediaProps> = ({ media, setMedia, dayIndex
 										className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20"
 										aria-label="Remove image"
 									>
-										<MdDeleteForever size={18} />
+										<MdDeleteOutline size={18} />
 									</button>
 								)}
 							</div>
@@ -270,7 +270,7 @@ const LocationMedia: React.FC<LocationMediaProps> = ({ media, setMedia, dayIndex
 									className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20"
 									aria-label="Remove new image"
 								>
-									<MdDeleteForever size={18} />
+									<MdDeleteOutline size={18} />
 								</button>
 							</div>
 						))}
