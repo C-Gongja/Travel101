@@ -10,10 +10,19 @@ interface ButtonProps {
 	height?: string;
 	padding?: string;
 	margin?: string;
+	isLoading?: boolean;
 	onClick?: () => void;
 }
 
-const Button: React.FC<ButtonProps> = ({ text = "Create a New Trip", width = 'auto', height = 'auto', padding = '0', margin = '0', onClick }) => {
+const Button: React.FC<ButtonProps> = ({
+	text = "Create a New Trip",
+	width = 'auto',
+	height = 'auto',
+	padding = '0',
+	margin = '0',
+	isLoading = false,
+	onClick
+}) => {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 	const { user, isAuthenticated } = useUserStore();
@@ -26,6 +35,7 @@ const Button: React.FC<ButtonProps> = ({ text = "Create a New Trip", width = 'au
 				type="button"
 				style={{ width, height, padding, margin }}
 				// onClick={saveHandler}
+				disabled={isLoading}
 				className="bg-maincolor text-white rounded-full hover:bg-maindarkcolor transition duration-150 "
 			>
 				{text}

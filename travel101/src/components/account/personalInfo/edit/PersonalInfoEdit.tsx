@@ -181,7 +181,7 @@ const PersonalInfoEditField: React.FC<PersonalInfoEditFieldProps> = ({
 					onClick={handleSave}
 					text={updateFieldMutation.isPending ? 'Saving...' : 'Save'}
 					padding="5px 15px"
-					disabled={updateFieldMutation.isPending}
+					isLoading={updateFieldMutation.isPending}
 				/>
 			</div>
 		</div>

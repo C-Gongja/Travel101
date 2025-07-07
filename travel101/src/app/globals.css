@@ -68,6 +68,28 @@
 	}
 }
 
+@keyframes draw-check {
+	0% {
+		stroke-dasharray: 50;
+		stroke-dashoffset: 50;
+	}
+
+	100% {
+		stroke-dasharray: 50;
+		stroke-dashoffset: 0;
+	}
+}
+
+.animate-draw-check {
+	stroke-dasharray: 50;
+	stroke-dashoffset: 50;
+	animation: draw-check 1s ease-out forwards;
+}
+
+.invisible {
+	opacity: 0;
+}
+
 h1 {
 	font-size: 3rem;
 	font-weight: bold;

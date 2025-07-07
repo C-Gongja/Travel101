@@ -13,6 +13,7 @@ import { useGetProfile } from "@/hooks/profile/useGetProfile";
 import UnfollowButton from "../ui/buttons/follow/UnfollowButton";
 import FollowButton from "../ui/buttons/follow/FollowButton";
 import ProfilePicture from "./ProfilePicture";
+import CheckmarkAnimation from "../ui/animation/CheckmarkAnimation";
 
 // 지금 여기 3번 rendering 되는중. 그니깐 총 6번이 rerendering이 되는중.
 
@@ -52,7 +53,6 @@ const AccountInfoCard: React.FC<AccountInfoProps> = ({ uuid, setIsFollowingOpen,
 			<div className="flex flex-row items-center gap-3 mb-4">
 				{/* Profile Image */}
 				<ProfilePicture pictureUrl={userSnippet?.picture} />
-
 				{/* User Info */}
 				<div className="flex-1">
 					<div className="">

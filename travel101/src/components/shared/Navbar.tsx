@@ -63,13 +63,14 @@ export default function Navbar() {
 				{isAuthenticated ? (
 					<div className="relative" >
 						<button onClick={() => setMenuOpen(!menuOpen)}>
-							<Image
-								src={user?.picture || '/img/logo-color.png'}
-								alt="User Profile"
-								width={40}
-								height={40}
-								className="rounded-full cursor-pointer border border-maincolor shadow-[0px_0px_17px_0px_rgba(0,_0,_0,_0.1)]"
-							/>
+							<div className="relative w-10 h-10 rounded-full overflow-hidden border border-maincolor shadow-[0px_0px_17px_0px_rgba(0,_0,_0,_0.1)] cursor-pointer">
+								<Image
+									src={user?.picture || '/img/logo-color.png'}
+									alt="User Profile"
+									fill
+									className="object-cover"
+								/>
+							</div>
 						</button>
 
 						{menuOpen && (
