@@ -1,7 +1,8 @@
 'use client'
 
-import clsx from "clsx";
 import { useCallback, useEffect, useRef, useState } from "react";
+import clsx from "clsx";
+import Image from "next/image";
 import { useUserStore } from "@/store/user/user-store";
 import { CommentRequestProps } from "@/types/comment/tripCommentTypes";
 import { useAddComment } from "@/hooks/comment/useAddComment";
@@ -56,12 +57,12 @@ export const AddComment = ({ targetUid, parentUid, targetType, setShowReplyInput
 			<div className="flex gap-3">
 				{/* Profile Image */}
 				<div className="w-10 h-10 flex-shrink-0">
-					<img
+					<Image
 						src={user?.picture || '/img/logo-color.png'}
-						alt="thumbnail"
-						className="object-cover rounded-full w-full h-full"
-						onError={(e) => (e.currentTarget.src = '')}
-						loading="lazy"
+						alt="User Profile"
+						width={40}
+						height={40}
+						className="w-10 h-10 rounded-full object-cover cursor-pointer"
 					/>
 				</div>
 

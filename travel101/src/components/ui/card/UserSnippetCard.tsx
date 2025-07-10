@@ -27,7 +27,7 @@ const UserSnippetCard: React.FC<{
 
 	return (
 		<div className="px-2 bg-white">
-			<div className="flex justify-between items-center gap-2">
+			<div className="flex flex-row items-center justify-between gap-2">
 				<div
 					onClick={handleProfileClick}
 					className="flex flex-row items-center gap-3 cursor-pointer px-4 py-2">

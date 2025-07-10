@@ -132,8 +132,11 @@ export default function TripPage() {
 			)}
 
 			{/* Account info card */}
-			<div className="mb-5">
+			<div className="flex gap-5 mb-5 w-full ">
 				{userSnippet && (<UserSnippetCard userSnippet={userSnippet} toggleFollow={toggleFollow} />)}
+				<div className="">
+
+				</div>
 			</div>
 			<div className="border-b-2"></div>
 			{/* comments */}

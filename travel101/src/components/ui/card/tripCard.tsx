@@ -103,7 +103,7 @@ const TripCard = ({ trip }: TripCardListProps) => {
 											loop
 											muted
 											playsInline
-											className="object-cover w-full h-full"
+											className="object-cover w-full h-full pointer-events-none"
 										>
 											Your browser does not support the video tag.
 										</video>
@@ -113,7 +113,7 @@ const TripCard = ({ trip }: TripCardListProps) => {
 											alt={`Trip image ${index + 1}`}
 											fill
 											sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-											className="object-cover"
+											className="object-cover pointer-events-none"
 											priority={index === 0}
 										/>
 									)}

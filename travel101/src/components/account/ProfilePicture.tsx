@@ -37,7 +37,7 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({ pictureUrl }) => {
 			<Image
 				src={pictureUrl || '/img/logo-color.png'} // Use preview URL, then current, then default
 				alt="User profile picture"
-				className="object-cover w-full h-full"
+				className="object-cover w-full h-full pointer-events-none"
 				width={120}
 				height={120}
 				onError={(e: React.SyntheticEvent<HTMLImageElement>) => {

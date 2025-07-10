@@ -68,7 +68,7 @@ export default function Navbar() {
 									src={user?.picture || '/img/logo-color.png'}
 									alt="User Profile"
 									fill
-									className="object-cover"
+									className="object-cover pointer-events-none"
 								/>
 							</div>
 						</button>

@@ -231,7 +231,7 @@ const LocationMedia: React.FC<LocationMediaProps> = ({ media, setMedia, dayIndex
 									<img
 										src={file.presignedUrl}
 										alt={`Uploaded ${index + 1}`}
-										className="max-w-full h-full object-contain"
+										className="max-w-full h-full object-contain pointer-events-none"
 									/>
 								)}
 								{/* isOwner일 때만 삭제 버튼 표시 */}
